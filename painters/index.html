@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painters - Thy BreadSite</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        header, footer {
+            background-color: #f7c59f;
+            color: #333;
+            text-align: center;
+            padding: 20px 0;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        header p {
+            margin-top: 5px;
+            font-style: italic;
+            font-size: 1.2em;
+        }
+        section {
+            margin: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #444;
+        }
+        .paint-container {
+            text-align: center;
+        }
+        canvas {
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: crosshair;
+        }
+        .controls {
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .controls button, .controls input[type="color"], .controls input[type="range"] {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .controls button:hover, .controls input[type="color"], .controls input[type="range"] {
+            background-color: #f7c59f;
+        }
+        footer p {
+            margin: 0;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <h1>Thy BreadSite</h1>
+        <p>Le cat shalt into Le Meow!</p>
+    </header>
+
+    <!-- Paint Game Section -->
+    <section id="paint-game">
+        <h2>Welcome to the Painters Page!</h2>
+        <p>Unleash your creativity on our virtual canvas. Choose your colors, adjust the brush size, and start painting! We love cats, and we love art. Let your imagination run wild!</p>
+        <div class="paint-container">
+            <canvas id="paint-canvas" width="800" height="600"></canvas>
+            <div class="controls">
+                <input type="color" id="color-picker" value="#000000">
+                <input type="range" id="brush-size" min="1" max="50" value="5">
+                <button onclick="clearCanvas()">Clear</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2022 Dabicco. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Canvas and Drawing Variables
+        const canvas = document.getElementById('paint-canvas');
+        const ctx = canvas.getContext('2d');
+        let painting = false;
+        let color = document.getElementById('color-picker').value;
+        let brushSize = document.getElementById('brush-size').value;
+
+        // Event Listeners for Canvas
+        canvas.addEventListener('mousedown', startPosition);
+        canvas.addEventListener('mouseup', endPosition);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('touchstart', startTouchPosition, false);
+        canvas.addEventListener('touchend', endPosition, false);
+        canvas.addEventListener('touchmove', drawTouch, false);
+        document.getElementById('color-picker').addEventListener('change', changeColor);
+        document.getElementById('brush-size').addEventListener('change', changeBrushSize);
+
+        // Prevent Scrolling on Touch
+        document.body.addEventListener('touchstart', preventDefaultTouch, { passive: false });
+        document.body.addEventListener('touchend', preventDefaultTouch, { passive: false });
+        document.body.addEventListener('touchmove', preventDefaultTouch, { passive: false });
+
+        function preventDefaultTouch(e) {
+            if (e.target === canvas) {
+                e.preventDefault();
+            }
+        }
+
+        // Start Drawing
+        function startPosition(e) {
+            painting = true;
+            draw(e);
+        }
+
+        // Start Touch Drawing
+        function startTouchPosition(e) {
+            painting = true;
+            drawTouch(e);
+        }
+
+        // End Drawing
+        function endPosition() {
+            painting = false;
+            ctx.beginPath();
+        }
+
+        // Draw Function
+        function draw(e) {
+            if (!painting) return;
+            ctx.lineWidth = brushSize;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = color;
+
+            ctx.lineTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+        }
+
+        // Draw Touch Function
+        function drawTouch(e) {
+            if (!painting) return;
+            const touch = e.touches[0];
+            ctx.lineWidth = brushSize;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = color;
+
+            ctx.lineTo(touch.clientX - canvas.offsetLeft, touch.clientY - canvas.offsetTop);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(touch.clientX - canvas.offsetLeft, touch.clientY - canvas.offsetTop);
+        }
+
+        // Change Brush Color
+        function changeColor(e) {
+            color = e.target.value;
+        }
+
+        // Change Brush Size
+        function changeBrushSize(e) {
+            brushSize = e.target.value;
+        }
+
+        // Clear Canvas
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+    </script>
+</body>
+</html>
