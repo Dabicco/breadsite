@@ -39,6 +39,7 @@
         }
         .paint-container {
             text-align: center;
+            overflow-x: auto;
         }
         canvas {
             border: 2px solid #ddd;
@@ -66,6 +67,23 @@
             margin: 0;
             font-size: 0.9em;
         }
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .back-link a {
+            text-decoration: none;
+            font-size: 1.2em;
+            color: #555;
+            border: 2px solid #f7c59f;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .back-link a:hover {
+            background-color: #f7c59f;
+            color: #fff;
+        }
     </style>
 </head>
 <body>
@@ -78,7 +96,7 @@
     <!-- Paint Game Section -->
     <section id="paint-game">
         <h2>Welcome to the Painters Page!</h2>
-        <p>Unleash your creativity on our virtual canvas. Choose your colors, adjust the brush size, and start painting! We love cats, and we love art. Let your imagination run wild!</p>
+        <p>Congratulations! Thou hast discovered the secret page of Thy BreadSite. Unleash thy creativity on our virtual canvas. Choose thy colors, adjust the brush size, and start painting! We love cats, and we love art. Let thy imagination run wild!</p>
         <div class="paint-container">
             <canvas id="paint-canvas" width="800" height="600"></canvas>
             <div class="controls">
@@ -86,6 +104,9 @@
                 <input type="range" id="brush-size" min="1" max="50" value="5">
                 <button onclick="clearCanvas()">Clear</button>
             </div>
+        </div>
+        <div class="back-link">
+            <a href="/breadsite">Return to Thy BreadSite</a>
         </div>
     </section>
 
@@ -102,41 +123,45 @@
         let color = document.getElementById('color-picker').value;
         let brushSize = document.getElementById('brush-size').value;
 
+        // Ensure smooth lines
+        ctx.lineJoin = ctx.lineCap = 'round';
+
         // Event Listeners for Canvas
-        canvas.addEventListener('mousedown', startPosition);
-        canvas.addEventListener('mouseup', endPosition);
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mouseup', endDrawing);
         canvas.addEventListener('mousemove', draw);
-        canvas.addEventListener('touchstart', startTouchPosition, false);
-        canvas.addEventListener('touchend', endPosition, false);
+        canvas.addEventListener('touchstart', startTouchDrawing, false);
+        canvas.addEventListener('touchend', endDrawing, false);
         canvas.addEventListener('touchmove', drawTouch, false);
-        document.getElementById('color-picker').addEventListener('change', changeColor);
-        document.getElementById('brush-size').addEventListener('change', changeBrushSize);
+        document.getElementById('color-picker').addEventListener('input', changeColor);
+        document.getElementById('brush-size').addEventListener('input', changeBrushSize);
 
-        // Prevent Scrolling on Touch
-        document.body.addEventListener('touchstart', preventDefaultTouch, { passive: false });
-        document.body.addEventListener('touchend', preventDefaultTouch, { passive: false });
-        document.body.addEventListener('touchmove', preventDefaultTouch, { passive: false });
+        // Prevent Scrolling on Touch Devices
+        document.body.addEventListener('touchstart', preventTouchScroll, { passive: false });
+        document.body.addEventListener('touchend', preventTouchScroll, { passive: false });
+        document.body.addEventListener('touchmove', preventTouchScroll, { passive: false });
 
-        function preventDefaultTouch(e) {
+        // Prevent default scrolling behavior
+        function preventTouchScroll(e) {
             if (e.target === canvas) {
                 e.preventDefault();
             }
         }
 
         // Start Drawing
-        function startPosition(e) {
+        function startDrawing(e) {
             painting = true;
             draw(e);
         }
 
         // Start Touch Drawing
-        function startTouchPosition(e) {
+        function startTouchDrawing(e) {
             painting = true;
             drawTouch(e);
         }
 
         // End Drawing
-        function endPosition() {
+        function endDrawing() {
             painting = false;
             ctx.beginPath();
         }
@@ -144,28 +169,30 @@
         // Draw Function
         function draw(e) {
             if (!painting) return;
-            ctx.lineWidth = brushSize;
-            ctx.lineCap = 'round';
             ctx.strokeStyle = color;
+            ctx.lineWidth = brushSize;
 
-            ctx.lineTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+            // Correct the coordinates for accurate drawing
+            const rect = canvas.getBoundingClientRect();
+            ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
             ctx.stroke();
             ctx.beginPath();
-            ctx.moveTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+            ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
         }
 
         // Draw Touch Function
         function drawTouch(e) {
             if (!painting) return;
-            const touch = e.touches[0];
-            ctx.lineWidth = brushSize;
-            ctx.lineCap = 'round';
             ctx.strokeStyle = color;
+            ctx.lineWidth = brushSize;
 
-            ctx.lineTo(touch.clientX - canvas.offsetLeft, touch.clientY - canvas.offsetTop);
+            // Correct the coordinates for accurate drawing
+            const rect = canvas.getBoundingClientRect();
+            const touch = e.touches[0];
+            ctx.lineTo(touch.clientX - rect.left, touch.clientY - rect.top);
             ctx.stroke();
             ctx.beginPath();
-            ctx.moveTo(touch.clientX - canvas.offsetLeft, touch.clientY - canvas.offsetTop);
+            ctx.moveTo(touch.clientX - rect.left, touch.clientY - rect.top);
         }
 
         // Change Brush Color
