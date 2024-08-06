@@ -8,337 +8,254 @@
         body {
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
-            color: #333;
             margin: 0;
             padding: 0;
-            position: relative;
         }
         header, footer {
             background-color: #f7c59f;
             color: #333;
             text-align: center;
-            padding: 20px 0;
+            padding: 20px;
         }
         header h1 {
             margin: 0;
             font-size: 2.5em;
         }
         header p {
-            margin-top: 5px;
+            margin: 10px 0 0;
             font-style: italic;
             font-size: 1.2em;
         }
         section {
-            margin: 20px;
             padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        h2, h3 {
+        h2 {
             color: #444;
         }
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        ul li {
+        .profile {
             display: flex;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
-        ul li img {
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            margin-right: 15px;
-            display: block;
-        }
-        ul li span {
-            font-size: 2em;
-            font-weight: bold;
-            color: #888;
-            display: none;
-        }
-        .discord-section {
-            text-align: center;
-            padding: 20px;
-        }
-        .discord-button {
-            display: inline-block;
-            padding: 10px 20px;
-            font-size: 1.2em;
-            color: #fff;
-            background-color: #7289da;
-            border-radius: 5px;
-            text-decoration: none;
-            transition: transform 0.3s, opacity 0.3s;
-        }
-        .discord-button:hover {
-            transform: scale(1.1);
-            opacity: 0.8;
-        }
-        .stonks {
-            text-align: center;
-            margin: 40px 0;
-            font-size: 1.5em;
-            font-weight: bold;
-        }
-        footer p {
-            margin: 0;
-            font-size: 0.9em;
-        }
-        #overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            opacity: 1;
-            transition: opacity 0.5s ease;
-        }
-        #passcode-box {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            text-align: center;
-        }
-        #passcode-input {
-            padding: 10px;
-            font-size: 1em;
-            width: 80%;
-            margin-bottom: 10px;
-        }
-        #error-message {
-            color: red;
-            font-size: 0.9em;
-            margin-top: 10px;
-        }
-        #submit-button {
-            padding: 10px 20px;
-            font-size: 1em;
-            color: #fff;
-            background-color: #f7c59f;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            opacity: 0.7;
-        }
-        #submit-button:hover {
-            opacity: 1;
-            transform: scale(1.05);
-        }
-        #submit-button:active {
-            outline: 2px solid #e6b58b;
-        }
-        #server-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .server-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .server-item img {
+        .profile img {
             width: 100px;
             height: 100px;
-            border-radius: 8px;
+            border-radius: 50%;
+            margin-right: 20px;
+            object-fit: cover;
+        }
+        .profile-info {
+            max-width: 500px;
+        }
+        .profile-info h3 {
+            margin: 0 0 5px;
+        }
+        .profile-info p {
+            margin: 5px 0;
+        }
+        .profile img[alt="error"] {
+            content: "???";
+            font-size: 48px;
+            display: block;
+            text-align: center;
+            line-height: 100px;
+        }
+        .server-list {
+            margin-top: 40px;
+        }
+        .server {
+            margin-bottom: 20px;
         }
         .divider {
-            height: 1px;
-            background-color: #ddd;
-            margin: 10px 0;
+            border-bottom: 2px solid #ddd;
+            margin: 20px 0;
         }
-        .hidden-paintbrush {
-            position: fixed;
-            bottom: 10px;
-            left: 10px;
-            font-size: 2em;
-            cursor: pointer;
-            transition: opacity 0.3s;
-        }
-        .hidden-paintbrush:hover {
-            opacity: 0.7;
-        }
-        .server-item button {
-            padding: 10px 20px;
-            font-size: 1em;
-            color: #fff;
+        .animated-button {
+            display: inline-block;
             background-color: #f7c59f;
-            border: none;
+            color: #333;
+            padding: 10px 20px;
             border-radius: 5px;
-            cursor: pointer;
             text-decoration: none;
-            transition: opacity 0.3s, transform 0.3s;
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
-        .server-item button:hover {
-            opacity: 0.8;
-            transform: scale(1.05);
+        .animated-button:hover {
+            background-color: #e6b98c;
+            transform: translateY(-2px);
+        }
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+        #paint-icon {
+            position: relative;
+            display: block;
+            margin: 20px auto;
+            width: 50px;
+            height: 50px;
         }
     </style>
 </head>
 <body>
-    <!-- Passcode Overlay -->
-    <div id="overlay">
-        <div id="passcode-box">
+    <header>
+        <h1>Thy BreadSite</h1>
+        <p>Le cat shalt into Le Meow!</p>
+    </header>
+
+    <section id="content">
+        <div id="passcode-screen" style="display: none;">
             <h2>Enter Passcode</h2>
-            <input type="text" id="passcode-input" placeholder="Passcode" onkeypress="handleKeyPress(event)">
-            <br>
-            <button id="submit-button" onclick="checkPasscode()">Submit</button>
-            <p id="error-message"></p>
+            <input type="text" id="passcode" placeholder="Enter passcode" autocomplete="off">
+            <button id="submit-passcode">Submit</button>
+            <div id="error-message" class="error-message"></div>
         </div>
-    </div>
 
-    <!-- Main Content -->
-    <div id="main-content" style="display: none;">
-        <!-- Header Section -->
-        <header>
-            <h1>Thy BreadSite</h1>
-            <p>Le cat shalt into Le Meow!</p>
-        </header>
-
-        <!-- Introduction Section -->
-        <section id="introduction">
+        <div id="main-content" style="display: none;">
             <h2>Welcome to Thy BreadSite!</h2>
-            <p>Welcome to Thy BreadSite, your ultimate hub for all things related to our Bread Gaming Server! Our site is dedicated to providing a rich and engaging experience for gamers who share our passions for Minecraft, Bopl Battles, and more. Whether you're here to explore our diverse Minecraft minigames, participate in thrilling events, or connect with fellow gaming enthusiasts, you've come to the right place.</p>
-            <p>We take pride in creating a vibrant community where fun and creativity flourish. From hosting exciting Minecraft minigames to organizing fun-filled Bopl Battles tournaments, we aim to deliver an exceptional gaming experience for all our members. Dive into our server list to discover the various Minecraft worlds we offer, and check out our events and activities that bring our community together.</p>
-        </section>
+            <p>Welcome to our amazing gaming community! We love cats and Minecraft, and we're excited to share our world with you. Explore our servers, join events, and become part of our fun and friendly community.</p>
 
-        <!-- Server List Section -->
-        <section id="minecraft-events">
-            <h2>Server List</h2>
-            <p>Our Minecraft servers offer a range of unique experiences, each with its own distinct flavor and challenges. Below is a detailed list of our Minecraft servers:</p>
-            <div id="server-list">
-                <div class="server-item">
-                    <img src="wither-storm.png" alt="Wither Storm" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                    <span style="display:none">?</span>
-                    <p><strong>Wither Storm Anarchy Survival:</strong> Immerse yourself in the ultimate survival challenge where chaos reigns supreme. Face off against the formidable Wither Storm in a lawless environment where survival depends on your skills and strategy.</p>
-                </div>
-                <div class="divider"></div>
-                <div class="server-item">
-                    <img src="explorers-smp.png" alt="Explorers SMP" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                    <span style="display:none">?</span>
-                    <p><strong>Explorers SMP:</strong> Embark on an adventure in a custom terrain world designed for exploration and creativity. This server features a rich and diverse landscape filled with unique biomes, challenges, and opportunities for building and discovery.</p>
-                </div>
-                <div class="divider"></div>
-                <div class="server-item">
-                    <img src="lemon-smp.png" alt="Lemon SMP" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                    <span style="display:none">?</span>
-                    <p><strong>Lemon SMP:</strong> Join a private world where camaraderie and collaboration thrive. This server offers a safe and friendly environment for players to build, explore, and interact without external disruptions.</p>
+            <div class="profile">
+                <img src="dabicco.png" alt="Dabicco's profile picture" onerror="this.onerror=null;this.src='';this.alt='???';">
+                <div class="profile-info">
+                    <h3>Dabicco (Nico)</h3>
+                    <p>Dabicco is a versatile mod who loves organizing events—though sometimes, they might slip up! <a href="https://www.youtube.com/channel/UCw27Qq_gQIOjb_Id4-0-EZA" target="_blank">Check out Dabicco's YouTube channel</a>.</p>
                 </div>
             </div>
-            <p>Connect to our Minecraft servers using the following details:</p>
-            <ul>
-                <li><strong>Java Edition IP: server.dabicco.online </strong></li>
-                <li><strong>Bedrock Edition IP: server.dabicco.online PORT: 19132</strong></li>
-            </ul>
-            <div class="server-item">
-                <button onclick="window.location.href='minecraft:?addExternalServer=BreadLobby|server.dabicco.online:19132'">Add Bedrock Server Directly</button>
+
+            <div class="profile">
+                <img src="joey.png" alt="Joeyready's profile picture" onerror="this.onerror=null;this.src='';this.alt='???';">
+                <div class="profile-info">
+                    <h3>Joeyready</h3>
+                    <p>Joeyready is passionate about cats, Bopl Battles, Minecraft, and minigames. <a href="https://www.youtube.com/channel/UCTSkGGvTBY1B79O3uatsFVg" target="_blank">Check out Joeyready's YouTube channel</a>.</p>
+                </div>
             </div>
-        </section>
 
-        <!-- Events Section -->
-        <section id="events">
-            <h2>Events and Activities</h2>
-            <p>We host a variety of events and activities that cater to different interests and playstyles. From Minecraft minigame tournaments to lively Bopl Battles competitions, there's always something happening in our community. Here's a glimpse into what we offer:</p>
-            <ul>
-                <li><strong>Minecraft Minigames:</strong> Participate in our themed Minecraft events and challenges, where players can showcase their skills and compete for glory.</li>
-                <li><strong>Bopl Battles:</strong> Join us for exciting Bopl Battles tournaments and events. Bopl Battles is a fun, fast-paced multiplayer game where slimes battle it out in a chaotic, yet entertaining environment.</li>
-                <li><strong>Event Portal:</strong> Access our event portal via our Minecraft lobby to connect with other servers and participate in cross-community events, such as those hosted by EEGAR and The Decayed Team.</li>
-                <li><strong>And More:</strong> Stay tuned for additional events and activities that may not be listed here. We're always looking for new ways to engage and entertain our community.</li>
-            </ul>
-            <p>Note that while the above list highlights some of our key events, there are many other breaders and events that contribute to the rich tapestry of our community.</p>
-        </section>
+            <div class="profile">
+                <img src="heartkitty.png" alt="Heart Kitty's profile picture" onerror="this.onerror=null;this.src='';this.alt='???';">
+                <div class="profile-info">
+                    <h3>Heart Kitty (IsabellaGohs)</h3>
+                    <p>Known for being friendly, Heart Kitty doesn’t participate much but is always a positive presence in the community.</p>
+                </div>
+            </div>
 
-        <!-- Staff Section -->
-        <section id="staff">
-            <h2>Meet Our Team</h2>
-            <p>Our team is dedicated to ensuring a smooth and enjoyable experience for all members of our community. Below are some of the key staff members who make it all happen:</p>
-            <ul>
-                <li>
-                    <img src="joey.png" alt="Joeyready's profile picture" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                    <span style="display:none">?</span>
-                    <strong>Joeyready:</strong> A passionate gamer who loves cats, Bopl Battles, Minecraft, and minigames. Joeyready plays a crucial role in managing and organizing our community activities.
-                </li>
-                <li>
-                    <img src="dabicco.png" alt="Dabicco's profile picture" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                    <span style="display:none">?</span>
-                    <strong>Dabicco (Nico):</strong> A main organizer responsible for coordinating events and ensuring smooth operations within the community. Dabicco's efforts help keep everything running seamlessly.
-                </li>
-                <li>
-                    <img src="poto.png" alt="Socoolmatteo's profile picture" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                    <span style="display:none">?</span>
-                    <strong>Socoolmatteo (Potato):</strong> Focused on community engagement and fostering a positive atmosphere. Known affectionately as "a literal potato," Socoolmatteo brings a unique and cheerful presence to the team.
-                </li>
-                <li>
-                    <img src="heartkitty.png" alt="Heart Kitty's profile picture" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                    <span style="display:none">?</span>
-                    <strong>Heart Kitty (IsabellaGohs):</strong> Known for their friendly demeanor, Heart Kitty is a beloved member of our team who adds a warm and welcoming touch to our community.
-                </li>
-            </ul>
-            <p>While the staff listed above play integral roles, there are many other valuable breaders and team members who contribute to the vibrant and dynamic nature of our community. Their efforts ensure that everyone has a fantastic experience, and we appreciate all their hard work and dedication.</p>
-        </section>
+            <div class="profile">
+                <img src="poto.png" alt="Socoolmatteo's profile picture" onerror="this.onerror=null;this.src='';this.alt='???';">
+                <div class="profile-info">
+                    <h3>Socoolmatteo (Potato)</h3>
+                    <p>Also known as a literal potato, Potato loves engaging with the community. <a href="https://youtube.com/@bakedp0tat0-fnf?si=1ChC7HnJ4p54bKPQ" target="_blank">Check out Potato's YouTube channel</a>.</p>
+                </div>
+            </div>
 
-        <!-- Discord Section -->
-        <section id="discord" class="discord-section">
-            <h2>Join Our Discord Community!</h2>
-            <p>Our Discord server is the heart of our community, where members come together to chat, organize events, and stay updated with the latest news. It's a hub for all things related to our gaming activities, and we welcome you to join us!</p>
-            <p>Connect with fellow gamers, participate in community events, and enjoy the camaraderie of our vibrant community. Click the button below to join our Discord server and be part of the action!</p>
-            <a href="https://discord.gg/sKFzMueBu6" class="discord-button">Join Our Discord</a>
-        </section>
+            <p>Other moderators and breaders also contribute to our vibrant community. Additionally, we host a variety of events that may not all be listed here. We encourage everyone to stay tuned for more exciting activities!</p>
 
-        <!-- Stonks Section -->
-        <section class="stonks">
-            <p>THY STONKS SHALL GROW!</p>
-        </section>
+            <div class="server-list">
+                <h2>Minecraft Server List</h2>
+                <div class="server">
+                    <h3>Wither Storm Anarchy Survival</h3>
+                    <p>Join our chaotic and thrilling Anarchy Survival server. Beware of the Wither Storm!</p>
+                </div>
+                <div class="divider"></div>
+                <div class="server">
+                    <h3>Explorers SMP</h3>
+                    <p>Explore a custom terrain world filled with unique biomes and hidden treasures.</p>
+                </div>
+                <div class="divider"></div>
+                <div class="server">
+                    <h3>Lemon SMP</h3>
+                    <p>Join our exclusive, private world, where creativity and community thrive.</p>
+                </div>
+                <div class="divider"></div>
+                <div class="server">
+                    <h3>Event Portal</h3>
+                    <p>Our event portal is the gateway to numerous exciting events across many Discord servers, such as EEGAR's server and The Decayed Team. Join us in various fun activities and competitions!</p>
+                </div>
+            </div>
 
-        <!-- Footer Section -->
-        <footer>
-            <p>&copy; 2022 Dabicco. All rights reserved.</p>
-        </footer>
-    </div>
+            <div class="server-list">
+                <h2>Server Details</h2>
+                <p><strong>Java Edition:</strong> Connect to <code>server.dabicco.online</code></p>
+                <p><strong>Bedrock Edition:</strong> Connect to <code>server.dabicco.online</code>, Port: <code>19132</code></p>
+                <a href="minecraft:?addExternalServer=BreadLobby|server.dabicco.online:19132" class="animated-button">Add Bedrock Server</a>
+            </div>
 
-    <!-- Secret Paint Brush Emoji -->
-    <a href="/breadsite/painters" class="hidden-paintbrush">🎨</a>
+            <div class="divider"></div>
+            <h2>Discord Server</h2>
+            <p>Join our Discord community for more fun and interaction. Share your love for cats, Minecraft, and more! Click the button below to join:</p>
+            <a href="https://discord.gg/sKFzMueBu6" class="animated-button">Join Discord</a>
+
+            <div class="divider"></div>
+            <h2>THY STONKS SHALL GROW!</h2>
+        </div>
+    </section>
+
+    <img src="icon.png" id="paint-icon" alt="Secret Canvas Icon" onclick="window.location.href='/breadsite/painters'">
+
+    <footer>
+        <p>&copy; 2022 Dabicco. All rights reserved.</p>
+    </footer>
 
     <script>
-        var attempts = 0;
+        document.addEventListener("DOMContentLoaded", () => {
+            const passcodeScreen = document.getElementById("passcode-screen");
+            const mainContent = document.getElementById("main-content");
+            const passcodeInput = document.getElementById("passcode");
+            const submitButton = document.getElementById("submit-passcode");
+            const errorMessage = document.getElementById("error-message");
+            let attempts = 0;
+            const maxAttempts = 3;
 
-        function checkPasscode() {
-            var passcode = document.getElementById("passcode-input").value;
-            if (passcode === "ILOVECATSANDBREAD") {
-                var overlay = document.getElementById("overlay");
-                overlay.style.opacity = "0";
-                setTimeout(function() {
-                    overlay.style.display = "none";
-                    document.getElementById("main-content").style.display = "block";
-                }, 500);
+            const correctPasscode = "ILOVECATSANDBREAD";
+            const storedPasscode = localStorage.getItem("breadsite_passcode");
+
+            function showContent() {
+                passcodeScreen.style.display = "none";
+                mainContent.style.display = "block";
+            }
+
+            if (storedPasscode === correctPasscode) {
+                showContent();
             } else {
-                attempts++;
-                if (attempts >= 3) {
-                    document.getElementById("error-message").innerText = "Too many failed attempts. Please reload the page to retry.";
-                    document.getElementById("submit-button").disabled = true;
-                    document.getElementById("passcode-input").disabled = true;
+                passcodeScreen.style.display = "block";
+            }
+
+            function handlePasscodeSubmission() {
+                if (passcodeInput.value === correctPasscode) {
+                    localStorage.setItem("breadsite_passcode", correctPasscode);
+                    showContent();
                 } else {
-                    document.getElementById("error-message").innerText = "Incorrect passcode. Please try again.";
+                    attempts++;
+                    if (attempts >= maxAttempts) {
+                        errorMessage.textContent = "Too many attempts. Please reload the page to try again.";
+                        submitButton.disabled = true;
+                    } else {
+                        errorMessage.textContent = "Incorrect passcode. Try again.";
+                    }
                 }
             }
-        }
 
-        function handleKeyPress(event) {
-            if (event.key === "Enter") {
-                checkPasscode();
-            }
-        }
+            submitButton.addEventListener("click", handlePasscodeSubmission);
+            passcodeInput.addEventListener("keyup", (event) => {
+                if (event.key === "Enter") {
+                    handlePasscodeSubmission();
+                }
+            });
+
+            submitButton.addEventListener("mouseover", () => {
+                submitButton.style.opacity = "1";
+            });
+
+            submitButton.addEventListener("mouseout", () => {
+                submitButton.style.opacity = "0.8";
+            });
+
+            submitButton.addEventListener("mousedown", () => {
+                submitButton.style.outline = "2px solid #f7c59f";
+            });
+
+            submitButton.addEventListener("mouseup", () => {
+                submitButton.style.outline = "none";
+            });
+        });
     </script>
 </body>
 </html>
