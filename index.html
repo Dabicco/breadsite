@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bread Gaming Server</title>
+    <title>Thy BreadSite</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -11,6 +11,7 @@
             color: #333;
             margin: 0;
             padding: 0;
+            position: relative;
         }
         header, footer {
             background-color: #f7c59f;
@@ -51,13 +52,13 @@
             width: 50px;
             height: 50px;
             margin-right: 15px;
+            display: block;
         }
-        ul li img.error {
-            border: none;
+        ul li span {
             font-size: 2em;
             font-weight: bold;
-            text-align: center;
-            line-height: 50px;
+            color: #888;
+            display: none;
         }
         .discord-section {
             text-align: center;
@@ -71,10 +72,11 @@
             background-color: #7289da;
             border-radius: 5px;
             text-decoration: none;
-            transition: transform 0.3s;
+            transition: transform 0.3s, opacity 0.3s;
         }
         .discord-button:hover {
             transform: scale(1.1);
+            opacity: 0.8;
         }
         .stonks {
             text-align: center;
@@ -97,6 +99,7 @@
             align-items: center;
             justify-content: center;
             z-index: 1000;
+            opacity: 1;
             transition: opacity 0.5s ease;
         }
         #passcode-box {
@@ -130,34 +133,56 @@
         }
         #submit-button:hover {
             opacity: 1;
+            transform: scale(1.05);
         }
         #submit-button:active {
             outline: 2px solid #e6b58b;
         }
-        .server-list {
+        #server-list {
             display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
+            flex-direction: column;
+            gap: 10px;
         }
-        .server {
-            width: 300px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 10px;
-            text-align: center;
+        .server-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
-        .server img {
-            width: 100%;
-            height: auto;
+        .server-item img {
+            width: 100px;
+            height: 100px;
             border-radius: 8px;
         }
-        .hidden-link {
+        .divider {
+            height: 1px;
+            background-color: #ddd;
+            margin: 10px 0;
+        }
+        .hidden-paintbrush {
             position: fixed;
             bottom: 10px;
             left: 10px;
-            font-size: 1.5em;
+            font-size: 2em;
             cursor: pointer;
+            transition: opacity 0.3s;
+        }
+        .hidden-paintbrush:hover {
+            opacity: 0.7;
+        }
+        .server-item button {
+            padding: 10px 20px;
+            font-size: 1em;
+            color: #fff;
+            background-color: #f7c59f;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: opacity 0.3s, transform 0.3s;
+        }
+        .server-item button:hover {
+            opacity: 0.8;
+            transform: scale(1.05);
         }
     </style>
 </head>
@@ -177,70 +202,97 @@
     <div id="main-content" style="display: none;">
         <!-- Header Section -->
         <header>
-            <h1>Bread Gaming Server</h1>
-            <p>Rise and Grind in a World of Flour Power!</p>
+            <h1>Thy BreadSite</h1>
+            <p>Le cat shalt into Le Meow!</p>
         </header>
 
         <!-- Introduction Section -->
         <section id="introduction">
-            <h2>Welcome to the Bread Gaming Server!</h2>
-            <p>At Bread Gaming, we mix our love for bread, cats, and gaming into a unique and engaging experience. Our server offers a range of minigames and events, specifically crafted to bring joy to our community members. We focus on both casual and competitive play, providing something for everyone.</p>
+            <h2>Welcome to Thy BreadSite!</h2>
+            <p>Welcome to Thy BreadSite, your ultimate hub for all things related to our Bread Gaming Server! Our site is dedicated to providing a rich and engaging experience for gamers who share our passions for Minecraft, Bopl Battles, and more. Whether you're here to explore our diverse Minecraft minigames, participate in thrilling events, or connect with fellow gaming enthusiasts, you've come to the right place.</p>
+            <p>We take pride in creating a vibrant community where fun and creativity flourish. From hosting exciting Minecraft minigames to organizing fun-filled Bopl Battles tournaments, we aim to deliver an exceptional gaming experience for all our members. Dive into our server list to discover the various Minecraft worlds we offer, and check out our events and activities that bring our community together.</p>
         </section>
 
         <!-- Server List Section -->
         <section id="minecraft-events">
             <h2>Server List</h2>
-            <div class="server-list">
-                <div class="server">
-                    <img src="witherstorm.png" alt="Wither Storm Anarchy Survival" onerror="this.outerHTML='<span class=\'error\'>?</span>'">
-                    <p><strong>Wither Storm Anarchy Survival:</strong> A chaotic survival mode where players face the formidable Wither Storm, battling for survival in a lawless world.</p>
+            <p>Our Minecraft servers offer a range of unique experiences, each with its own distinct flavor and challenges. Below is a detailed list of our Minecraft servers:</p>
+            <div id="server-list">
+                <div class="server-item">
+                    <img src="wither-storm.png" alt="Wither Storm" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                    <span style="display:none">?</span>
+                    <p><strong>Wither Storm Anarchy Survival:</strong> Immerse yourself in the ultimate survival challenge where chaos reigns supreme. Face off against the formidable Wither Storm in a lawless environment where survival depends on your skills and strategy.</p>
                 </div>
-                <div class="server">
-                    <img src="explorers.png" alt="Explorers SMP" onerror="this.outerHTML='<span class=\'error\'>?</span>'">
-                    <p><strong>Explorers SMP:</strong> An adventure-driven server featuring a custom terrain world, perfect for explorers and builders alike. Dive into a rich landscape filled with unique biomes and challenges.</p>
+                <div class="divider"></div>
+                <div class="server-item">
+                    <img src="explorers-smp.png" alt="Explorers SMP" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                    <span style="display:none">?</span>
+                    <p><strong>Explorers SMP:</strong> Embark on an adventure in a custom terrain world designed for exploration and creativity. This server features a rich and diverse landscape filled with unique biomes, challenges, and opportunities for building and discovery.</p>
                 </div>
-                <div class="server">
-                    <img src="lemon.png" alt="Lemon SMP" onerror="this.outerHTML='<span class=\'error\'>?</span>'">
-                    <p><strong>Lemon SMP:</strong> A private, close-knit community world where players can collaborate and build without the threat of external chaos.</p>
+                <div class="divider"></div>
+                <div class="server-item">
+                    <img src="lemon-smp.png" alt="Lemon SMP" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                    <span style="display:none">?</span>
+                    <p><strong>Lemon SMP:</strong> Join a private world where camaraderie and collaboration thrive. This server offers a safe and friendly environment for players to build, explore, and interact without external disruptions.</p>
                 </div>
             </div>
-            <p>Access all these amazing Minecraft experiences through our event portal, a lobby that serves as the gateway to each of these unique worlds. The portal also connects to special events across various Minecraft servers, including collaborations with EEGAR's server and The Decayed Team.</p>
+            <p>Connect to our Minecraft servers using the following details:</p>
+            <ul>
+                <li><strong>Java Edition IP:</strong> <code>server.dabicco.online</code></li>
+                <li><strong>Bedrock Edition IP:</strong> <code>server.dabicco.online</code>, Port: 19132</li>
+            </ul>
+            <div class="server-item">
+                <button onclick="window.location.href='minecraft:?addExternalServer=BreadLobby|server.dabicco.online:19132'">Add Bedrock Server</button>
+            </div>
         </section>
 
-        <!-- Bopl Battles Section -->
-        <section id="bopl-battles">
-            <h2>Bopl Battles</h2>
-            <p>Bopl Battles is a delightful addition to our game offerings. This fun couch/online multiplayer game lets players control adorable slimes in fast-paced battles. We regularly host tournaments and special events, encouraging both new and experienced players to join the fun and showcase their skills.</p>
+        <!-- Events Section -->
+        <section id="events">
+            <h2>Events and Activities</h2>
+            <p>We host a variety of events and activities that cater to different interests and playstyles. From Minecraft minigame tournaments to lively Bopl Battles competitions, there's always something happening in our community. Here's a glimpse into what we offer:</p>
+            <ul>
+                <li><strong>Minecraft Minigames:</strong> Participate in our themed Minecraft events and challenges, where players can showcase their skills and compete for glory.</li>
+                <li><strong>Bopl Battles:</strong> Join us for exciting Bopl Battles tournaments and events. Bopl Battles is a fun, fast-paced multiplayer game where slimes battle it out in a chaotic, yet entertaining environment.</li>
+                <li><strong>Event Portal:</strong> Access our event portal via our Minecraft lobby to connect with other servers and participate in cross-community events, such as those hosted by EEGAR and The Decayed Team.</li>
+                <li><strong>And More:</strong> Stay tuned for additional events and activities that may not be listed here. We're always looking for new ways to engage and entertain our community.</li>
+            </ul>
+            <p>Note that while the above list highlights some of our key events, there are many other breaders and events that contribute to the rich tapestry of our community.</p>
         </section>
 
-        <!-- Community Section -->
-        <section id="community">
+        <!-- Staff Section -->
+        <section id="staff">
             <h2>Meet Our Team</h2>
-            <p>Our community is guided by a team of dedicated moderators who help maintain a friendly and engaging environment. Meet some of our key members:</p>
+            <p>Our team is dedicated to ensuring a smooth and enjoyable experience for all members of our community. Below are some of the key staff members who make it all happen:</p>
             <ul>
                 <li>
-                    <img src="joey.png" alt="Joeyready's profile picture" onerror="this.outerHTML='<span class=\'error\'>?</span>'">
-                    <strong>Joeyready:</strong> A passionate gamer with a love for cats, Bopl Battles, and Minecraft minigames.
+                    <img src="joey.png" alt="Joeyready's profile picture" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                    <span style="display:none">?</span>
+                    <strong>Joeyready:</strong> A passionate gamer who loves cats, Bopl Battles, Minecraft, and minigames. Joeyready plays a crucial role in managing and organizing our community activities.
                 </li>
                 <li>
-                    <img src="dabicco.png" alt="Dabicco's profile picture" onerror="this.outerHTML='<span class=\'error\'>?</span>'">
-                    <strong>Dabicco (Nico):</strong> A main organizer, ensuring smooth operations and coordinating events.
+                    <img src="dabicco.png" alt="Dabicco's profile picture" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                    <span style="display:none">?</span>
+                    <strong>Dabicco (Nico):</strong> A main organizer responsible for coordinating events and ensuring smooth operations within the community. Dabicco's efforts help keep everything running seamlessly.
                 </li>
                 <li>
-                    <img src="poto.png" alt="Socoolmatteo's profile picture" onerror="this.outerHTML='<span class=\'error\'>?</span>'">
-                    <strong>Socoolmatteo (Potato):</strong> Focused on community engagement and maintaining a positive atmosphere. And yes, they are a literal potato!
+                    <img src="poto.png" alt="Socoolmatteo's profile picture" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                    <span style="display:none">?</span>
+                    <strong>Socoolmatteo (Potato):</strong> Focused on community engagement and fostering a positive atmosphere. Known affectionately as "a literal potato," Socoolmatteo brings a unique and cheerful presence to the team.
                 </li>
                 <li>
-                    <img src="heartkitty.png" alt="Heart Kitty's profile picture" onerror="this.outerHTML='<span class=\'error\'>?</span>'">
-                    <strong>Heart Kitty (IsabellaGohs):</strong> Known for their friendly demeanor, always bringing a smile to our community.
+                    <img src="heartkitty.png" alt="Heart Kitty's profile picture" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                    <span style="display:none">?</span>
+                    <strong>Heart Kitty (IsabellaGohs):</strong> Known for their friendly demeanor, Heart Kitty is a beloved member of our team who adds a warm and welcoming touch to our community.
                 </li>
             </ul>
+            <p>While the staff listed above play integral roles, there are many other valuable breaders and team members who contribute to the vibrant and dynamic nature of our community. Their efforts ensure that everyone has a fantastic experience, and we appreciate all their hard work and dedication.</p>
         </section>
 
         <!-- Discord Section -->
         <section id="discord" class="discord-section">
             <h2>Join Our Discord Community!</h2>
-            <p>Connect with fellow gamers, participate in community events, and stay updated with the latest news on our Discord server. It's the perfect place to make new friends and share your love for games.</p>
+            <p>Our Discord server is the heart of our community, where members come together to chat, organize events, and stay updated with the latest news. It's a hub for all things related to our gaming activities, and we welcome you to join us!</p>
+            <p>Connect with fellow gamers, participate in community events, and enjoy the camaraderie of our vibrant community. Click the button below to join our Discord server and be part of the action!</p>
             <a href="https://discord.gg/sKFzMueBu6" class="discord-button">Join Our Discord</a>
         </section>
 
@@ -253,24 +305,32 @@
         <footer>
             <p>&copy; 2022 Dabicco. All rights reserved.</p>
         </footer>
-
-        <!-- Hidden Paintbrush Link -->
-        <div class="hidden-link">
-            <a href="/painters" title="Painters Subpage">🎨</a>
-        </div>
     </div>
 
+    <!-- Secret Paint Brush Emoji -->
+    <a href="/breadsite/painters" class="hidden-paintbrush">🎨</a>
+
     <script>
+        var attempts = 0;
+
         function checkPasscode() {
             var passcode = document.getElementById("passcode-input").value;
             if (passcode === "ILOVECATSANDBREAD") {
-                document.getElementById("overlay").style.opacity = 0;
-                setTimeout(() => {
-                    document.getElementById("overlay").style.display = "none";
+                var overlay = document.getElementById("overlay");
+                overlay.style.opacity = "0";
+                setTimeout(function() {
+                    overlay.style.display = "none";
                     document.getElementById("main-content").style.display = "block";
                 }, 500);
             } else {
-                document.getElementById("error-message").innerText = "Incorrect passcode. Please try again.";
+                attempts++;
+                if (attempts >= 3) {
+                    document.getElementById("error-message").innerText = "Too many failed attempts. Please reload the page to retry.";
+                    document.getElementById("submit-button").disabled = true;
+                    document.getElementById("passcode-input").disabled = true;
+                } else {
+                    document.getElementById("error-message").innerText = "Incorrect passcode. Please try again.";
+                }
             }
         }
 
