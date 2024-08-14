@@ -4,11 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lava Escape Minigame</title>
+    <title>Breaders - Lava Escape Game</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
+            background-color: #ffffff;
             color: #333;
             line-height: 1.6;
             margin: 0;
@@ -19,35 +19,49 @@
             max-width: 900px;
             margin: 0 auto;
             padding: 20px;
+            background-color: #f2f2f2;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         h1,
         h2 {
-            color: #555;
+            color: #444;
         }
 
         img {
             max-width: 100%;
             height: auto;
             margin: 10px 0;
+            border-radius: 8px;
         }
 
-        .trailer,
-        .update-trailer {
+        iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
             margin: 20px 0;
+            border-radius: 8px;
         }
 
-        .trailer a,
-        .update-trailer a {
+        .download-button {
+            display: inline-block;
+            padding: 15px 30px;
+            font-size: 20px;
+            color: #fff;
+            background-color: #ff6347;
+            border-radius: 8px;
+            text-align: center;
             text-decoration: none;
-            color: #007bff;
-            font-weight: bold;
+            margin-top: 20px;
+            animation: pulse 2s infinite;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .changelog {
             margin-top: 40px;
             padding: 20px;
-            background-color: #e9ecef;
+            background-color: #e0e0e0;
             border-radius: 5px;
         }
 
@@ -55,60 +69,81 @@
             font-weight: bold;
             margin: 20px 0;
         }
+
+        .tags ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .tags li {
+            display: inline-block;
+            background-color: #ddd;
+            color: #333;
+            padding: 5px 10px;
+            margin: 5px;
+            border-radius: 4px;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <h1>Boxed-In</h1>
+        <a href="/releases/lava-escape_1.21.20-1.3.0.27_A.mcworld" class="download-button" download>Download Lava Escape - Not an AD!</a>
+        <h1>Lava Escape</h1>
         <p>Escape many thrilling maps with numerous puzzles and passages while dodging obstacles, arrows, and falling anvils! And don't forget the quickly rising lava - there's a lot of that!</p>
 
-        <div class="trailer">
-            <h2>Trailer:</h2>
-            <iframe href="https://youtu.be/5n73x99TkJA" target="_blank"></iframe>
-        </div>
+        <h2>Trailer:</h2>
+        <iframe src="https://www.youtube.com/embed/5n73x99TkJA" allowfullscreen></iframe>
 
+        <h2>Map Examples</h2>
         <p>This is Boxed-In! It's a Normal map and acts more like a "Practice map" for what is to come.</p>
-        <img src="boxed-in-map.jpg" alt="Boxed-In Map">
+        <img src="boxed-in-map.png" alt="Boxed-In Map">
 
         <p>Watch out because lava rises in every map! Open the capsule and escape as quickly as you can!</p>
-        <img src="escape-capsule.jpg" alt="Escape Capsule">
+        <img src="escape-capsule.png" alt="Escape Capsule">
 
         <p>This game is heavily inspired by Flood Escape, a game on ROBLOX made by Crazyblox.</p>
-        <img src="flood-escape.jpg" alt="Flood Escape">
+        <img src="flood-escape.png" alt="Flood Escape">
 
-        <p>Collaborate with up to 12 players!</p>
-        <img src="multiplayer.jpg" alt="Multiplayer">
+        <p>Collaborate with up to 100 players!</p>
 
-        <div class="update-trailer">
-            <h2>Expanded Realms Update Trailer:</h2>
-            <a href="https://youtu.be/5n73x99TkJA" target="_blank">
-                <img src="expanded-realms-trailer.jpg" alt="Expanded Realms Update Trailer">
-            </a>
-        </div>
+        <h2>Expanded Realms Update Trailer:</h2>
+        <iframe src="https://www.youtube.com/embed/5n73x99TkJA" allowfullscreen></iframe>
 
         <p>WHO LET OUT THE BEES!?!??!?!!!!??</p>
-        <img src="bees.jpg" alt="Bees">
+        <img src="bees.png" alt="Bees">
 
         <p>This is The Hive! Run from the sticky molten honey, climb to the top of the hive, and defeat the Queen Bee!</p>
-        <img src="the-hive.jpg" alt="The Hive">
+        <img src="the-hive.png" alt="The Hive">
 
         <p>Just a bit further...</p>
-        <img src="mystic-mineshaft.jpg" alt="Mystic Mineshaft">
+        <img src="mystic-mineshaft.png" alt="Mystic Mineshaft">
 
         <p>This is Mystic Mineshaft, and I can happily say: RUN!!</p>
-        <img src="run.jpg" alt="Run">
+        <img src="run.png" alt="Run">
 
         <p>The Hotel is no better; all it's doing is burning down!</p>
-        <img src="the-hotel.jpg" alt="The Hotel">
+        <img src="the-hotel.png" alt="The Hotel">
 
         <h2><u>This is just a TASTE of what's in the game; there are 10 more maps!</u></h2>
 
         <div class="changelog">
-            <h2>Select version for changelog:</h2>
-            <h3>1.0.8</h3>
-            <p><strong>Changelog:</strong></p>
-            <h4>1.3 Expanded Realms Update:</h4>
+            <h2>Version Changelog:</h2>
+            <h3>1.3 Expanded Realms Update</h3>
             <ul>
                 <li>Added The Hive map</li>
                 <li>Added Mystic Mineshaft map</li>
@@ -125,7 +160,7 @@
             <h2>Install Instructions:</h2>
             <p>Open the file, and it should automatically open in MCPE and import!</p>
             <p><strong>Note:</strong> The game will lag on older devices!</p>
-            <p><strong>Compatibility:</strong> This map no longer works on versions below 1.20.80!</p>
+            <p>This map no longer works on versions below 1.20.80!</p>
             <p>Credits In-Game!</p>
         </div>
 
@@ -135,18 +170,20 @@
             <li>1.20.80</li>
         </ul>
 
-        <h2>Tags:</h2>
-        <ul>
-            <li>Parkour Maps</li>
-            <li>Survival Maps</li>
-            <li>Puzzle Maps</li>
-            <li>.MCWorld</li>
-            <li>Minigame Maps</li>
-            <li>Adventure Maps</li>
-            <li>Minigame</li>
-            <li>Modded Maps</li>
-            <li>Redstone Maps</li>
-        </ul>
+        <div class="tags">
+            <h2>Tags:</h2>
+            <ul>
+                <li>Parkour Maps</li>
+                <li>Survival Maps</li>
+                <li>Puzzle Maps</li>
+                <li>.MCWorld</li>
+                <li>Minigame Maps</li>
+                <li>Adventure Maps</li>
+                <li>Minigame</li>
+                <li>Modded Maps</li>
+                <li>Redstone Maps</li>
+            </ul>
+        </div>
     </div>
 </body>
 
