@@ -218,12 +218,6 @@
             <p>Our Minecraft servers offer a range of unique experiences, each with its own distinct flavor and challenges. Below is a detailed list of our Minecraft servers:</p>
             <div id="server-list">
                 <div class="server-item">
-                    <img src="wither-storm.png" alt="Wither Storm" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                    <span style="display:none">?</span>
-                    <p><strong>Wither Storm Anarchy Survival:</strong> Immerse yourself in the ultimate survival challenge where chaos reigns supreme. Face off against the formidable Wither Storm in a lawless environment where survival depends on your skills and strategy.</p>
-                </div>
-                <div class="divider"></div>
-                <div class="server-item">
                     <img src="lemon-smp.png" alt="Lemon SMP" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
                     <span style="display:none">?</span>
                     <p><strong>Lemon SMP:</strong> Join a private world where camaraderie and collaboration thrive. This server offers a safe and friendly environment for players to build, explore, and interact without external disruptions.</p>
@@ -247,7 +241,7 @@
                 <img src="lava-escape.png" alt="Lava Escape" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
                 <span style="display:none">?</span>
                 <p><strong>Lava Escape:</strong> Race against time to escape the rising lava in this fast-paced, adrenaline-pumping minigame.</p>
-                <button onclick="window.location.href='lava-escape.html'">Learn More</button>
+                <button onclick="window.location.href='/breadsite/lava-escape'">Learn More</button>
             </div>
         </section>
 
@@ -266,12 +260,12 @@
 
         <!-- Footer Section -->
         <footer>
-            <p>&copy; Thy BreadSite, All Rights Reserved. Meow!</p>
+            <p>&copy; Dabicco 2024, All Rights Reserved. Meow!</p>
         </footer>
     </div>
 
     <!-- Paintbrush Icon -->
-    <div class="hidden-paintbrush" onclick="toggleEditor()">🖌️</div>
+    <div class="hidden-paintbrush" onclick="window.location.href='/breadsite/painters'">🖌️</div>
 
     <script>
         // Function to handle passcode check
@@ -294,11 +288,6 @@
             if (event.key === 'Enter') {
                 checkPasscode();
             }
-        }
-
-        // Function to toggle the editor (for future use)
-        function toggleEditor() {
-            alert("Paintbrush toggled! (Future editing feature)");
         }
     </script>
 </body>
