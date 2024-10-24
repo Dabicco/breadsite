@@ -137,6 +137,46 @@
         nav button:hover.dark-mode {
             background-color: #555;
         }
+
+        /* Button Animations */
+        .animated-button {
+            display: inline-block;
+            padding: 15px 30px;
+            color: white;
+            background-color: #00cfff;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: background-color 0.3s, transform 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .animated-button:hover {
+            background-color: #007fa3;
+            transform: scale(1.05);
+        }
+        .animated-button:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.2);
+            transition: left 0.3s;
+        }
+        .animated-button:hover:before {
+            left: 100%;
+        }
+
+        /* Image Size Constraints */
+        img {
+            max-width: 300px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
     </style>
 </head>
 <body>
@@ -187,7 +227,7 @@
                 <li><strong>Bedrock Edition IP:</strong> <code>server.breadgames.online</code>, Port: 19132</li>
             </ul>
             <div class="server-item">
-                <button class="bedrock-button" onclick="window.location.href='minecraft:?addExternalServer=BreadLobby|server.breadgames.online:19132'">Add Bedrock Server</button>
+                <button class="animated-button" onclick="window.location.href='minecraft:?addExternalServer=BreadLobby|server.breadgames.online:19132'">Add Bedrock Server</button>
             </div>
         </section>
 
@@ -198,38 +238,29 @@
             <ul>
                 <li><strong>Lava Escape:</strong> A high-intensity mini-game where players race to avoid a rising tide of lava!</li>
             </ul>
-            <button class="mcpe-button" onclick="window.location.href='/breadsite/lava-escape'">Download For MCPE 1.21+</button>
+            <button class="animated-button" onclick="window.location.href='/breadsite/lava-escape'">Download For MCPE 1.21+</button>
         </section>
 
         <!-- Discord Section -->
         <section class="discord-section">
             <h2>Join Our Community</h2>
-            <p>Stay connected with our vibrant community of gamers. Join us on Discord for real-time updates, discussions, and events.</p>
-            <a class="discord-button" href="https://discord.com/invite/your-invite-link" target="_blank">Join our Discord</a>
+            <button class="animated-button" onclick="window.location.href='https://discord.gg/yourserver'">Join Our Discord</button>
         </section>
-
-        <!-- Fun Section -->
-        <section class="stonks">
-            <h2>STONKS!!!</h2>
-            <p>The market's booming! Buy low, sell high, and most importantly, have fun.</p>
-        </section>
-
-        <!-- Footer Section -->
-        <footer>
-            <p>&copy; Dabicco 2024, All Rights Reserved. Meow!</p>
-        </footer>
     </div>
 
     <!-- Settings Page -->
-    <div id="settings-content">
-        <section>
-            <h2>Settings</h2>
-            <div class="settings-toggle">
-                <label for="dark-mode-toggle">Dark Mode</label>
-                <input type="checkbox" id="dark-mode-toggle" onclick="toggleDarkMode()">
-            </div>
-        </section>
+    <div id="settings-content" style="display: none;">
+        <h2>Settings</h2>
+        <div class="settings-toggle">
+            <label for="dark-mode-toggle">Dark Mode</label>
+            <input type="checkbox" id="dark-mode-toggle" onclick="toggleDarkMode()">
+        </div>
     </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>© Dabicco 2024. All Rights Reserved.</p>
+    </footer>
 
     <!-- Paintbrush Icon -->
     <div class="hidden-paintbrush" onclick="window.location.href='/breadsite/painters'">🖌️</div>
