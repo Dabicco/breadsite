@@ -59,61 +59,38 @@
         h2, h3 {
             color: #444;
         }
-        .settings-toggle {
+
+        /* Animated Button Styles */
+        .animated-button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 1.1em;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            background-color: #00cfff;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+        }
+        .animated-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Image Styling */
+        .server-item img, .addon-item img {
+            width: 100px;
+            height: 100px;
+            border-radius: 10px;
+            object-fit: cover;
+            margin-right: 15px;
+        }
+
+        .server-item, .addon-item {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            max-width: 300px;
-            margin: 20px auto;
-        }
-        .settings-toggle input[type="checkbox"] {
-            width: 40px;
-            height: 20px;
-            appearance: none;
-            background-color: #ccc;
-            border-radius: 15px;
-            position: relative;
-            cursor: pointer;
-            outline: none;
-        }
-        .settings-toggle input[type="checkbox"]:checked {
-            background-color: #00cfff;
-        }
-        .settings-toggle input[type="checkbox"]:before {
-            content: '';
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 16px;
-            height: 16px;
-            background-color: #fff;
-            border-radius: 50%;
-            transition: 0.3s;
-        }
-        .settings-toggle input[type="checkbox"]:checked:before {
-            transform: translateX(20px);
-        }
-        #overlay, #main-content, #settings-content {
-            display: none;
-        }
-        #home-page {
-            display: block;
-        }
-        footer p {
-            margin: 0;
-            font-size: 0.9em;
-        }
-        .hidden-paintbrush {
-            position: fixed;
-            bottom: 10px;
-            left: 10px;
-            font-size: 2em;
-            cursor: pointer;
-            transition: opacity 0.3s;
-            color: #00cfff;
-        }
-        .hidden-paintbrush:hover {
-            opacity: 0.7;
+            margin-bottom: 20px;
         }
 
         /* Dark Mode Styles */
@@ -136,46 +113,6 @@
         }
         nav button:hover.dark-mode {
             background-color: #555;
-        }
-
-        /* Button Animations */
-        .animated-button {
-            display: inline-block;
-            padding: 15px 30px;
-            color: white;
-            background-color: #00cfff;
-            border-radius: 5px;
-            border: none;
-            cursor: pointer;
-            font-size: 1.2em;
-            transition: background-color 0.3s, transform 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-        .animated-button:hover {
-            background-color: #007fa3;
-            transform: scale(1.05);
-        }
-        .animated-button:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(255, 255, 255, 0.2);
-            transition: left 0.3s;
-        }
-        .animated-button:hover:before {
-            left: 100%;
-        }
-
-        /* Image Size Constraints */
-        img {
-            max-width: 300px;
-            height: auto;
-            display: block;
-            margin: 0 auto;
         }
     </style>
 </head>
@@ -227,7 +164,7 @@
                 <li><strong>Bedrock Edition IP:</strong> <code>server.breadgames.online</code>, Port: 19132</li>
             </ul>
             <div class="server-item">
-                <button class="animated-button" onclick="window.location.href='minecraft:?addExternalServer=BreadLobby|server.breadgames.online:19132'">Add Bedrock Server</button>
+                <a class="animated-button" href="minecraft:?addExternalServer=BreadLobby|server.breadgames.online:19132">Add Bedrock Server</a>
             </div>
         </section>
 
@@ -235,32 +172,42 @@
         <section id="addons">
             <h2>Our Add-ons</h2>
             <p>Explore our custom Minecraft add-ons, designed to enhance your gameplay experience. Check out the list of our popular add-ons below:</p>
-            <ul>
-                <li><strong>Lava Escape:</strong> A high-intensity mini-game where players race to avoid a rising tide of lava!</li>
-            </ul>
-            <button class="animated-button" onclick="window.location.href='/breadsite/lava-escape'">Download For MCPE 1.21+</button>
+            <div class="addon-item">
+                <img src="lava-escape.png" alt="Lava Escape">
+                <p><strong>Lava Escape:</strong> A high-intensity mini-game where players race to avoid a rising tide of lava!</p>
+            </div>
+            <a class="animated-button" href="/breadsite/lava-escape">Download For MCPE 1.21+</a>
         </section>
 
         <!-- Discord Section -->
         <section class="discord-section">
             <h2>Join Our Community</h2>
-            <button class="animated-button" onclick="window.location.href='https://discord.gg/yourserver'">Join Our Discord</button>
+            <p>Stay connected with our vibrant community of gamers. Join us on Discord for real-time updates, discussions, and events.</p>
+            <a class="animated-button" href="https://discord.com/invite/your-invite-link" target="_blank">Join our Discord</a>
         </section>
+
+        <!-- Fun Section -->
+        <section class="stonks">
+            <h2>STONKS!!!</h2>
+            <p>The market's booming! Buy low, sell high, and most importantly, have fun.</p>
+        </section>
+
+        <!-- Footer Section -->
+        <footer>
+            <p>&copy; Dabicco 2024, All Rights Reserved. Meow!</p>
+        </footer>
     </div>
 
     <!-- Settings Page -->
-    <div id="settings-content" style="display: none;">
-        <h2>Settings</h2>
-        <div class="settings-toggle">
-            <label for="dark-mode-toggle">Dark Mode</label>
-            <input type="checkbox" id="dark-mode-toggle" onclick="toggleDarkMode()">
-        </div>
+    <div id="settings-content">
+        <section>
+            <h2>Settings</h2>
+            <div class="settings-toggle">
+                <label for="dark-mode-toggle">Dark Mode</label>
+                <input type="checkbox" id="dark-mode-toggle" onclick="toggleDarkMode()">
+            </div>
+        </section>
     </div>
-
-    <!-- Footer -->
-    <footer>
-        <p>© Dabicco 2024. All Rights Reserved.</p>
-    </footer>
 
     <!-- Paintbrush Icon -->
     <div class="hidden-paintbrush" onclick="window.location.href='/breadsite/painters'">🖌️</div>
