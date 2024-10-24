@@ -7,15 +7,15 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            background-color: #f0f8ff; /* Very light blue, almost white */
             color: #333;
             margin: 0;
             padding: 0;
             position: relative;
         }
         header, footer {
-            background-color: #f7c59f;
-            color: #333;
+            background-color: #00e5ff; /* Neon light blue */
+            color: #fff;
             text-align: center;
             padding: 20px 0;
         }
@@ -31,7 +31,7 @@
         section {
             margin: 20px;
             padding: 20px;
-            background-color: #fff;
+            background-color: #f0f8ff; /* Matching light blue background */
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
@@ -69,7 +69,7 @@
             padding: 10px 20px;
             font-size: 1.2em;
             color: #fff;
-            background-color: #7289da;
+            background-color: #7289da; /* Discord button remains original color */
             border-radius: 5px;
             text-decoration: none;
             transition: transform 0.3s, opacity 0.3s;
@@ -83,6 +83,7 @@
             margin: 40px 0;
             font-size: 1.5em;
             font-weight: bold;
+            color: #00e5ff; /* Neon light blue for stonks */
         }
         footer p {
             margin: 0;
@@ -124,7 +125,7 @@
             padding: 10px 20px;
             font-size: 1em;
             color: #fff;
-            background-color: #f7c59f;
+            background-color: #00e5ff; /* Neon light blue for button */
             border: none;
             border-radius: 5px;
             cursor: pointer;
@@ -136,7 +137,7 @@
             transform: scale(1.05);
         }
         #submit-button:active {
-            outline: 2px solid #e6b58b;
+            outline: 2px solid #00cfff; /* Slightly darker blue when clicked */
         }
         #server-list {
             display: flex;
@@ -165,6 +166,7 @@
             font-size: 2em;
             cursor: pointer;
             transition: opacity 0.3s;
+            color: #00e5ff; /* Neon light blue for paintbrush */
         }
         .hidden-paintbrush:hover {
             opacity: 0.7;
@@ -173,7 +175,7 @@
             padding: 10px 20px;
             font-size: 1em;
             color: #fff;
-            background-color: #f7c59f;
+            background-color: #00e5ff; /* Neon light blue for server buttons */
             border: none;
             border-radius: 5px;
             cursor: pointer;
@@ -236,13 +238,11 @@
         <!-- Add-ons Section -->
         <section id="addons">
             <h2>Our Add-ons</h2>
-            <p>Explore our custom Minecraft add-ons, designed to enhance your gameplay experience. Check out the list of our popular add-ons:</p>
-            <div class="server-item">
-                <img src="lava-escape.png" alt="Lava Escape" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                <span style="display:none">?</span>
-                <p><strong>Lava Escape:</strong> Race against time to escape the rising lava in this fast-paced, adrenaline-pumping minigame.</p>
-                <button onclick="window.location.href='/breadsite/lava-escape'">Learn More</button>
-            </div>
+            <p>Explore our custom Minecraft add-ons, designed to enhance your gameplay experience. Check out the list of our popular add-ons below:</p>
+            <ul>
+                <li><strong>Lava Escape:</strong> A high-intensity mini-game where players race to avoid a rising tide of lava!</li>
+            </ul>
+            <button onclick="window.location.href='/breadsite/lava-escape'">Download For MCPE 1.21+</button>
         </section>
 
         <!-- Discord Section -->
@@ -254,7 +254,7 @@
 
         <!-- Fun Section -->
         <section class="stonks">
-            <h2>STONKS</h2>
+            <h2>STONKS!!!</h2>
             <p>The market's booming! Buy low, sell high, and most importantly, have fun.</p>
         </section>
 
@@ -269,10 +269,12 @@
 
     <script>
         // Function to handle passcode check
-        const correctPasscode = 'Meowdy';
+        const correctPasscode = 'cats123';
         function checkPasscode() {
             const passcodeInput = document.getElementById('passcode-input').value;
             if (passcodeInput === correctPasscode) {
+                // Save to local storage
+                localStorage.setItem('passcode', correctPasscode);
                 document.getElementById('overlay').style.opacity = '0';
                 setTimeout(() => {
                     document.getElementById('overlay').style.display = 'none';
@@ -289,6 +291,15 @@
                 checkPasscode();
             }
         }
+
+        // Check local storage for passcode on page load
+        window.onload = function() {
+            const savedPasscode = localStorage.getItem('passcode');
+            if (savedPasscode === correctPasscode) {
+                document.getElementById('overlay').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+            }
+        };
     </script>
 </body>
 </html>
