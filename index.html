@@ -70,6 +70,43 @@
         body.dark-mode h2, body.dark-mode h3 {
             color: #e0e0e0; /* Dark mode heading color */
         }
+        /* Server Links */
+        .server-list {
+            list-style-type: none;
+            padding: 0;
+            text-align: center;
+        }
+        .server-list li {
+            margin: 15px 0;
+        }
+        .server-list a {
+            text-decoration: none;
+            font-size: 1.5em;
+            color: #00cfff;
+            padding: 10px 20px;
+            background-color: #fff;
+            border: 2px solid #00cfff;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        .server-list a:hover {
+            background-color: #00cfff;
+            color: #fff;
+        }
+        /* Animated Buttons */
+        .animated-btn {
+            font-size: 1.2em;
+            padding: 10px 20px;
+            color: white;
+            background-color: #00cfff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .animated-btn:hover {
+            transform: scale(1.05);
+        }
         /* Settings Page Styles */
         .settings-section {
             display: none;
@@ -151,6 +188,16 @@
         <section id="home-section">
             <h2>Welcome to Thy BreadSite!</h2>
             <p>Welcome to Thy BreadSite, the ultimate hub for all things related to the Bread Gaming Community! Our site is dedicated to providing a time for gamers who enjoy games like Minecraft, Bopl Battles, and more, as we do. Whether you're here to explore our diverse Minecraft minigames, participate in thrilling events, or connect with fellow gaming enthusiasts, you've come to the right place.</p>
+            
+            <!-- Server Links -->
+            <ul class="server-list">
+                <li><a href="/breadsite/lava-escape">Lava Escape</a></li>
+                <li><a href="/breadsite/painters"><img src="paint-icon.png" alt="Painters Icon" width="30"> Painters</a></li>
+                <li><a href="bedrock-server-link" class="animated-btn">Join Bedrock Server</a></li>
+            </ul>
+            
+            <!-- Download Button -->
+            <button class="animated-btn">Download for MCPE 1.21+</button>
         </section>
 
         <!-- Settings Section -->
