@@ -7,18 +7,14 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #e0f7ff; /* Default light theme */
+            background-color: #e0f7ff; /* Light mode default */
             color: #333;
             margin: 0;
             padding: 0;
-            transition: background-color 0.5s, color 0.5s;
-        }
-        body.dark-mode {
-            background-color: #121212; /* Dark mode background */
-            color: #e0e0e0; /* Dark mode text color */
+            position: relative;
         }
         header, footer {
-            background-color: #00cfff; /* Neon blue */
+            background-color: #00cfff;
             color: #fff;
             text-align: center;
             padding: 20px 0;
@@ -32,129 +28,114 @@
             font-style: italic;
             font-size: 1.2em;
         }
-        .tabs {
+        nav {
             display: flex;
             justify-content: center;
-            margin-top: 20px;
+            background-color: #00cfff;
+            margin-bottom: 20px;
         }
-        .tab {
-            margin: 0 15px;
-            padding: 10px 20px;
-            cursor: pointer;
-            font-size: 1.2em;
+        nav button {
             background-color: #00cfff;
             color: white;
-            border-radius: 5px;
-            transition: background-color 0.3s, transform 0.3s;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
-        .tab:hover {
-            background-color: #0099cc;
-            transform: scale(1.05);
+        nav button.active {
+            background-color: #009acd;
         }
-        .tab.active {
-            background-color: #0099cc;
+        nav button:hover {
+            background-color: #007fa3;
         }
         section {
             margin: 20px;
             padding: 20px;
-            background-color: #e0f7ff; /* Matching background */
+            background-color: #e0f7ff;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        body.dark-mode section {
-            background-color: #1e1e1e; /* Dark mode section background */
         }
         h2, h3 {
             color: #444;
         }
-        body.dark-mode h2, body.dark-mode h3 {
-            color: #e0e0e0; /* Dark mode heading color */
+        .settings-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 300px;
+            margin: 20px auto;
         }
-        /* Server Links */
-        .server-list {
-            list-style-type: none;
-            padding: 0;
-            text-align: center;
+        .settings-toggle input[type="checkbox"] {
+            width: 40px;
+            height: 20px;
+            appearance: none;
+            background-color: #ccc;
+            border-radius: 15px;
+            position: relative;
+            cursor: pointer;
+            outline: none;
         }
-        .server-list li {
-            margin: 15px 0;
+        .settings-toggle input[type="checkbox"]:checked {
+            background-color: #00cfff;
         }
-        .server-list a {
-            text-decoration: none;
-            font-size: 1.5em;
-            color: #00cfff;
-            padding: 10px 20px;
+        .settings-toggle input[type="checkbox"]:before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 16px;
+            height: 16px;
             background-color: #fff;
-            border: 2px solid #00cfff;
-            border-radius: 5px;
+            border-radius: 50%;
             transition: 0.3s;
         }
-        .server-list a:hover {
-            background-color: #00cfff;
-            color: #fff;
+        .settings-toggle input[type="checkbox"]:checked:before {
+            transform: translateX(20px);
         }
-        /* Animated Buttons */
-        .animated-btn {
-            font-size: 1.2em;
-            padding: 10px 20px;
-            color: white;
-            background-color: #00cfff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-        .animated-btn:hover {
-            transform: scale(1.05);
-        }
-        /* Settings Page Styles */
-        .settings-section {
+        #overlay, #main-content, #settings-content {
             display: none;
         }
-        footer {
-            margin-top: 30px;
+        #home-page {
+            display: block;
         }
         footer p {
             margin: 0;
             font-size: 0.9em;
         }
-        /* Toggle Switch */
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 60px;
-            height: 34px;
-        }
-        .toggle-switch input {
-            display: none;
-        }
-        .slider {
-            position: absolute;
+        .hidden-paintbrush {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            font-size: 2em;
             cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 34px;
+            transition: opacity 0.3s;
+            color: #00cfff;
         }
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 26px;
-            width: 26px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
+        .hidden-paintbrush:hover {
+            opacity: 0.7;
         }
-        input:checked + .slider {
-            background-color: #00cfff;
+
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background-color: #121212;
+            color: #f1f1f1;
         }
-        input:checked + .slider:before {
-            transform: translateX(26px);
+        header.dark-mode, footer.dark-mode, nav.dark-mode {
+            background-color: #333;
+        }
+        section.dark-mode {
+            background-color: #1e1e1e;
+        }
+        nav button.dark-mode {
+            background-color: #333;
+            color: #f1f1f1;
+        }
+        nav button.active.dark-mode {
+            background-color: #444;
+        }
+        nav button:hover.dark-mode {
+            background-color: #555;
         }
     </style>
 </head>
@@ -170,46 +151,67 @@
         </div>
     </div>
 
+    <!-- Navigation Tabs -->
+    <header>
+        <h1>Thy BreadSite</h1>
+        <p>Le cat shalt into le Meow!</p>
+    </header>
+    <nav>
+        <button class="active" id="home-tab" onclick="showPage('home')">Home</button>
+        <button id="settings-tab" onclick="showPage('settings')">Settings</button>
+    </nav>
+
     <!-- Main Content -->
-    <div id="main-content" style="display: none;">
-        <!-- Header Section -->
-        <header>
-            <h1>Thy BreadSite</h1>
-            <p>Le cat shalt into le Meow!</p>
-
-            <!-- Tabs for Page Navigation -->
-            <div class="tabs">
-                <div id="tab-home" class="tab active" onclick="showPage('home')">Home</div>
-                <div id="tab-settings" class="tab" onclick="showPage('settings')">Settings</div>
-            </div>
-        </header>
-
-        <!-- Home Section -->
-        <section id="home-section">
+    <div id="home-page">
+        <!-- Content from previous version (home page) -->
+        <!-- Introduction Section -->
+        <section id="introduction">
             <h2>Welcome to Thy BreadSite!</h2>
             <p>Welcome to Thy BreadSite, the ultimate hub for all things related to the Bread Gaming Community! Our site is dedicated to providing a time for gamers who enjoy games like Minecraft, Bopl Battles, and more, as we do. Whether you're here to explore our diverse Minecraft minigames, participate in thrilling events, or connect with fellow gaming enthusiasts, you've come to the right place.</p>
-            
-            <!-- Server Links -->
-            <ul class="server-list">
-                <li><a href="/breadsite/lava-escape">Lava Escape</a></li>
-                <li><a href="/breadsite/painters"><img src="paint-icon.png" alt="Painters Icon" width="30"> Painters</a></li>
-                <li><a href="bedrock-server-link" class="animated-btn">Join Bedrock Server</a></li>
-            </ul>
-            
-            <!-- Download Button -->
-            <button class="animated-btn">Download for MCPE 1.21+</button>
         </section>
 
-        <!-- Settings Section -->
-        <section id="settings-section" class="settings-section">
-            <h2>Settings</h2>
-            <div>
-                <label for="dark-mode-toggle">Dark Mode:</label>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="dark-mode-toggle" onclick="toggleDarkMode()">
-                    <span class="slider"></span>
-                </label>
+        <!-- Server List Section -->
+        <section id="minecraft-events">
+            <h2>Server List</h2>
+            <p>Our Minecraft servers offer a range of unique experiences, each with its own distinct flavor and challenges. Below is a detailed list of our Minecraft servers:</p>
+            <div id="server-list">
+                <div class="server-item">
+                    <img src="lemon-smp.png" alt="Lemon SMP" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                    <span style="display:none">?</span>
+                    <p><strong>Lemon SMP:</strong> Join a private world where camaraderie and collaboration thrive. This server offers a safe and friendly environment for players to build, explore, and interact without external disruptions.</p>
+                </div>
             </div>
+            <p>Connect to our Minecraft servers using the following details:</p>
+            <ul>
+                <li><strong>Java Edition IP:</strong> <code>server.breadgames.online</code></li>
+                <li><strong>Bedrock Edition IP:</strong> <code>server.breadgames.online</code>, Port: 19132</li>
+            </ul>
+            <div class="server-item">
+                <button class="bedrock-button" onclick="window.location.href='minecraft:?addExternalServer=BreadLobby|server.breadgames.online:19132'">Add Bedrock Server</button>
+            </div>
+        </section>
+
+        <!-- Add-ons Section -->
+        <section id="addons">
+            <h2>Our Add-ons</h2>
+            <p>Explore our custom Minecraft add-ons, designed to enhance your gameplay experience. Check out the list of our popular add-ons below:</p>
+            <ul>
+                <li><strong>Lava Escape:</strong> A high-intensity mini-game where players race to avoid a rising tide of lava!</li>
+            </ul>
+            <button class="mcpe-button" onclick="window.location.href='/breadsite/lava-escape'">Download For MCPE 1.21+</button>
+        </section>
+
+        <!-- Discord Section -->
+        <section class="discord-section">
+            <h2>Join Our Community</h2>
+            <p>Stay connected with our vibrant community of gamers. Join us on Discord for real-time updates, discussions, and events.</p>
+            <a class="discord-button" href="https://discord.com/invite/your-invite-link" target="_blank">Join our Discord</a>
+        </section>
+
+        <!-- Fun Section -->
+        <section class="stonks">
+            <h2>STONKS!!!</h2>
+            <p>The market's booming! Buy low, sell high, and most importantly, have fun.</p>
         </section>
 
         <!-- Footer Section -->
@@ -218,46 +220,23 @@
         </footer>
     </div>
 
+    <!-- Settings Page -->
+    <div id="settings-content">
+        <section>
+            <h2>Settings</h2>
+            <div class="settings-toggle">
+                <label for="dark-mode-toggle">Dark Mode</label>
+                <input type="checkbox" id="dark-mode-toggle" onclick="toggleDarkMode()">
+            </div>
+        </section>
+    </div>
+
+    <!-- Paintbrush Icon -->
+    <div class="hidden-paintbrush" onclick="window.location.href='/breadsite/painters'">🖌️</div>
+
     <script>
+        // Function to handle passcode check
         const correctPasscode = 'cats123';
-        
-        // Function to show the active page (Home or Settings)
-        function showPage(page) {
-            if (page === 'home') {
-                document.getElementById('home-section').style.display = 'block';
-                document.getElementById('settings-section').style.display = 'none';
-                document.getElementById('tab-home').classList.add('active');
-                document.getElementById('tab-settings').classList.remove('active');
-            } else if (page === 'settings') {
-                document.getElementById('home-section').style.display = 'none';
-                document.getElementById('settings-section').style.display = 'block';
-                document.getElementById('tab-home').classList.remove('active');
-                document.getElementById('tab-settings').classList.add('active');
-            }
-        }
-
-        // Dark Mode Toggle
-        function toggleDarkMode() {
-            const isDarkMode = document.getElementById('dark-mode-toggle').checked;
-            if (isDarkMode) {
-                document.body.classList.add('dark-mode');
-                localStorage.setItem('darkMode', 'enabled');
-            } else {
-                document.body.classList.remove('dark-mode');
-                localStorage.setItem('darkMode', 'disabled');
-            }
-        }
-
-        // Load Dark Mode State from Local Storage
-        function loadDarkModeState() {
-            const darkMode = localStorage.getItem('darkMode');
-            if (darkMode === 'enabled') {
-                document.body.classList.add('dark-mode');
-                document.getElementById('dark-mode-toggle').checked = true;
-            }
-        }
-
-        // Function to check passcode
         function checkPasscode() {
             const passcodeInput = document.getElementById('passcode-input').value;
             if (passcodeInput === correctPasscode) {
@@ -265,29 +244,79 @@
                 document.getElementById('overlay').style.opacity = '0';
                 setTimeout(() => {
                     document.getElementById('overlay').style.display = 'none';
-                    document.getElementById('main-content').style.display = 'block';
+                    document.getElementById('home-page').style.display = 'block';
                 }, 500);
             } else {
                 document.getElementById('error-message').textContent = 'Incorrect passcode. Please try again.';
             }
         }
 
-        // Handle Enter key for passcode input
+        // Handle enter key for passcode submission
         function handleKeyPress(event) {
             if (event.key === 'Enter') {
                 checkPasscode();
             }
         }
 
-        // Check for saved passcode and load dark mode state on page load
+        // Check local storage for passcode on page load
         window.onload = function() {
             const savedPasscode = localStorage.getItem('passcode');
             if (savedPasscode === correctPasscode) {
                 document.getElementById('overlay').style.display = 'none';
-                document.getElementById('main-content').style.display = 'block';
-                loadDarkModeState();
+                document.getElementById('home-page').style.display = 'block';
+            }
+
+            // Set dark mode based on saved preference
+            const darkMode = localStorage.getItem('darkMode');
+            if (darkMode === 'enabled') {
+                enableDarkMode();
+                document.getElementById('dark-mode-toggle').checked = true;
             }
         };
+
+        // Function to switch between pages
+        function showPage(page) {
+            if (page === 'home') {
+                document.getElementById('home-page').style.display = 'block';
+                document.getElementById('settings-content').style.display = 'none';
+                document.getElementById('home-tab').classList.add('active');
+                document.getElementById('settings-tab').classList.remove('active');
+            } else if (page === 'settings') {
+                document.getElementById('home-page').style.display = 'none';
+                document.getElementById('settings-content').style.display = 'block';
+                document.getElementById('settings-tab').classList.add('active');
+                document.getElementById('home-tab').classList.remove('active');
+            }
+        }
+
+        // Toggle dark mode
+        function toggleDarkMode() {
+            if (document.body.classList.contains('dark-mode')) {
+                disableDarkMode();
+            } else {
+                enableDarkMode();
+            }
+        }
+
+        function enableDarkMode() {
+            document.body.classList.add('dark-mode');
+            document.querySelector('header').classList.add('dark-mode');
+            document.querySelector('footer').classList.add('dark-mode');
+            document.querySelector('nav').classList.add('dark-mode');
+            document.querySelectorAll('section').forEach(section => section.classList.add('dark-mode'));
+            document.querySelectorAll('button').forEach(button => button.classList.add('dark-mode'));
+            localStorage.setItem('darkMode', 'enabled');
+        }
+
+        function disableDarkMode() {
+            document.body.classList.remove('dark-mode');
+            document.querySelector('header').classList.remove('dark-mode');
+            document.querySelector('footer').classList.remove('dark-mode');
+            document.querySelector('nav').classList.remove('dark-mode');
+            document.querySelectorAll('section').forEach(section => section.classList.remove('dark-mode'));
+            document.querySelectorAll('button').forEach(button => button.classList.remove('dark-mode'));
+            localStorage.setItem('darkMode', 'disabled');
+        }
     </script>
 </body>
 </html>
