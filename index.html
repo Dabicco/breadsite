@@ -7,14 +7,14 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f8ff; /* Very light blue, almost white */
+            background-color: #e0f7ff; /* Slightly darker light blue */
             color: #333;
             margin: 0;
             padding: 0;
             position: relative;
         }
         header, footer {
-            background-color: #00e5ff; /* Neon light blue */
+            background-color: #00cfff; /* Slightly darker neon blue */
             color: #fff;
             text-align: center;
             padding: 20px 0;
@@ -31,7 +31,7 @@
         section {
             margin: 20px;
             padding: 20px;
-            background-color: #f0f8ff; /* Matching light blue background */
+            background-color: #e0f7ff; /* Matching darker light blue background */
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
@@ -64,17 +64,21 @@
             text-align: center;
             padding: 20px;
         }
-        .discord-button {
+        .discord-button,
+        .mcpe-button,
+        .bedrock-button {
             display: inline-block;
             padding: 10px 20px;
             font-size: 1.2em;
             color: #fff;
-            background-color: #7289da; /* Discord button remains original color */
+            background-color: #00cfff; /* Neon slightly darker blue */
             border-radius: 5px;
             text-decoration: none;
             transition: transform 0.3s, opacity 0.3s;
         }
-        .discord-button:hover {
+        .discord-button:hover,
+        .mcpe-button:hover,
+        .bedrock-button:hover {
             transform: scale(1.1);
             opacity: 0.8;
         }
@@ -83,7 +87,7 @@
             margin: 40px 0;
             font-size: 1.5em;
             font-weight: bold;
-            color: #00e5ff; /* Neon light blue for stonks */
+            color: #00cfff; /* Slightly darker neon blue for stonks */
         }
         footer p {
             margin: 0;
@@ -125,7 +129,7 @@
             padding: 10px 20px;
             font-size: 1em;
             color: #fff;
-            background-color: #00e5ff; /* Neon light blue for button */
+            background-color: #00cfff; /* Neon slightly darker blue for button */
             border: none;
             border-radius: 5px;
             cursor: pointer;
@@ -137,7 +141,7 @@
             transform: scale(1.05);
         }
         #submit-button:active {
-            outline: 2px solid #00cfff; /* Slightly darker blue when clicked */
+            outline: 2px solid #00aaff; /* Slightly darker blue when clicked */
         }
         #server-list {
             display: flex;
@@ -166,25 +170,10 @@
             font-size: 2em;
             cursor: pointer;
             transition: opacity 0.3s;
-            color: #00e5ff; /* Neon light blue for paintbrush */
+            color: #00cfff; /* Neon slightly darker blue for paintbrush */
         }
         .hidden-paintbrush:hover {
             opacity: 0.7;
-        }
-        .server-item button {
-            padding: 10px 20px;
-            font-size: 1em;
-            color: #fff;
-            background-color: #00e5ff; /* Neon light blue for server buttons */
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
-            transition: opacity 0.3s, transform 0.3s;
-        }
-        .server-item button:hover {
-            opacity: 0.8;
-            transform: scale(1.05);
         }
     </style>
 </head>
@@ -231,7 +220,7 @@
                 <li><strong>Bedrock Edition IP:</strong> <code>server.breadgames.online</code>, Port: 19132</li>
             </ul>
             <div class="server-item">
-                <button onclick="window.location.href='minecraft:?addExternalServer=BreadLobby|server.breadgames.online:19132'">Add Bedrock Server</button>
+                <button class="bedrock-button" onclick="window.location.href='minecraft:?addExternalServer=BreadLobby|server.breadgames.online:19132'">Add Bedrock Server</button>
             </div>
         </section>
 
@@ -242,7 +231,7 @@
             <ul>
                 <li><strong>Lava Escape:</strong> A high-intensity mini-game where players race to avoid a rising tide of lava!</li>
             </ul>
-            <button onclick="window.location.href='/breadsite/lava-escape'">Download For MCPE 1.21+</button>
+            <button class="mcpe-button" onclick="window.location.href='/breadsite/lava-escape'">Download For MCPE 1.21+</button>
         </section>
 
         <!-- Discord Section -->
