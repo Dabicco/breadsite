@@ -42,6 +42,8 @@
             border: none;
             cursor: pointer;
             transition: background-color 0.3s;
+            border-radius: 12px; /* Rounded tabs */
+            margin: 0 10px;
         }
         nav button.active {
             background-color: #009acd;
@@ -104,7 +106,7 @@
         .settings-toggle input[type="checkbox"]:checked:before {
             transform: translateX(20px);
         }
-        #main-content, #settings-content {
+        #main-content, #settings-content, #addons-content {
             display: none;
         }
         #home-page {
@@ -174,19 +176,18 @@
     </header>
     <nav>
         <button class="active" id="home-tab" onclick="showPage('home')">Home</button>
+        <button id="addons-tab" onclick="showPage('addons')">Add-ons</button>
         <button id="settings-tab" onclick="showPage('settings')">Settings</button>
     </nav>
 
     <!-- Main Content -->
     <div id="home-page">
-        <!-- Content from previous version (home page) -->
-        <!-- Introduction Section -->
+        <!-- Home page content -->
         <section id="introduction">
             <h2>Welcome to Thy BreadSite!</h2>
             <p>Welcome to Thy BreadSite, the ultimate hub for all things related to the Bread Gaming Community! Our site is dedicated to providing a time for gamers who enjoy games like Minecraft, Bopl Battles, and more, as we do. Whether you're here to explore our diverse Minecraft minigames, participate in thrilling events, or connect with fellow gaming enthusiasts, you've come to the right place.</p>
         </section>
 
-        <!-- Server List Section -->
         <section id="minecraft-events">
             <h2>Server List</h2>
             <p>Our Minecraft servers offer a range of unique experiences, each with its own distinct flavor and challenges. Below is a detailed list of our Minecraft servers:</p>
@@ -207,20 +208,6 @@
             </div>
         </section>
 
-        <!-- Add-ons Section -->
-        <section id="addons">
-            <h2>Our Add-ons</h2>
-            <p>Explore our custom Minecraft add-ons, designed to enhance your gameplay experience. Check out the list of our popular add-ons below:</p>
-            <div class="addon-item">
-                <img src="lava-escape.png" alt="Lava Escape">
-                <p><strong>Lava Escape:</strong> A high-intensity mini-game where players race to avoid a rising tide of lava! Available for MCPE.</p>
-            </div>
-            <div class="addon-item">
-                <button class="mcpe-button" onclick="window.location.href='https://mcpedl.com/download-now'">Download Now on MCPEDL</button>
-            </div>
-        </section>
-
-        <!-- Discord Section -->
         <section id="discord">
             <h2>Join Our Discord</h2>
             <p>Connect with fellow gamers on our official Discord server! Participate in community events, get the latest updates, and chat with other players.</p>
@@ -230,17 +217,33 @@
         </section>
     </div>
 
+    <!-- Add-ons Page -->
+    <div id="addons-content">
+        <section id="addons">
+            <h2>Our Add-ons</h2>
+            <p>Discover our specially designed Minecraft add-ons, tailored to enhance your gameplay and introduce new challenges. Each add-on brings something unique, whether it’s a mini-game, a thrilling race against time, or a creative world enhancement, ensuring you have endless fun and exploration options!</p>
+            <div class="addon-item">
+                <img src="lava-escape.png" alt="Lava Escape">
+                <p><strong>Lava Escape:</strong> A high-intensity mini-game where players race to avoid a rising tide of lava! Available for MCPE.</p>
+            </div>
+            <div class="addon-item">
+                <button class="mcpe-button" onclick="window.location.href='https://mcpedl.com/download-now'">Download for MCPE 1.21+</button>
+            </div>
+        </section>
+    </div>
+
     <!-- Settings Page -->
     <div id="settings-content">
         <section>
             <h2>Settings</h2>
             <div class="settings-toggle">
-                <label for="dark-mode-toggle">Enable Dark Mode</label>
+                <label for="dark-mode-toggle">Dark Mode</label>
                 <input type="checkbox" id="dark-mode-toggle" onclick="toggleDarkMode()">
             </div>
         </section>
     </div>
 
+    <!-- Footer -->
     <footer>
         <p>&copy; Dabicco 2024</p>
     </footer>
@@ -252,20 +255,17 @@
                 enableDarkMode();
                 document.getElementById('dark-mode-toggle').checked = true;
             }
+            showPage('home');
         };
 
         function showPage(page) {
-            if (page === 'home') {
-                document.getElementById('home-page').style.display = 'block';
-                document.getElementById('settings-content').style.display = 'none';
-                document.getElementById('home-tab').classList.add('active');
-                document.getElementById('settings-tab').classList.remove('active');
-            } else if (page === 'settings') {
-                document.getElementById('home-page').style.display = 'none';
-                document.getElementById('settings-content').style.display = 'block';
-                document.getElementById('settings-tab').classList.add('active');
-                document.getElementById('home-tab').classList.remove('active');
-            }
+            document.getElementById('home-page').style.display = page === 'home' ? 'block' : 'none';
+            document.getElementById('addons-content').style.display = page === 'addons' ? 'block' : 'none';
+            document.getElementById('settings-content').style.display = page === 'settings' ? 'block' : 'none';
+
+            document.getElementById('home-tab').classList.toggle('active', page === 'home');
+            document.getElementById('addons-tab').classList.toggle('active', page === 'addons');
+            document.getElementById('settings-tab').classList.toggle('active', page === 'settings');
         }
 
         function toggleDarkMode() {
