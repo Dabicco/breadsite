@@ -61,12 +61,12 @@
         h2, h3 {
             color: #444;
         }
-        .server-item, .addon-item {
+        .server-item, .addon-item, .staff-item {
             display: flex;
             align-items: center;
             margin: 20px 0;
         }
-        .server-item img, .addon-item img {
+        .server-item img, .addon-item img, .staff-item img {
             width: 100px;
             height: 100px;
             border-radius: 12px;
@@ -106,7 +106,7 @@
         .settings-toggle input[type="checkbox"]:checked:before {
             transform: translateX(20px);
         }
-        #main-content, #settings-content, #addons-content {
+        #main-content, #settings-content, #addons-content, #our-team-content {
             display: none;
         }
         #home-page {
@@ -177,6 +177,7 @@
     <nav>
         <button class="active" id="home-tab" onclick="showPage('home')">Home</button>
         <button id="addons-tab" onclick="showPage('addons')">Add-ons</button>
+        <button id="our-team-tab" onclick="showPage('our-team')">Our Team</button>
         <button id="settings-tab" onclick="showPage('settings')">Settings</button>
     </nav>
 
@@ -232,6 +233,37 @@
         </section>
     </div>
 
+    <!-- Our Team Page -->
+    <div id="our-team-content">
+        <section id="staff">
+            <h2>Meet Our Team</h2>
+            <p>Our team is dedicated to ensuring a smooth and enjoyable experience for all members of our community. Below are some of the key staff members who make it all happen:</p>
+            <ul>
+                <li>
+                    <img src="joey.png" alt="Joeyready's profile picture" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                    <span style="display:none">?</span>
+                    <strong>Joeyready:</strong> A passionate gamer who loves cats, Bopl Battles, Minecraft, and minigames. Joeyready plays a crucial role in managing and organizing our community activities.
+                </li>
+                <li>
+                    <img src="dabicco.png" alt="Dabicco's profile picture" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                    <span style="display:none">?</span>
+                    <strong>Dabicco (Nico):</strong> A main organizer responsible for coordinating events and ensuring smooth operations within the community. Dabicco's efforts help keep everything running seamlessly.
+                </li>
+                <li>
+                    <img src="poto.png" alt="Socoolmatteo's profile picture" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                    <span style="display:none">?</span>
+                    <strong>Socoolmatteo (Potato):</strong> Focused on community engagement and fostering a positive atmosphere. Known affectionately as "a literal potato," Socoolmatteo brings a unique and cheerful presence to the team.
+                </li>
+                <li>
+                    <img src="heartkitty.png" alt="Heart Kitty's profile picture" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                    <span style="display:none">?</span>
+                    <strong>Heart Kitty (IsabellaGohs):</strong> Known for their friendly demeanor, Heart Kitty is a beloved member of our team who adds a warm and welcoming touch to our community.
+                </li>
+            </ul>
+            <p>While the staff listed above play integral roles, there are many other valuable breaders and team members who contribute to the vibrant and dynamic nature of our community. Their efforts ensure that everyone has a fantastic experience, and we appreciate all their hard work and dedication.</p>
+        </section>
+    </div>
+
     <!-- Settings Page -->
     <div id="settings-content">
         <section>
@@ -261,10 +293,12 @@
         function showPage(page) {
             document.getElementById('home-page').style.display = page === 'home' ? 'block' : 'none';
             document.getElementById('addons-content').style.display = page === 'addons' ? 'block' : 'none';
+            document.getElementById('our-team-content').style.display = page === 'our-team' ? 'block' : 'none';
             document.getElementById('settings-content').style.display = page === 'settings' ? 'block' : 'none';
 
             document.getElementById('home-tab').classList.toggle('active', page === 'home');
             document.getElementById('addons-tab').classList.toggle('active', page === 'addons');
+            document.getElementById('our-team-tab').classList.toggle('active', page === 'our-team');
             document.getElementById('settings-tab').classList.toggle('active', page === 'settings');
         }
 
