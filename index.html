@@ -3,332 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thy BreadSite</title>
+    <title>The Breadsite</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bitter:wght@400;700&display=swap');
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #e0f7ff; /* Light mode default */
-            color: #333;
             margin: 0;
-            padding: 0;
-            position: relative;
-        }
-        header, footer {
-            background-color: #00cfff;
+            font-family: 'Bitter', serif;
             color: #fff;
-            text-align: center;
-            padding: 20px 0;
         }
-        header h1 {
-            margin: 0;
-            font-size: 2.5em;
-        }
-        header p {
-            margin-top: 5px;
-            font-style: italic;
-            font-size: 1.2em;
-        }
-        nav {
+
+        /* Full-screen banner */
+        .banner {
+            background: url('https://www.purina.com/_gatsby/image/64a671d8c916162a2759c68d66c75378/1781294bf6b5ca078753aeb073cba2fa/eco_batch138_cat_loaf.jpg?u=https%3A%2F%2Fwww.purina.com%2Fsites%2Fdefault%2Ffiles%2F2024-08%2Feco_batch138_cat_loaf_0.jpg&a=w%3D200%26h%3D100%26fm%3Djpg%26q%3D75&cd=b4ac418a6d98b5c938e44904da11453f') no-repeat center center/cover;
+            height: 100vh;
             display: flex;
             justify-content: center;
-            background-color: #00cfff;
-            margin-bottom: 20px;
+            align-items: center;
+            position: relative;
+            text-align: center;
         }
-        nav button {
-            background-color: #00cfff;
+
+        .banner h1 {
+            position: absolute;
+            top: 25%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
             color: white;
-            padding: 15px 30px;
-            font-size: 1.2em;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+        }
+
+        .banner h2 {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5rem;
+            color: white;
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);
+        }
+
+        .banner h3 {
+            position: absolute;
+            top: 48%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1rem;
+            color: white;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .scroll-button {
+            background-color: rgba(255, 255, 255, 0.8);
             border: none;
+            border-radius: 20px;
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            color: #000;
             cursor: pointer;
-            transition: background-color 0.3s;
-            border-radius: 12px; /* Rounded tabs */
-            margin: 0 10px;
-        }
-        nav button.active {
-            background-color: #009acd;
-        }
-        nav button:hover {
-            background-color: #007fa3;
-        }
-        section {
-            margin: 20px;
-            padding: 20px;
-            background-color: #e0f7ff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        h2, h3 {
-            color: #444;
-        }
-        .server-item, .addon-item, .staff-item {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            position: absolute;
+            bottom: 10%;
+            left: 50%;
+            transform: translateX(-50%);
             display: flex;
             align-items: center;
+            gap: 10px;
+        }
+
+        .scroll-button:hover {
+            transform: translateX(-50%) scale(1.1);
+            background-color: #ccc;
+        }
+
+        .scroll-button i {
+            font-size: 1.5rem;
+        }
+
+        /* Content Section */
+        .content {
+            background: linear-gradient(135deg, #003366, #66ccff);
+            padding: 50px;
+            text-align: center;
+        }
+
+        h1 {
             margin: 20px 0;
         }
-        .server-item img, .addon-item img, .staff-item img {
-            width: 100px;
-            height: 100px;
-            border-radius: 12px; /* Rounded-square style */
-            margin-right: 20px;
-        }
-        .settings-toggle {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            max-width: 300px;
-            margin: 20px auto;
-        }
-        .settings-toggle input[type="checkbox"] {
-            width: 40px;
-            height: 20px;
-            appearance: none;
-            background-color: #ccc;
-            border-radius: 15px;
-            position: relative;
+
+        .fancy-button {
+            background: linear-gradient(135deg, #0099cc, #003366);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.2rem;
             cursor: pointer;
-            outline: none;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
         }
-        .settings-toggle input[type="checkbox"]:checked {
-            background-color: #00cfff;
-        }
-        .settings-toggle input[type="checkbox"]:before {
+
+        .fancy-button:before {
             content: '';
             position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 16px;
-            height: 16px;
-            background-color: #fff;
-            border-radius: 50%;
-            transition: 0.3s;
-        }
-        .settings-toggle input[type="checkbox"]:checked:before {
-            transform: translateX(20px);
-        }
-        #main-content, #settings-content, #addons-content, #our-team-content {
-            display: none;
-        }
-        #home-page {
-            display: block;
-        }
-        footer p {
-            margin: 0;
-            font-size: 0.9em;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: skewX(-45deg);
+            transition: left 0.5s ease;
         }
 
-        /* Animated Buttons */
-        .bedrock-button, .discord-button, .mcpe-button {
-            display: inline-block;
-            padding: 15px 30px;
-            font-size: 1.2em;
-            border-radius: 8px;
-            margin: 10px;
-            cursor: pointer;
-            text-align: center;
-            color: white;
-            background-color: #00cfff;
-            transition: transform 0.2s, box-shadow 0.2s;
-            text-decoration: none;
-        }
-        .bedrock-button {
-            background-color: #007fa3;
-        }
-        .discord-button {
-            background-color: #7289da; /* Discord purple */
-        }
-        .mcpe-button {
-            background-color: #007fa3;
-        }
-        .bedrock-button:hover, .discord-button:hover, .mcpe-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        .fancy-button:hover {
+            transform: scale(1.1);
         }
 
-        /* Dark Mode Styles */
-        body.dark-mode {
-            background-color: #121212;
-            color: #f1f1f1;
-        }
-        header.dark-mode, footer.dark-mode, nav.dark-mode {
-            background-color: #333;
-        }
-        section.dark-mode {
-            background-color: #1e1e1e;
-        }
-        nav button.dark-mode {
-            background-color: #333;
-            color: #f1f1f1;
-        }
-        nav button.active.dark-mode {
-            background-color: #444;
-        }
-        nav button:hover.dark-mode {
-            background-color: #555;
+        .fancy-button:hover:before {
+            left: 100%;
         }
     </style>
 </head>
 <body>
-    <!-- Navigation Tabs -->
-    <header>
-        <h1>Thy BreadSite</h1>
-        <p>Le cat shalt into le Meow!</p>
-    </header>
-    <nav>
-        <button class="active" id="home-tab" onclick="showPage('home')">Home</button>
-        <button id="addons-tab" onclick="showPage('addons')">Add-ons</button>
-        <button id="our-team-tab" onclick="showPage('our-team')">Our Team</button>
-        <button id="settings-tab" onclick="showPage('settings')">Settings</button>
-    </nav>
 
-    <!-- Main Content -->
-    <div id="home-page">
-        <!-- Home page content -->
-        <section id="introduction">
-            <h2>Welcome to Thy BreadSite!</h2>
-            <p>Welcome to Thy BreadSite, the ultimate hub for all things related to the Bread Gaming Community! Our site is dedicated to providing a time for gamers who enjoy games like Minecraft, Bopl Battles, and more, as we do. Whether you're here to explore our diverse Minecraft minigames, participate in thrilling events, or connect with fellow gaming enthusiasts, you've come to the right place.</p>
-        </section>
-
-        <section id="minecraft-events">
-            <h2>Server List</h2>
-            <p>Our Minecraft servers offer a range of unique experiences, each with its own distinct flavor and challenges. Below is a detailed list of our Minecraft servers:</p>
-            <div id="server-list">
-                <div class="server-item">
-                    <img src="lemon-smp.png" alt="Lemon SMP" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                    <span style="display:none">?</span>
-                    <p><strong>Lemon SMP:</strong> Join a private world where camaraderie and collaboration thrive. This server offers a safe and friendly environment for players to build, explore, and interact without external disruptions.</p>
-                </div>
-            </div>
-            <p>Connect to our Minecraft servers using the following details:</p>
-            <ul>
-                <li><strong>Java Edition IP:</strong> <code>server.breadgames.online</code></li>
-                <li><strong>Bedrock Edition IP:</strong> <code>server.breadgames.online</code>, Port: 19132</li>
-            </ul>
-            <div class="server-item">
-                <button class="bedrock-button" onclick="window.location.href='minecraft:?addExternalServer=BreadLobby|server.breadgames.online:19132'">Add Bedrock Server</button>
-            </div>
-        </section>
-
-        <section id="discord">
-            <h2>Join Our Discord</h2>
-            <p>Connect with fellow gamers on our official Discord server! Participate in community events, get the latest updates, and chat with other players.</p>
-            <div>
-                <button class="discord-button" onclick="window.location.href='https://discord.gg/yourserverinvite'">Join our Discord</button>
-            </div>
-        </section>
+    <!-- Full-Screen Banner -->
+    <div class="banner">
+        <h1>The Breadsite</h1>
+        <h2>Made By DDMM!</h2>
+        <h3>Le cat shalt into Le Meow!</h3>
+        <button class="scroll-button" onclick="scrollToContent()">
+            <i>↓</i> Scroll Down
+        </button>
     </div>
 
-    <!-- Add-ons Page -->
-    <div id="addons-content">
-        <section id="addons">
-            <h2>Our Add-ons</h2>
-            <p>Discover our specially designed Minecraft add-ons, tailored to enhance your gameplay and introduce new challenges. Each add-on brings something unique, whether it’s a mini-game, a thrilling race against time, or a creative world enhancement, ensuring you have endless fun and exploration options!</p>
-            <div class="addon-item">
-                <img src="lava-escape.png" alt="Lava Escape">
-                <p><strong>Lava Escape:</strong> A high-intensity mini-game where players race to avoid a rising tide of lava! Available for MCPE.</p>
-            </div>
-            <div class="addon-item">
-                <button class="mcpe-button" onclick="window.location.href='/breadsite/lava-escape'">Download for MCPE 1.21+</button>
-            </div>
-        </section>
+    <!-- Main Content Section -->
+    <div class="content" id="content">
+        <h1>Welcome to The Breadsite</h1>
+        <p>Your one-stop destination for all things bread and loaf-related!</p>
+        <button class="fancy-button">Discover More</button>
     </div>
-
-    <!-- Our Team Page -->
-    <div id="our-team-content">
-        <section id="staff">
-            <h2>Meet Our Team</h2>
-            <p>Our team is dedicated to ensuring a smooth and enjoyable experience for all members of our community. Below are some of the key staff members who make it all happen:</p>
-            <ul>
-                <li class="staff-item">
-                    <img src="joey.png" alt="Joeyready's profile picture" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                    <span style="display:none">?</span>
-                    <strong>Joeyready:</strong> A passionate gamer who loves cats, Bopl Battles, Minecraft, and minigames. Joeyready plays a crucial role in managing and organizing our community activities.
-                </li>
-                <li class="staff-item">
-                    <img src="dabicco.png" alt="Dabicco's profile picture" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                    <span style="display:none">?</span>
-                    <strong>Dabicco (Nico):</strong> A main organizer responsible for coordinating events and ensuring smooth operations within the community. Dabicco's efforts help keep everything running seamlessly.
-                </li>
-                <li class="staff-item">
-                    <img src="poto.png" alt="Socoolmatteo's profile picture" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                    <span style="display:none">?</span>
-                    <strong>Socoolmatteo (Potato):</strong> Focused on community engagement and fostering a positive atmosphere. Known affectionately as "a literal potato," Socoolmatteo brings a unique and cheerful presence to the team.
-                </li>
-                <li class="staff-item">
-                    <img src="heartkitty.png" alt="Heart Kitty's profile picture" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                    <span style="display:none">?</span>
-                    <strong>Heart Kitty (IsabellaGohs):</strong> Known for their friendly demeanor, Heart Kitty is a beloved member of our team who adds a warm and welcoming touch to our community.
-                </li>
-            </ul>
-            <p>While the staff listed above play integral roles, there are many other valuable breaders and team members who contribute to the vibrant and dynamic nature of our community. Their efforts ensure that everyone has a fantastic experience, and we appreciate all their hard work and dedication.</p>
-        </section>
-    </div>
-
-    <!-- Settings Page -->
-    <div id="settings-content">
-        <section>
-            <h2>Settings</h2>
-            <div class="settings-toggle">
-                <label for="dark-mode-toggle">Dark Mode</label>
-                <input type="checkbox" id="dark-mode-toggle" onclick="toggleDarkMode()">
-            </div>
-        </section>
-    </div>
-
-    <!-- Footer -->
-    <footer>
-        <p>&copy; Dabicco 2024</p>
-    </footer>
 
     <script>
-        window.onload = function() {
-            const darkMode = localStorage.getItem('darkMode');
-            if (darkMode === 'enabled') {
-                enableDarkMode();
-                document.getElementById('dark-mode-toggle').checked = true;
-            }
-            showPage('home');
-        };
-
-        function showPage(page) {
-            document.getElementById('home-page').style.display = page === 'home' ? 'block' : 'none';
-            document.getElementById('addons-content').style.display = page === 'addons' ? 'block' : 'none';
-            document.getElementById('our-team-content').style.display = page === 'our-team' ? 'block' : 'none';
-            document.getElementById('settings-content').style.display = page === 'settings' ? 'block' : 'none';
-
-            document.getElementById('home-tab').classList.toggle('active', page === 'home');
-            document.getElementById('addons-tab').classList.toggle('active', page === 'addons');
-            document.getElementById('our-team-tab').classList.toggle('active', page === 'our-team');
-            document.getElementById('settings-tab').classList.toggle('active', page === 'settings');
-        }
-
-        function toggleDarkMode() {
-            if (document.body.classList.contains('dark-mode')) {
-                disableDarkMode();
-            } else {
-                enableDarkMode();
-            }
-        }
-
-        function enableDarkMode() {
-            document.body.classList.add('dark-mode');
-            document.querySelector('header').classList.add('dark-mode');
-            document.querySelector('footer').classList.add('dark-mode');
-            document.querySelector('nav').classList.add('dark-mode');
-            document.querySelectorAll('section').forEach(section => section.classList.add('dark-mode'));
-            document.querySelectorAll('button').forEach(button => button.classList.add('dark-mode'));
-            localStorage.setItem('darkMode', 'enabled');
-        }
-
-        function disableDarkMode() {
-            document.body.classList.remove('dark-mode');
-            document.querySelector('header').classList.remove('dark-mode');
-            document.querySelector('footer').classList.remove('dark-mode');
-            document.querySelector('nav').classList.remove('dark-mode');
-            document.querySelectorAll('section').forEach(section => section.classList.remove('dark-mode'));
-            document.querySelectorAll('button').forEach(button => button.classList.remove('dark-mode'));
-            localStorage.setItem('darkMode', 'disabled');
+        function scrollToContent() {
+            document.getElementById('content').scrollIntoView({ behavior: 'smooth' });
         }
     </script>
+
 </body>
 </html>
