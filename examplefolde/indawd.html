@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Breadsite</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bitter:wght@400;700&display=swap');
+
+        body {
+            margin: 0;
+            font-family: 'Bitter', serif;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* Full-screen banner */
+        .banner {
+            background: url('https://www.purina.com/_gatsby/image/64a671d8c916162a2759c68d66c75378/1781294bf6b5ca078753aeb073cba2fa/eco_batch138_cat_loaf.jpg?u=https%3A%2F%2Fwww.purina.com%2Fsites%2Fdefault%2Ffiles%2F2024-08%2Feco_batch138_cat_loaf_0.jpg&a=w%3D200%26h%3D100%26fm%3Djpg%26q%3D75&cd=b4ac418a6d98b5c938e44904da11453f') no-repeat center center/cover;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            text-align: center;
+        }
+
+        .banner h1 {
+            position: absolute;
+            top: 25%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            color: white;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+        }
+
+        .banner h2 {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5rem;
+            color: white;
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);
+        }
+
+        .banner h3 {
+            position: absolute;
+            top: 48%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1rem;
+            color: white;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .scroll-button {
+            background-color: rgba(255, 255, 255, 0.8);
+            border: none;
+            border-radius: 20px;
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            color: #000;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            position: absolute;
+            bottom: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .scroll-button:hover {
+            transform: translateX(-50%) scale(1.1);
+            background-color: #ccc;
+        }
+
+        .scroll-button i {
+            font-size: 1.5rem;
+        }
+
+        /* Server Info Section */
+        .server-info {
+            background: linear-gradient(135deg, #003366, #66ccff);
+            padding: 50px;
+            text-align: center;
+        }
+
+        .server-info h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .cards-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 0;
+        }
+
+        .card {
+            width: 250px;
+            height: 350px;
+            background: linear-gradient(135deg, #2a3d66, #3b4f79);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            position: relative;
+            color: white;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .card .card-header {
+            background: url('https://www.example.com/banner_image.jpg') no-repeat center center/cover;
+            height: 50%;
+        }
+
+        .card .card-body {
+            padding: 15px;
+            flex-grow: 1;
+        }
+
+        .card .card-body h3 {
+            margin-bottom: 15px;
+        }
+
+        .card .card-body p {
+            font-size: 1rem;
+        }
+
+        .card .card-body button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #0099cc, #003366);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .card .card-body button:hover {
+            transform: scale(1.05);
+            background: linear-gradient(135deg, #005b99, #003366);
+        }
+
+        /* Smooth Scroll to Sections */
+        .bedrock, .java {
+            margin-top: 50px;
+            padding: 50px;
+            text-align: center;
+            font-size: 1.2rem;
+            color: white;
+            margin-bottom: 0;
+        }
+
+        .bedrock {
+            background: linear-gradient(135deg, #5f5f5f, #2a2a2a);
+        }
+
+        .java {
+            background: linear-gradient(135deg, #2e8b57, #006400);
+        }
+
+        /* Styling for buttons to copy text */
+        .copy-button {
+            margin-left: 10px;
+            background-color: #444;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            padding: 5px 10px;
+        }
+
+        .copy-button:hover {
+            background-color: #666;
+        }
+
+        .return-home {
+            display: block;
+            width: 200px;
+            margin: 50px auto;
+            padding: 15px;
+            background-color: #444;
+            color: white;
+            text-align: center;
+            border-radius: 25px;
+            font-size: 1.2rem;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .return-home:hover {
+            background-color: #666;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Full-Screen Banner -->
+    <div class="banner">
+        <h1>The Breadsite</h1>
+        <h2>Made By DDMM!</h2>
+        <h3>Le cat shalt into Le Meow!</h3>
+        <button class="scroll-button" onclick="scrollToServerInfo()">
+            <i>↓</i> Scroll Down
+        </button>
+    </div>
+
+    <!-- Server Info Section -->
+    <div class="server-info" id="server-info">
+        <h2>Welcome to Our Server!</h2>
+        <p>Our community is built on connection and fun!</p>
+        <div class="cards-container">
+            <div class="card" onclick="scrollToBedrock()">
+                <div class="card-header"></div>
+                <div class="card-body">
+                    <h3>Bedrock Connection</h3>
+                    <p>Join our server for bedrock edition.</p>
+                    <button class="fancy-button">Connect</button>
+                </div>
+            </div>
+            <div class="card" onclick="scrollToJava()">
+                <div class="card-header"></div>
+                <div class="card-body">
+                    <h3>Java Connection</h3>
+                    <p>Join our server for java edition.</p>
+                    <button class="fancy-button">Connect</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bedrock Section -->
+    <div class="bedrock" id="bedrock">
+        <h2>Bedrock Edition</h2>
+        <p>Follow these steps to join:</p>
+        <ul>
+            <li>Open Minecraft and navigate to Play Menu → Multiplayer → Add Server (you may need to scroll down in the server list).</li>
+            <li>Enter the following information:</li>
+            <ul>
+                <li><strong>IP</strong>: play.breadgames.online <button class="copy-button" onclick="copyText('play.breadgames.online')">Click to Copy</button></li>
+                <li><strong>Port</strong>: 19132 (default port)</li>
+            </ul>
+        </ul>
+    </div>
+
+    <!-- Java Section -->
+    <div class="java" id="java">
+        <h2>Java Edition</h2>
+        <p>Follow these steps to join:</p>
+        <ul>
+            <li>Navigate to Multiplayer → Add Server/Direct Connect.</li>
+            <li>Enter the following information:</li>
+            <ul>
+                <li><strong>IP</strong>: server.breadgames.online <button class="copy-button" onclick="copyText('server.breadgames.online')">Click to Copy</button></li>
+            </ul>
+            <li>Enable Server Resource Packs.</li>
+        </ul>
+    </div>
+
+    <!-- Return to Home Button -->
+    <a href="/breadsite/home" class="return-home">Return to Home</a>
+
+    <script>
+        function scrollToServerInfo() {
+            document.getElementById('server-info').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function scrollToBedrock() {
+            document.getElementById('bedrock').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function scrollToJava() {
+            document.getElementById('java').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function copyText(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            alert('Copied: ' + text);
+        }
+    </script>
+
+</body>
+</html>
