@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discovery - The Breadsite</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bitter:wght@400;700&display=swap');
+
+        body {
+            margin: 0;
+            font-family: 'Bitter', serif;
+            color: #fff;
+            background-color: #f1f1f1;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Discovery Banner */
+        .discovery-banner {
+            background: linear-gradient(135deg, #003366, #0099cc);
+            padding: 40px 0;
+            text-align: center;
+            color: white;
+        }
+
+        .discovery-banner h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .discovery-banner p {
+            font-size: 1.2rem;
+            color: #ccc;
+        }
+
+        /* Discovery Section */
+        .discovery-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 40px;
+            justify-content: center;
+            background: linear-gradient(135deg, #003366, #006699);
+            flex-grow: 1;
+        }
+
+        /* Card Style */
+        .discovery-card {
+            background-color: #002a44;
+            width: 250px;
+            height: 350px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            transition: transform 0.3s ease, filter 0.3s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Darken effect for unselected cards */
+        .discovery-card:not(:hover) {
+            filter: brightness(0.8);
+        }
+
+        .discovery-card:hover {
+            transform: scale(1.05);
+            filter: brightness(1);
+        }
+
+        /* Banner Image */
+        .card-banner {
+            width: 100%;
+            height: 120px;
+            background-size: cover;
+            background-position: center;
+            border-bottom: 2px solid #fff;
+        }
+
+        /* Card Content */
+        .card-content {
+            padding: 15px;
+            color: #fff;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-content h3 {
+            margin: 10px 0;
+            font-size: 1.2rem;
+        }
+
+        .card-content p {
+            font-size: 0.9rem;
+            color: #ccc;
+            flex-grow: 1;
+            overflow: hidden;
+            text-overflow: clip;  /* Prevent text from being truncated with ellipsis */
+            display: block;       /* Ensure the text wraps properly */
+        }
+
+        /* Button inside card */
+        .discover-button {
+            background: linear-gradient(135deg, #0099cc, #003366);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            position: relative;
+            z-index: 10;
+        }
+
+        .discover-button:hover {
+            background-color: #0077b3;
+            transform: scale(1.1);
+        }
+
+        /* Dark Background for "Go back home" Button */
+        .dark-background {
+            background-color: #001f2d; /* Darker background color */
+            padding: 20px 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Bottom Button */
+        .go-home-button {
+            background: linear-gradient(135deg, #003366, #006699);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            width: 250px;
+        }
+
+        .go-home-button:hover {
+            background-color: #005b7f;
+            transform: scale(1.05);
+        }
+
+        /* New Purple Gradient Section with Discord Info */
+        .discord-section {
+            background: linear-gradient(135deg, #7b2cbf, #9c4dcc);
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .discord-section img {
+            width: 100px;
+            margin-bottom: 20px;
+        }
+
+        .discord-section h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .discord-section p {
+            font-size: 1.1rem;
+            color: #ddd;
+            margin-bottom: 30px;
+        }
+
+        /* Animated Discord Button */
+        .discord-button {
+            background: linear-gradient(135deg, #9c4dcc, #7b2cbf);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .discord-button:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: skewX(-45deg);
+            transition: left 0.5s ease;
+        }
+
+        .discord-button:hover {
+            transform: scale(1.1);
+        }
+
+        .discord-button:hover:before {
+            left: 100%;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Discovery Page Banner -->
+    <div class="discovery-banner">
+        <h1>Discovery</h1>
+        <p>The Breadsite Directory</p>
+    </div>
+
+    <!-- Discovery Page Content -->
+    <div class="discovery-container">
+        <div class="discovery-card">
+            <div class="card-banner" style="background-image: url('/breadsite/discovery/banner11.png');"></div>
+            <div class="card-content">
+                <h3>BreadMC</h3>
+                <p>The official DDMM Minecraft Server! Powered by PaperMC & Dabicco's Velocity Fork, <i>Embeddium</i>, we can host events in our <a href="#discord-section">Discord</a>.</p>
+                <button class="discover-button" onclick="window.location.href='/breadsite/server'">View Details</button>
+            </div>
+        </div>
+
+        <div class="discovery-card">
+            <div class="card-banner" style="background-image: url('/breadsite/discovery/banner12.png');"></div>
+            <div class="card-content">
+                <h3>Our Team</h3>
+                <p>Meet the team behind the Bread Server! The introduction to the members of DDMM and some cool fun facts about each of them!</p>
+                <button class="discover-button" onclick="window.location.href='/breadsite/staff'">View Details</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Discord Community Section -->
+    <div class="discord-section" id="discord-section">
+        <img src="https://cdn.prod.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png" alt="Discord Icon">
+        <h2>Join Our Discord Community!</h2>
+        <p>We have a fun community with regular events, friendly chats, and a lot of fun! Come hang out with us!</p>
+        <button class="discord-button" onclick="window.location.href='https://discord.com/invite/YOUR_DISCORD_LINK'">Join The Discord</button>
+    </div>
+
+    <!-- Dark Background for "Go back home" Button -->
+    <div class="dark-background">
+        <button class="go-home-button" onclick="window.location.href='/breadsite/home'">Go back home</button>
+    </div>
+
+</body>
+</html>
