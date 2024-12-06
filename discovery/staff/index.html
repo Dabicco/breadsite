@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Team - The Breadsite</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bitter:wght@400;700&display=swap');
+
+        body {
+            margin: 0;
+            font-family: 'Bitter', serif;
+            color: #fff;
+            background-color: #f1f1f1;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Team Page Banner */
+        .team-banner {
+            background: linear-gradient(135deg, #003366, #0099cc);
+            padding: 40px 0;
+            text-align: center;
+            color: white;
+        }
+
+        .team-banner h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .team-banner p {
+            font-size: 1.2rem;
+            color: #ccc;
+        }
+
+        /* Team Section */
+        .team-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 40px;
+            background: linear-gradient(135deg, #003366, #006699);
+        }
+
+        /* Card Style */
+        .team-card {
+            width: 250px;
+            height: 350px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            transition: transform 0.3s ease, filter 0.3s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            color: white;
+        }
+
+        .team-card:not(:hover) {
+            filter: brightness(0.8);
+        }
+
+        .team-card:hover {
+            transform: scale(1.05);
+            filter: brightness(1);
+        }
+
+        .card-banner {
+            width: 100%;
+            height: 60px;
+            border-bottom: 2px solid #fff;
+            position: relative;
+        }
+
+        .profile-pic {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            border: 3px solid #fff;
+            overflow: hidden;
+        }
+
+        .profile-pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-content {
+            padding: 15px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            text-align: left;
+        }
+
+        .card-content h3 {
+            margin: 10px 0;
+            font-size: 1.2rem;
+        }
+
+        .card-content p {
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+
+        /* YouTube Button */
+        .team-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: #FF0000;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: transform 0.3s ease;
+            text-decoration: none;
+        }
+
+        .team-button img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .team-button:hover {
+            transform: scale(1.1);
+        }
+
+        /* Dark Background for "Go back home" Button */
+        .dark-background {
+            background-color: #001f2d;
+            padding: 20px 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .go-home-button {
+            background: linear-gradient(135deg, #003366, #006699);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            text-decoration: none;
+        }
+
+        .go-home-button:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Team Page Banner -->
+    <div class="team-banner">
+        <h1>Our Team</h1>
+        <p>Meet the amazing team of DDMM!</p>
+    </div>
+
+    <!-- Team Members Section -->
+    <div class="team-container">
+        <!-- Joeyready's Card -->
+        <div class="team-card" style="background: linear-gradient(135deg, #f4e04d, #f9d423);">
+            <div class="card-banner">
+                <div class="profile-pic">
+                    <img src="/assets/joey.png" alt="Joeyready">
+                </div>
+            </div>
+            <div class="card-content">
+                <h3>Joeyready</h3>
+                <p>Community Manager, Creator of DDMM, and known by many in LSR (Life Series Reborn). Loves Cats, Bread, Breadcats, LoafCats, you name it!</p>
+                <a class="team-button" href="https://youtube.com/joeyready3" target="_blank">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/YouTube_full-color_icon_%282017%29.svg/2560px-YouTube_full-color_icon_%282017%29.svg.png" alt="YouTube">
+                    YouTube
+                </a>
+            </div>
+        </div>
+
+        <!-- Nico's Card -->
+        <div class="team-card" style="background: linear-gradient(135deg, #00d4ff, #0053ff);">
+            <div class="card-banner">
+                <div class="profile-pic">
+                    <img src="/breadsite/assets/dabicco.png" alt="Nico">
+                </div>
+            </div>
+            <div class="card-content">
+                <h3>Nico</h3>
+                <p>Lead Programmer, actually only programmer. Server Hoster & Creator of The Bread Gaming Community. Likes root beer and <a href="/breadsite/titin">titin</a>!</p>
+                <a class="team-button" href="https://youtube.com/Dabicco" target="_blank">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/YouTube_full-color_icon_%282017%29.svg/2560px-YouTube_full-color_icon_%282017%29.svg.png" alt="YouTube">
+                    YouTube
+                </a>
+            </div>
+        </div>
+
+        <!-- Potato's Card -->
+        <div class="team-card" style="background: linear-gradient(135deg, #ff4b5c, #f45f5f);">
+            <div class="card-banner">
+                <div class="profile-pic">
+                    <img src="/breadsite/assets/poto.png" alt="Potato">
+                </div>
+            </div>
+            <div class="card-content">
+                <h3>Potato</h3>
+                <p>A Literal Potato. Sits back and relaxes until he gets the chance to build something or participate. Pretty chill guy until you watch his Youtube Videos lol.</p>
+                <a class="team-button" href="https://youtube.com/TheScrumptiousPotato" target="_blank">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/YouTube_full-color_icon_%282017%29.svg/2560px-YouTube_full-color_icon_%282017%29.svg.png" alt="YouTube">
+                    YouTube
+                </a>
+            </div>
+        </div>
+
+        <!-- HeartKitty's Card -->
+        <div class="team-card" style="background: linear-gradient(135deg, #ff7bc1, #ff5ad6);">
+            <div class="card-banner">
+                <div class="profile-pic">
+                    <img src="/breadsite/assets/heartkitty.png" alt="HeartKitty">
+                </div>
+            </div>
+            <div class="card-content">
+                <h3>HeartKitty</h3>
+                <p>Completely Inactive but completely necessary individual as they are pretty chill and work on a few things.</p>
+                <a class="team-button" href="https://youtube.com/kittyplaysgames2" target="_blank">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/YouTube_full-color_icon_%282017%29.svg/2560px-YouTube_full-color_icon_%282017%29.svg.png" alt="YouTube">
+                    YouTube
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Dark Background for "Go back home" Button -->
+    <div class="dark-background">
+        <a class="go-home-button" href="/breadsite/discovery">Go back to The Discovery</a>
+    </div>
+
+</body>
+</html>
