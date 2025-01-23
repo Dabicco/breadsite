@@ -66,6 +66,7 @@
     .explorer-card p {
       color: #ccc;
       margin: 10px 0;
+      line-height: 1.4;
     }
 
     /* Larger iFrame embed area */
@@ -142,8 +143,12 @@
         Pan, zoom, and explore our simulated solar system right here in your browser!
       </p>
 
+      <p>
+        <strong>Tip:</strong> Using a mouse and keyboard? Try the <em>middle click</em> (or three-finger
+        click on a trackpad) to navigate the game more easily.
+      </p>
+
       <!-- iFrame embedding the actual game -->
-      <!-- 'allowfullscreen' to help with requesting fullscreen -->
       <iframe
         id="solarFrame"
         class="game-iframe"
@@ -153,7 +158,7 @@
       >
       </iframe>
 
-      <!-- Fullscreen Button calls a JS function to request FS on the iFrame -->
+      <!-- Fullscreen Button -->
       <button
         class="explorer-button"
         onclick="goFullscreen()"
@@ -172,20 +177,19 @@
 
   <script>
     /*
-      Attempt to request fullscreen on the iFrame element.
-      Note: Some browsers block cross-domain FS. 
-      Also, you may need same-origin content or special permissions.
+      Request fullscreen on the iFrame. 
+      Note that for cross-domain content, or certain browsers, 
+      this might be blocked. 
     */
     function goFullscreen() {
       const frame = document.getElementById('solarFrame');
-      // For cross-browser support:
       if (frame.requestFullscreen) {
         frame.requestFullscreen();
-      } else if (frame.mozRequestFullScreen) { /* Firefox */
+      } else if (frame.mozRequestFullScreen) { 
         frame.mozRequestFullScreen();
-      } else if (frame.webkitRequestFullscreen) { /* Chrome, Safari */
+      } else if (frame.webkitRequestFullscreen) {
         frame.webkitRequestFullscreen();
-      } else if (frame.msRequestFullscreen) { /* IE/Edge */
+      } else if (frame.msRequestFullscreen) {
         frame.msRequestFullscreen();
       } else {
         alert("Fullscreen not supported in this browser or iFrame setup.");
