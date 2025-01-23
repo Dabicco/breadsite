@@ -25,12 +25,10 @@
       text-align: center;
       color: white;
     }
-
     .explorer-banner h1 {
       font-size: 3rem;
       margin-bottom: 10px;
     }
-
     .explorer-banner p {
       font-size: 1.2rem;
       color: #ccc;
@@ -44,7 +42,7 @@
       gap: 20px;
       padding: 40px;
       background: linear-gradient(135deg, #1e1e1e, #2f2f2f);
-      flex-grow: 1; /* so it stretches */
+      flex-grow: 1; /* so it stretches down */
     }
 
     /* Card Style */
@@ -62,27 +60,25 @@
       flex-direction: column;
       padding: 20px;
     }
-
     .explorer-card h2 {
       margin-top: 0;
     }
-
     .explorer-card p {
       color: #ccc;
       margin: 10px 0;
     }
 
-    /* The iFrame embed area */
+    /* Larger iFrame embed area */
     .game-iframe {
       width: 100%;
-      height: 450px; /* Adjust as needed for your game size */
+      height: 600px; /* bigger embed */
       border: 2px solid #333;
       border-radius: 5px;
       background-color: #000;
       margin: 20px 0;
     }
 
-    /* A small styled button inside the card (optional) */
+    /* Fullscreen Button */
     .explorer-button {
       background: linear-gradient(135deg, #0066cc, #003366);
       color: white;
@@ -96,7 +92,6 @@
       position: relative;
       z-index: 10;
     }
-
     .explorer-button:hover {
       background-color: #004c99;
       transform: scale(1.1);
@@ -124,7 +119,6 @@
       transition: background-color 0.3s ease, transform 0.3s ease;
       width: 250px;
     }
-
     .go-back-button:hover {
       background-color: #444444;
       transform: scale(1.05);
@@ -149,7 +143,9 @@
       </p>
 
       <!-- iFrame embedding the actual game -->
+      <!-- 'allowfullscreen' to help with requesting fullscreen -->
       <iframe
+        id="solarFrame"
         class="game-iframe"
         src="/breadsite/games/solarexplorer/assets/game.html"
         title="Solar Explorer Game"
@@ -157,12 +153,12 @@
       >
       </iframe>
 
-      <!-- Optional button to do something extra, e.g. open in new tab -->
+      <!-- Fullscreen Button calls a JS function to request FS on the iFrame -->
       <button
         class="explorer-button"
-        onclick="window.open('/breadsite/games/solarexplorer/assets/game.html', '_blank')"
+        onclick="goFullscreen()"
       >
-        Launch in New Tab
+        Go Fullscreen
       </button>
     </div>
   </div>
@@ -173,6 +169,29 @@
       Go back to Games
     </button>
   </div>
+
+  <script>
+    /*
+      Attempt to request fullscreen on the iFrame element.
+      Note: Some browsers block cross-domain FS. 
+      Also, you may need same-origin content or special permissions.
+    */
+    function goFullscreen() {
+      const frame = document.getElementById('solarFrame');
+      // For cross-browser support:
+      if (frame.requestFullscreen) {
+        frame.requestFullscreen();
+      } else if (frame.mozRequestFullScreen) { /* Firefox */
+        frame.mozRequestFullScreen();
+      } else if (frame.webkitRequestFullscreen) { /* Chrome, Safari */
+        frame.webkitRequestFullscreen();
+      } else if (frame.msRequestFullscreen) { /* IE/Edge */
+        frame.msRequestFullscreen();
+      } else {
+        alert("Fullscreen not supported in this browser or iFrame setup.");
+      }
+    }
+  </script>
 
 </body>
 </html>
