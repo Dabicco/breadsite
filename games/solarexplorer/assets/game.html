@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Embeddable Solar System</title>
+  <style>
+    /* 
+      FULLSCREEN & STAR BACKGROUND
+      This can run in an <iframe> at any size. 
+      The system auto-scales to fit the iframe's aspect ratio.
+    */
+    html, body {
+      margin: 0; 
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      overflow: hidden; /* We'll handle pan/zoom ourselves */
+    }
+
+    /* First star layer */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: -9999;
+      background: transparent url('data:image/svg+xml;utf8,\
+        <svg width="400" height="400" xmlns="http://www.w3.org/2000/svg">\
+          <circle cx="50" cy="50" r="2" fill="white" />\
+          <circle cx="80" cy="120" r="1" fill="white" />\
+          <circle cx="150" cy="200" r="2" fill="white" />\
+          <circle cx="250" cy="300" r="1" fill="white" />\
+          <circle cx="320" cy="50" r="2" fill="white" />\
+          <circle cx="200" cy="100" r="2" fill="white" />\
+          <circle cx="100" cy="300" r="1" fill="white" />\
+        </svg>'
+      ) repeat;
+      animation: star-scroll 80s linear infinite;
+    }
+    /* Second star layer for more density. */
+    body::after {
+      content: "";
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: -9998;
+      background: transparent url('data:image/svg+xml;utf8,\
+        <svg width="600" height="600" xmlns="http://www.w3.org/2000/svg">\
+          <circle cx="100" cy="80"  r="1" fill="white" />\
+          <circle cx="200" cy="200" r="1" fill="white" />\
+          <circle cx="400" cy="250" r="1" fill="white" />\
+          <circle cx="500" cy="150" r="2" fill="white" />\
+          <circle cx="350" cy="450" r="1" fill="white" />\
+          <circle cx="300" cy="100" r="1" fill="white" />\
+          <circle cx="450" cy="380" r="2" fill="white" />\
+          <circle cx="80"  cy="380" r="1" fill="white" />\
+          <circle cx="150" cy="400" r="1" fill="white" />\
+          <circle cx="250" cy="300" r="2" fill="white" />\
+          <circle cx="580" cy="520" r="1" fill="white" />\
+        </svg>'
+      ) repeat;
+      animation: star-scroll2 110s linear infinite;
+      opacity: 0.8;
+    }
+    @keyframes star-scroll {
+      0%   { background-position: 0 0; }
+      100% { background-position: 0 400px; }
+    }
+    @keyframes star-scroll2 {
+      0%   { background-position: 0 0; }
+      100% { background-position: 0 600px; }
+    }
+
+    /* 
+      #solarSystemContainer is the "camera" for pan/zoom
+    */
+    #solarSystemContainer {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      transform-origin: 0 0;
+      transition: transform 0.05s ease-out;
+    }
+
+    /* 
+      The 2200×2200 "universal-system" anchored at (0,0)
+    */
+    .universal-system {
+      position: absolute;
+      width: 2200px;
+      height: 2200px;
+      left: 0; top: 0;
+      border: 2px dotted #fff;
+      border-radius: 50%;
+      overflow: visible;
+    }
+
+    /* Orbits revolve with spin animation, base durations in data-baseDuration */
+    .orbit {
+      position: absolute;
+      top: 50%; left: 50%;
+      border: 1px dotted rgba(255,255,255,0.3);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation-name: spin;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+    }
+    @keyframes spin {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to   { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    /* The Sun doesn't orbit, so we skip spin. */
+    .orbit.sun-orbit { width:0; height:0; border:none; animation:none; }
+
+    .planet {
+      position: absolute;
+      top: 50%; left: 100%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+    }
+
+    /* The Sun with a glow + flickering "flames" effect */
+    .planet.sun {
+      width: 60px; height: 60px;
+      background: #FFD700;
+      filter: drop-shadow(0 0 40px #FFD700);
+      position: relative;
+    }
+    .sun-flames {
+      position: absolute;
+      left: 50%; top: 50%;
+      width: 120px; height: 120px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: radial-gradient(rgba(255,215,0,0.3), rgba(255,69,0,0.1));
+      animation: flameFlicker 2s infinite alternate ease-in-out;
+      pointer-events: none;
+    }
+    @keyframes flameFlicker {
+      0% { transform: translate(-50%, -50%) scale(1);   opacity: 0.6; }
+      100%{transform: translate(-50%, -50%) scale(1.1); opacity: 0.3; }
+    }
+
+    /* Distances for each planet orbit. */
+    .orbit.mercury-orbit { width:400px; height:400px; }
+    .planet.mercury      { width:12px;  height:12px;  background:#c0c0c0; }
+
+    .orbit.venus-orbit   { width:500px; height:500px; }
+    .planet.venus        { width:14px;  height:14px;  background:#cf9e7d; }
+
+    .orbit.earth-orbit   { width:600px; height:600px; }
+    .planet.earth {
+      width:16px; height:16px; background:#2cf; position:relative;
+    }
+    /* Earth’s moon */
+    .moon-orbit {
+      position: absolute;
+      top: 50%; left: 50%;
+      width:24px; height:24px;
+      border:1px dashed rgba(255,255,255,0.4);
+      border-radius:50%;
+      animation: spin linear infinite;
+      transform:translate(-50%,-50%);
+    }
+    .moon {
+      position:absolute;
+      top:50%; left:100%;
+      width:4px; height:4px;
+      background:#ccc;
+      border-radius:50%;
+      transform:translate(-50%,-50%);
+    }
+
+    .orbit.mars-orbit { width:700px; height:700px; }
+    .planet.mars {
+      width:14px; height:14px; background:#f44336;
+    }
+
+    /* ASTEROID BELT ~1300 px radius */
+    .orbit.asteroid-belt-orbit {
+      width:1300px; height:1300px; border:none; animation:none;
+    }
+
+    .orbit.jupiter-orbit { width:1600px; height:1600px; }
+    .planet.jupiter {
+      width:24px; height:24px; background:#deaa88; position:relative;
+    }
+    /* Jupiter major moons: Io, Europa, Ganymede, Callisto */
+    .jupiter-moon-orbit {
+      position:absolute;
+      top:50%; left:50%;
+      border:1px dashed rgba(255,255,255,0.3);
+      border-radius:50%;
+      animation:spin linear infinite;
+      transform:translate(-50%,-50%);
+    }
+    .jupiter-moon {
+      position:absolute;
+      top:50%; left:100%;
+      transform:translate(-50%,-50%);
+      border-radius:50%;
+      background:#999;
+    }
+
+    .orbit.saturn-orbit { width:1800px; height:1800px; }
+    .planet.saturn {
+      width:22px; height:22px; background:#d2b48c; position:relative;
+    }
+    /* Saturn major moons (Titan, Rhea, Iapetus, Dione, etc.) */
+    .saturn-moon-orbit {
+      position:absolute;
+      top:50%; left:50%;
+      border:1px dashed rgba(255,255,255,0.3);
+      border-radius:50%;
+      animation:spin linear infinite;
+      transform:translate(-50%,-50%);
+    }
+    .saturn-moon {
+      position:absolute;
+      top:50%; left:100%;
+      transform:translate(-50%,-50%);
+      border-radius:50%;
+      background:#bbb;
+    }
+
+    .orbit.uranus-orbit { width:1900px; height:1900px; }
+    .planet.uranus      { width:20px; height:20px; background:#a1dbf5; position:relative; }
+    /* Uranus: Titania, Oberon */
+    .uranus-moon-orbit {
+      position:absolute;
+      top:50%; left:50%;
+      border:1px dashed rgba(255,255,255,0.3);
+      border-radius:50%;
+      animation:spin linear infinite;
+      transform:translate(-50%,-50%);
+    }
+    .uranus-moon {
+      position:absolute;
+      top:50%; left:100%;
+      transform:translate(-50%,-50%);
+      border-radius:50%;
+      background:#ccc;
+    }
+
+    .orbit.neptune-orbit { width:2000px; height:2000px; }
+    .planet.neptune      { width:20px; height:20px; background:#5078ff; position:relative; }
+    /* Neptune major moon: Triton */
+    .neptune-moon-orbit {
+      position:absolute;
+      top:50%; left:50%;
+      border:1px dashed rgba(255,255,255,0.3);
+      border-radius:50%;
+      animation:spin linear infinite;
+      transform:translate(-50%,-50%);
+    }
+    .neptune-moon {
+      position:absolute;
+      top:50%; left:100%;
+      transform:translate(-50%,-50%);
+      border-radius:50%;
+      background:#bbb;
+    }
+
+    .orbit.pluto-orbit { width:2100px; height:2100px; }
+    .planet.pluto {
+      width:12px; height:12px; background:#bbaaff; position:relative;
+    }
+    /* Pluto major moon: Charon */
+    .pluto-moon-orbit {
+      position:absolute;
+      top:50%; left:50%;
+      border:1px dashed rgba(255,255,255,0.3);
+      border-radius:50%;
+      animation:spin linear infinite;
+      transform:translate(-50%,-50%);
+    }
+    .pluto-moon {
+      position:absolute;
+      top:50%; left:100%;
+      transform:translate(-50%,-50%);
+      border-radius:50%;
+      background:#ddd;
+    }
+
+    /* ASTEROID random orbits each with spin. */
+    @keyframes asteroid-spin {
+      0%   { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .asteroidOrbit {
+      position:absolute;
+      top:50%; left:50%;
+      transform-origin:center;
+    }
+    .asteroid {
+      position:absolute;
+      width:3px; height:3px;
+      border-radius:50%;
+      background:#aaa;
+    }
+
+    /* INTRO BOX + FANCY SLIDER */
+    .intro-box {
+      position:absolute;
+      bottom:10px;
+      left:50%;
+      transform:translateX(-50%);
+      max-width:800px;
+      background:rgba(0,0,0,0.7);
+      padding:16px 24px;
+      border-radius:10px;
+      font-size:16px;
+      line-height:1.6;
+    }
+    .intro-box h1 {
+      margin-top:0;
+      color:#FFD700;
+      text-align:center;
+    }
+
+    .slider-container {
+      display:flex; align-items:center; justify-content:center;
+      margin-top:12px;
+    }
+    .slider-container label {
+      margin-right:8px;
+      font-weight:bold;
+      color:#FFD700;
+    }
+    .slider-container input[type="range"] {
+      -webkit-appearance:none;
+      width:240px; height:8px;
+      background:linear-gradient(90deg,#444 0%,#bbb 100%);
+      border-radius:4px;
+      outline:none; margin:0 12px;
+      cursor:pointer; transition:background 0.3s;
+    }
+    .slider-container input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance:none;
+      width:20px; height:20px;
+      border-radius:50%;
+      background:#FFD700;
+      box-shadow:0 0 5px #FFD700;
+      border:2px solid #333;
+      cursor:pointer;
+    }
+    .slider-value {
+      min-width:60px;
+      text-align:center;
+      font-weight:bold;
+    }
+  </style>
+</head>
+<body>
+  <div id="solarSystemContainer">
+    <div class="universal-system" id="solarSystem">
+
+      <!-- SUN -->
+      <div class="orbit sun-orbit" data-baseDuration="0">
+        <div class="planet sun">
+          <div class="sun-flames"></div>
+        </div>
+      </div>
+
+      <!-- MERCURY -->
+      <div class="orbit mercury-orbit" data-baseDuration="8">
+        <div class="planet mercury"></div>
+      </div>
+
+      <!-- VENUS -->
+      <div class="orbit venus-orbit" data-baseDuration="14">
+        <div class="planet venus"></div>
+      </div>
+
+      <!-- EARTH + Moon -->
+      <div class="orbit earth-orbit" data-baseDuration="20">
+        <div class="planet earth">
+          <div class="moon-orbit" data-baseDuration="2">
+            <div class="moon"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MARS -->
+      <div class="orbit mars-orbit" data-baseDuration="28">
+        <div class="planet mars"></div>
+      </div>
+
+      <!-- ASTEROID BELT -->
+      <div class="orbit asteroid-belt-orbit" id="asteroidBeltOrbit" data-baseDuration="40">
+        <!-- random asteroids added in JS -->
+      </div>
+
+      <!-- JUPITER + major moons -->
+      <div class="orbit jupiter-orbit" data-baseDuration="34">
+        <div class="planet jupiter">
+          <!-- Io -->
+          <div class="jupiter-moon-orbit" style="width:24px;height:24px;" data-baseDuration="5">
+            <div class="jupiter-moon" style="width:3px;height:3px;"></div>
+          </div>
+          <!-- Europa -->
+          <div class="jupiter-moon-orbit" style="width:28px;height:28px;" data-baseDuration="7">
+            <div class="jupiter-moon" style="width:4px;height:4px;"></div>
+          </div>
+          <!-- Ganymede -->
+          <div class="jupiter-moon-orbit" style="width:32px;height:32px;" data-baseDuration="9">
+            <div class="jupiter-moon" style="width:5px;height:5px;background:#ddd;"></div>
+          </div>
+          <!-- Callisto -->
+          <div class="jupiter-moon-orbit" style="width:36px;height:36px;" data-baseDuration="11">
+            <div class="jupiter-moon" style="width:4px;height:4px;background:#bbb;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SATURN + some moons -->
+      <div class="orbit saturn-orbit" data-baseDuration="40">
+        <div class="planet saturn">
+          <div class="saturn-moon-orbit" style="width:20px;height:20px;" data-baseDuration="4">
+            <div class="saturn-moon" style="width:3px;height:3px;"></div>
+          </div>
+          <div class="saturn-moon-orbit" style="width:26px;height:26px;" data-baseDuration="6">
+            <div class="saturn-moon" style="width:4px;height:4px;"></div>
+          </div>
+          <div class="saturn-moon-orbit" style="width:30px;height:30px;" data-baseDuration="8">
+            <div class="saturn-moon" style="width:3px;height:3px;"></div>
+          </div>
+          <div class="saturn-moon-orbit" style="width:34px;height:34px;" data-baseDuration="9">
+            <div class="saturn-moon" style="width:3px;height:3px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- URANUS + Titania, Oberon -->
+      <div class="orbit uranus-orbit" data-baseDuration="46">
+        <div class="planet uranus">
+          <div class="uranus-moon-orbit" style="width:22px;height:22px;" data-baseDuration="5">
+            <div class="uranus-moon" style="width:3px;height:3px;"></div>
+          </div>
+          <div class="uranus-moon-orbit" style="width:28px;height:28px;" data-baseDuration="7">
+            <div class="uranus-moon" style="width:3px;height:3px;background:#ddd;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NEPTUNE + Triton -->
+      <div class="orbit neptune-orbit" data-baseDuration="52">
+        <div class="planet neptune">
+          <div class="neptune-moon-orbit" style="width:24px;height:24px;" data-baseDuration="6">
+            <div class="neptune-moon" style="width:4px;height:4px;background:#bbb;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PLUTO + Charon -->
+      <div class="orbit pluto-orbit" data-baseDuration="60">
+        <div class="planet pluto">
+          <div class="pluto-moon-orbit" style="width:16px;height:16px;" data-baseDuration="4">
+            <div class="pluto-moon" style="width:3px;height:3px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INTRO + FANCY SLIDER -->
+  <div class="intro-box">
+    <h1>Ultimate Solar System</h1>
+    <p>
+      A fully <strong>click-&-drag pannable</strong>, 
+      <em>mouse-wheel zoomable</em> Solar System with 
+      a flickering Sun, major moons (Jupiter, Saturn, Uranus, Neptune, Pluto), 
+      random Asteroid Belt (follows your chosen speed), 
+      and dense twinkling stars. You can't lose sight of the system—camera clamped.  
+      Adjust speed below: from 0× (pause) to 10× (fast).
+    </p>
+    <div class="slider-container">
+      <label for="speedSlider">Sim Speed:</label>
+      <input type="range" id="speedSlider" min="0" max="10" step="1" value="1">
+      <span class="slider-value" id="speedValue">1×</span>
+    </div>
+  </div>
+
+  <script>
+    const container=document.getElementById('solarSystemContainer');
+    const universalSystemSize=2200;
+    let cameraX=0, cameraY=0;
+    let scale=1;
+    const MIN_SCALE=0.1, MAX_SCALE=5;
+    let isDragging=false;
+    let lastMouseX=0, lastMouseY=0;
+
+    let orbits=[];
+    let asteroidOrbits=[];
+
+    window.addEventListener('DOMContentLoaded', ()=>{
+      createAsteroidBelt();
+      storeBaseDurations();
+      centerCamera();
+      setupPan();
+      setupZoom();
+      setupSpeedSlider();
+
+      // Start at 1× speed => not paused
+      updateOrbitSpeeds(1);
+
+      window.addEventListener('resize', centerCamera);
+    });
+
+    /* Random asteroids in belt radius 620..640 */
+    function createAsteroidBelt(){
+      const belt=document.getElementById('asteroidBeltOrbit');
+      if(!belt) return;
+      const numAst=600;
+      const minR=620, maxR=640;
+      for(let i=0; i<numAst; i++){
+        const orbitSecs=Math.random()*50+10;
+        const angle=Math.random()*360;
+        const dist=Math.random()*(maxR-minR)+minR;
+        const size=Math.floor(Math.random()*3)+2;
+
+        const orbitDiv=document.createElement('div');
+        orbitDiv.className='asteroidOrbit';
+        orbitDiv.style.transform=`translate(-50%,-50%) rotate(${angle}deg)`;
+        orbitDiv.dataset.baseDuration=orbitSecs.toFixed(3);
+        orbitDiv.style.animationName='asteroid-spin';
+        orbitDiv.style.animationTimingFunction='linear';
+        orbitDiv.style.animationIterationCount='infinite';
+
+        const rock=document.createElement('div');
+        rock.className='asteroid';
+        rock.style.width=size+'px';
+        rock.style.height=size+'px';
+        rock.style.transform=`translateX(${dist}px)`;
+
+        orbitDiv.appendChild(rock);
+        belt.appendChild(orbitDiv);
+        asteroidOrbits.push(orbitDiv);
+      }
+    }
+
+    /* gather base durations for orbits & asteroids */
+    function storeBaseDurations(){
+      const sel='.orbit, .moon-orbit, .jupiter-moon-orbit, .saturn-moon-orbit, .uranus-moon-orbit, .neptune-moon-orbit, .pluto-moon-orbit';
+      const allOrbs=document.querySelectorAll(sel);
+      allOrbs.forEach(orb=>{
+        const dur=orb.getAttribute('data-baseDuration');
+        if(dur){
+          orbits.push({el:orb, base:parseFloat(dur)});
+        }
+      });
+      asteroidOrbits.forEach(ao=>{
+        const base=parseFloat(ao.dataset.baseDuration);
+        orbits.push({el:ao, base});
+      });
+    }
+
+    /* center & scale so entire 2200x2200 fits current window */
+    function centerCamera(){
+      const w=window.innerWidth, h=window.innerHeight;
+      const scaleW=w/universalSystemSize;
+      const scaleH=h/universalSystemSize;
+      scale=Math.min(scaleW, scaleH);
+      cameraX=(w - universalSystemSize*scale)/2;
+      cameraY=(h - universalSystemSize*scale)/2;
+      applyTransform();
+    }
+
+    function applyTransform(){
+      // clamp so system can't slip offscreen
+      const w=window.innerWidth, h=window.innerHeight;
+      const scaledW=universalSystemSize*scale;
+      const scaledH=universalSystemSize*scale;
+
+      if(scaledW<=w){
+        cameraX=(w-scaledW)/2;
+      } else {
+        if(cameraX>0)cameraX=0;
+        if(cameraX<(w-scaledW))cameraX=w-scaledW;
+      }
+      if(scaledH<=h){
+        cameraY=(h-scaledH)/2;
+      } else {
+        if(cameraY>0)cameraY=0;
+        if(cameraY<(h-scaledH))cameraY=h-scaledH;
+      }
+
+      container.style.transform=`translate(${cameraX}px,${cameraY}px) scale(${scale})`;
+    }
+
+    function setupPan(){
+      container.addEventListener('mousedown', e=>{
+        isDragging=true;
+        lastMouseX=e.clientX;
+        lastMouseY=e.clientY;
+      });
+      document.addEventListener('mousemove', e=>{
+        if(!isDragging)return;
+        const dx=e.clientX-lastMouseX;
+        const dy=e.clientY-lastMouseY;
+        cameraX+=dx; 
+        cameraY+=dy;
+        lastMouseX=e.clientX;
+        lastMouseY=e.clientY;
+        applyTransform();
+      });
+      document.addEventListener('mouseup', ()=>isDragging=false);
+    }
+
+    function setupZoom(){
+      container.addEventListener('wheel', e=>{
+        e.preventDefault();
+        const oldScale=scale;
+        const zoomDelta=-e.deltaY*0.001;
+        scale+=zoomDelta;
+        if(scale<MIN_SCALE)scale=MIN_SCALE;
+        if(scale>MAX_SCALE)scale=MAX_SCALE;
+
+        // pointer-based zoom
+        const rect=container.getBoundingClientRect();
+        const mouseX=e.clientX-rect.left;
+        const mouseY=e.clientY-rect.top;
+        const worldX=(mouseX-cameraX)/oldScale;
+        const worldY=(mouseY-cameraY)/oldScale;
+        cameraX=mouseX-worldX*scale;
+        cameraY=mouseY-worldY*scale;
+
+        applyTransform();
+      },{passive:false});
+    }
+
+    function setupSpeedSlider(){
+      const slider=document.getElementById('speedSlider');
+      const speedVal=document.getElementById('speedValue');
+      slider.addEventListener('input', ()=>{
+        const val=parseInt(slider.value,10);
+        speedVal.textContent=(val===0?'0×(Pause)':val+'×');
+        updateOrbitSpeeds(val);
+      });
+    }
+
+    /* If speed=0 => pause. else => newDur= base/factor */
+    function updateOrbitSpeeds(factor){
+      orbits.forEach(({el,base})=>{
+        if(factor===0){
+          el.style.animationPlayState='paused';
+        } else {
+          el.style.animationPlayState='running';
+          const newDur=base/factor;
+          el.style.animationDuration=(newDur>0?newDur:999999)+'s';
+        }
+      });
+    }
+  </script>
+</body>
+</html>
