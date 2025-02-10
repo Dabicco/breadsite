@@ -174,7 +174,7 @@
     </p>
   </header>
 
-  <!-- Student Management Section with Toggle Switch for File Save Mode -->
+  <!-- Student Management Section with Toggle Switch -->
   <div id="studentManagement">
     <select id="studentDropdown" onchange="onStudentChange()">
       <option value="">Select Student</option>
@@ -330,6 +330,7 @@
       const tableBody = document.querySelector("#assignmentTable tbody");
       const row = document.createElement("tr");
       let cell;
+      // Assignment Name
       cell = document.createElement("td");
       const nameInput = document.createElement("input");
       nameInput.type = "text";
@@ -338,6 +339,7 @@
       nameInput.addEventListener("input", saveCurrentStudentAssignments);
       cell.appendChild(nameInput);
       row.appendChild(cell);
+      // Category
       cell = document.createElement("td");
       const categoryInput = document.createElement("input");
       categoryInput.type = "text";
@@ -346,6 +348,7 @@
       categoryInput.addEventListener("input", saveCurrentStudentAssignments);
       cell.appendChild(categoryInput);
       row.appendChild(cell);
+      // Grade Input
       cell = document.createElement("td");
       const gradeInputField = document.createElement("input");
       gradeInputField.type = "text";
@@ -354,6 +357,7 @@
       gradeInputField.addEventListener("input", function() { updateRow(row); });
       cell.appendChild(gradeInputField);
       row.appendChild(cell);
+      // Weight
       cell = document.createElement("td");
       const weightInputField = document.createElement("input");
       weightInputField.type = "number";
@@ -363,6 +367,7 @@
       weightInputField.addEventListener("input", function() { updateRow(row); });
       cell.appendChild(weightInputField);
       row.appendChild(cell);
+      // Comments
       cell = document.createElement("td");
       const commentInput = document.createElement("input");
       commentInput.type = "text";
@@ -371,6 +376,7 @@
       commentInput.addEventListener("input", saveCurrentStudentAssignments);
       cell.appendChild(commentInput);
       row.appendChild(cell);
+      // Status (including "failed")
       cell = document.createElement("td");
       const statusSelect = document.createElement("select");
       const statusOptions = ["", "complete", "turned in", "missing", "failed", "cheated", "late completed"];
@@ -384,12 +390,14 @@
       statusSelect.addEventListener("change", saveCurrentStudentAssignments);
       cell.appendChild(statusSelect);
       row.appendChild(cell);
+      // Computed Percentage
       cell = document.createElement("td");
       const computedCell = document.createElement("span");
       const initialGradeData = parseGrade(gradeInput);
       computedCell.textContent = initialGradeData ? initialGradeData.percentage.toFixed(2) + "%" : "N/A";
       cell.appendChild(computedCell);
       row.appendChild(cell);
+      // Remove button
       cell = document.createElement("td");
       const removeBtn = document.createElement("button");
       removeBtn.textContent = "Remove";
@@ -478,7 +486,6 @@
 
     // ========= SAVING/LOADING DATA =========
     function saveData() {
-      // Check if our fancy switch is enabled
       const txtMode = document.getElementById("txtModeSwitch").checked;
       saveCurrentStudentAssignments();
       if (txtMode) {
@@ -566,12 +573,14 @@
       const colWidths = [60, 40, 30, 20, 60, 40, 30];
       const headers = ["Assignment", "Category", "Grade", "Weight", "Comments", "Status", "Computed %"];
       
+      // Title
       doc.setFontSize(18);
       doc.setTextColor(40, 40, 40);
       doc.text("Grade Report for " + student.name, pageWidth / 2, 20, { align: 'center' });
       doc.setLineWidth(0.5);
       doc.line(10, 25, pageWidth - 10, 25);
       
+      // Table header
       doc.setFontSize(12);
       doc.setFillColor(230, 230, 230);
       let startY = 32;
@@ -584,6 +593,7 @@
       });
       startY += lineHeight + 2;
       
+      // Table rows
       student.assignments.forEach(function(assignment) {
         const gradeData = parseGrade(assignment.grade);
         const computed = gradeData
@@ -621,8 +631,31 @@
         startY += maxLines * lineHeight;
       });
       
+      // --- Additional Course Instructions ---
+      // Add a vertical gap before the instructions.
+      startY += 10;
+      doc.setFontSize(12);
+      doc.setTextColor(0, 0, 0);
+      
+      // Write the instruction text with "90 and above" in bold.
+      const instrLine1 = "Passing for this specific course is a ";
+      doc.text(instrLine1, 12, startY);
+      const instrLine1Width = doc.getTextWidth(instrLine1);
+      doc.setFont("helvetica", "bold");
+      doc.text("90 and above", 12 + instrLine1Width, startY);
+      doc.setFont("helvetica", "normal");
+      startY += 8;
+      doc.text("Any grade below that is considered an 'F' Grade. If you fail this course you must submit a rejoin exam", 12, startY, { maxWidth: pageWidth - 24 });
+      startY += 8;
+      doc.text("which your course master shall provide upon your request.", 12, startY, { maxWidth: pageWidth - 24 });
+      startY += 10;
+      doc.text("Course: Computer Programming Dab", 12, startY);
+      
+      // Footer with overall average
+      startY += 12;
       doc.setFontSize(14);
-      doc.text("Overall Weighted Average: " + document.getElementById("averageValue").textContent, 12, startY + 10);
+      doc.text("Overall Weighted Average: " + document.getElementById("averageValue").textContent, 12, startY);
+      
       doc.save(student.name.replace(/\s+/g, '_') + "_grade_report.pdf");
     }
 
@@ -876,6 +909,7 @@
 
     // ========= INITIALIZATION =========
     addAssignmentRow();
+
   </script>
 </body>
 </html>
