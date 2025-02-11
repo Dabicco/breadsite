@@ -14,7 +14,7 @@
     body {
       font-family: 'Open Sans', sans-serif;
       background: #f2f2f2;
-      padding-top: 60px; /* space for top nav */
+      padding-top: 60px; /* space for fixed nav bar */
     }
     /* Top Navigation Bar */
     .top-nav {
@@ -46,7 +46,7 @@
     .top-nav a:hover {
       text-decoration: underline;
     }
-    /* Content Sections */
+    /* Content Sections (for Home, Schedule, Lessons, Resources) */
     .content-section {
       max-width: 950px;
       margin: 20px auto;
@@ -65,15 +65,13 @@
       text-align: center;
       color: #333;
     }
-    #home p {
+    #home p, #home ul {
       margin-bottom: 15px;
       line-height: 1.6;
       color: #555;
     }
     #home ul {
       margin-left: 20px;
-      margin-bottom: 15px;
-      color: #555;
     }
     /* Schedule Section */
     .schedule-container {
@@ -167,11 +165,11 @@
       line-height: 1.6;
       color: #555;
     }
-    /* Exam Section - No content-section styling so it fills the page */
+    /* Exam Section - fullscreen embed, no footer */
     #exam {
       display: none;
       width: 100%;
-      height: calc(100vh - 50px); /* fill the page below the nav bar */
+      height: calc(100vh - 50px); /* full viewport below nav bar */
       margin: 0;
       padding: 0;
       background: #fff;
@@ -181,10 +179,93 @@
       height: 100%;
       border: none;
     }
-    /* Footer */
-    .footer-note {
+    /* Resources Section */
+    #resources {
+      display: none;
+      max-width: 950px;
+      margin: 20px auto;
+      background: #fff;
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .resource-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .resource-card {
+      background: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+      transition: transform 0.3s, box-shadow 0.3s;
+      overflow: hidden;
+      padding: 20px;
       text-align: center;
-      margin-top: 30px;
+      cursor: pointer;
+    }
+    .resource-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+    .resource-card h3 {
+      margin-bottom: 10px;
+      color: #007BFF;
+    }
+    .resource-card p {
+      color: #555;
+      font-size: 0.95em;
+      margin-bottom: 15px;
+    }
+    .resource-card button {
+      padding: 10px 20px;
+      font-size: 1em;
+      background: #007BFF;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .resource-card button:hover {
+      background: #0056b3;
+    }
+    /* HTML Viewer Section - full screen embed, no footer */
+    #htmlviewer {
+      display: none;
+      width: 100%;
+      height: calc(100vh - 50px);
+      margin: 0;
+      padding: 0;
+      background: #fff;
+      overflow: hidden;
+    }
+    #htmlviewer iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      overflow: hidden;
+    }
+    #htmlviewer button {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 1001;
+      padding: 8px 15px;
+      background: #007BFF;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #htmlviewer button:hover {
+      background: #0056b3;
+    }
+    /* Footer (only for non-fullscreen embed pages) */
+    #footer {
+      max-width: 950px;
+      margin: 20px auto;
+      text-align: center;
       font-size: 1em;
       color: #666;
       font-style: italic;
@@ -199,21 +280,23 @@
       <li><a href="#" onclick="showSection('schedule'); return false;">Schedule</a></li>
       <li><a href="#" onclick="showSection('lessons'); return false;">Lessons</a></li>
       <li><a href="#" onclick="showSection('exam'); return false;">Exam</a></li>
+      <li><a href="#" onclick="showSection('resources'); return false;">Resources</a></li>
     </ul>
   </nav>
 
   <!-- Home Section -->
   <section id="home" class="content-section">
     <h1>Computer Programming Course: HTML5</h1>
-    <p>Welcome to our Computer Programming Course! We are excited to embark on a journey into modern web development with HTML5. In this course, we will learn everything from the basic structure of a webpage to advanced techniques for creating responsive, interactive websites.</p>
-    <p>We will use this site as our central hub. The top navigation bar will help us navigate the following sections:</p>
+    <p>Welcome to our Computer Programming Course! We are excited to embark on a journey into modern web development using HTML5. Throughout this course, we will explore everything from the basic structure of a webpage to advanced techniques for creating responsive and interactive websites.</p>
+    <p>This site is our central hub. We can navigate through the course using the top navigation bar:</p>
     <ul>
-      <li><strong>Home:</strong> This page provides a detailed overview of our course and explains how to use our website.</li>
-      <li><strong>Schedule:</strong> Here, we will see our weekly schedule. Each day is displayed as a clickable card that expands to show a detailed overview of our planned activities. Past days will be grayed out and the current day will be highlighted with a bright border and a "Today" badge.</li>
-      <li><strong>Lessons:</strong> This section will give us an in‑depth overview of the lessons we have covered and those we will cover. We will see detailed descriptions for Lesson 1 (the basics of HTML5), Lesson 2.1 (Basic Content Elements), Lesson 2.2 (Enhanced Content and Semantics), and Lesson 2.3 (Basic HTML Forms). We will also note that our future lessons are still being planned.</li>
-      <li><strong>Exam:</strong> In the Exam tab, we will have a large, full‑page embedded exam portal (covering the area below the nav bar) where our exam will be displayed from <code>/breadsite/portal/exam/</code>.</li>
+      <li><strong>Home:</strong> Provides an overview of our course, its focus on HTML5, and instructions on how to use this website.</li>
+      <li><strong>Schedule:</strong> Displays our weekly schedule with clickable cards that expand to reveal detailed plans for each day. Past days will be grayed out, and the current day will be highlighted with a bright border and a "Today" badge.</li>
+      <li><strong>Lessons:</strong> Offers an in‑depth overview of our lessons, including detailed descriptions for Lesson 1 (the basics of HTML5), Lesson 2.1 (Basic Content Elements), Lesson 2.2 (Enhanced Content and Semantics), and Lesson 2.3 (Basic HTML Forms). Future lessons are still being planned.</li>
+      <li><strong>Exam:</strong> Contains a full‑page embed of our exam portal from <code>/breadsite/portal/exam/</code> where our exam will be administered when the time comes.</li>
+      <li><strong>Resources:</strong> Provides additional tools to support our learning, including an HTML Online Viewer and VSCodeOnline.</li>
     </ul>
-    <p>We are looking forward to an engaging and collaborative learning experience as we explore HTML5 together!</p>
+    <p>We look forward to learning and growing together as we explore the power of HTML5!</p>
   </section>
 
   <!-- Schedule Section -->
@@ -228,11 +311,10 @@
         <ul class="event-list">
           <li>
             <strong>Begin Learning at Lesson 1</strong>
-            <div class="explanation">We will begin our HTML journey by learning the basic structure of an HTML document, including the DOCTYPE declaration and essential tags like <code>&lt;html&gt;</code>, <code>&lt;head&gt;</code>, <code>&lt;title&gt;</code>, and <code>&lt;body&gt;</code>. We will work together through interactive demos and hands-on exercises.</div>
+            <div class="explanation">We will begin our HTML journey by exploring the fundamental structure of an HTML document. We will be introduced to the DOCTYPE and essential tags like <code>&lt;html&gt;</code>, <code>&lt;head&gt;</code>, <code>&lt;title&gt;</code>, and <code>&lt;body&gt;</code>. Interactive demos and hands-on exercises will set our foundation.</div>
           </li>
         </ul>
       </div>
-      
       <!-- Monday, 2/10 -->
       <div class="day-card" data-date="2025-02-10">
         <div class="day-header">
@@ -241,15 +323,14 @@
         <ul class="event-list">
           <li>
             <strong>Make-Up Lesson 1</strong>
-            <div class="explanation">We will review any missed material from Lesson 1 to ensure that our foundation in HTML5 is solid and that we are all on the same page.</div>
+            <div class="explanation">We will review any missed material from Lesson 1 so that our foundation in HTML5 remains strong.</div>
           </li>
           <li>
             <strong>Lesson 2.1 &amp; 2.2</strong>
-            <div class="explanation">We will learn to add content to our webpages by creating hyperlinks, embedding images with descriptive alt text, building both ordered and unordered lists, and using meta tags and semantic elements to improve structure and SEO. Detailed examples and interactive practice will be provided.</div>
+            <div class="explanation">We will add content to our webpages by creating hyperlinks, embedding images with descriptive alt text, building lists, and using meta tags and semantic elements. Detailed examples and interactive practice will guide us.</div>
           </li>
         </ul>
       </div>
-      
       <!-- Tuesday, 2/11 -->
       <div class="day-card" data-date="2025-02-11">
         <div class="day-header">
@@ -258,15 +339,14 @@
         <ul class="event-list">
           <li>
             <strong>Lesson 2.3</strong>
-            <div class="explanation">We will build and style basic HTML forms using the <code>&lt;form&gt;</code> element. Our session will cover various input types (text, email, password, telephone), the use of <code>&lt;textarea&gt;</code> for multi-line text, and <code>&lt;select&gt;</code> with <code>&lt;option&gt;</code> for dropdowns. We will also emphasize proper use of <code>&lt;label&gt;</code> tags to improve accessibility.</div>
+            <div class="explanation">We will build and style basic HTML forms using the <code>&lt;form&gt;</code> element, various input types (text, email, password, tel), <code>&lt;textarea&gt;</code> for multi-line input, and dropdown menus using <code>&lt;select&gt;</code> with <code>&lt;option&gt;</code>. We will focus on best practices and accessibility using <code>&lt;label&gt;</code> tags.</div>
           </li>
           <li>
             <strong>Lesson 2.1-2.3 Quiz</strong>
-            <div class="explanation">We will take a quiz to review and assess our understanding of the material from Lessons 2.1 through 2.3.</div>
+            <div class="explanation">We will take a quiz to review and assess our understanding of Lessons 2.1 through 2.3.</div>
           </li>
         </ul>
       </div>
-      
       <!-- Wednesday, 2/12 -->
       <div class="day-card" data-date="2025-02-12">
         <div class="day-header">
@@ -275,15 +355,14 @@
         <ul class="event-list">
           <li>
             <strong>Lesson 2.4 &amp; 2.5</strong>
-            <div class="explanation">We will explore advanced HTML topics with extensive live coding, detailed examples, and collaborative exercises designed to deepen our understanding of more complex concepts.</div>
+            <div class="explanation">We will explore advanced HTML topics through extensive live coding, detailed examples, and group exercises to master complex concepts.</div>
           </li>
           <li>
             <strong>Studying</strong>
-            <div class="explanation">We will have dedicated study sessions to review and practice all the material we have learned so far, working together in groups and with our instructor.</div>
+            <div class="explanation">We will have dedicated time for collaborative review and practice of all material learned so far.</div>
           </li>
         </ul>
       </div>
-      
       <!-- Thursday, 2/13 -->
       <div class="day-card" data-date="2025-02-13">
         <div class="day-header">
@@ -292,15 +371,14 @@
         <ul class="event-list">
           <li>
             <strong>Lesson 2.6</strong>
-            <div class="explanation">We will be introduced to additional advanced HTML topics through hands-on coding challenges and in-depth discussions. Our session will help us further enhance our skills.</div>
+            <div class="explanation">We will be introduced to additional advanced HTML topics through hands-on coding challenges and in-depth discussions designed to further enhance our skills.</div>
           </li>
           <li>
             <strong>Lesson 2.4-2.6 Quiz</strong>
-            <div class="explanation">We will take a quiz to evaluate our understanding of the advanced concepts covered in Lessons 2.4 through 2.6. (For future sessions, details are still being finalized.)</div>
+            <div class="explanation">We will take a quiz to evaluate our understanding of the advanced topics from Lessons 2.4 to 2.6. (For future sessions, there is not much more detail available yet.)</div>
           </li>
         </ul>
       </div>
-      
       <!-- Friday, 2/14 -->
       <div class="day-card" data-date="2025-02-14">
         <div class="day-header">
@@ -309,15 +387,14 @@
         <ul class="event-list">
           <li>
             <strong>Lesson 2.7-2.8</strong>
-            <div class="explanation">We will tackle complex HTML topics with interactive demonstrations and collaborative exercises, all designed to expand our skills.</div>
+            <div class="explanation">We will tackle challenging new HTML topics through interactive demonstrations and collaborative exercises designed to expand our skills.</div>
           </li>
           <li>
             <strong>Quiz on Lessons 2.7-2.8</strong>
-            <div class="explanation">A challenging quiz will test our mastery of these advanced topics. (Additional details for this day will be provided as the lesson is finalized.)</div>
+            <div class="explanation">A challenging quiz will be administered to test our mastery of the advanced topics introduced on this day.</div>
           </li>
         </ul>
       </div>
-      
       <!-- Saturday, 2/15 -->
       <div class="day-card" data-date="2025-02-15">
         <div class="day-header">
@@ -330,16 +407,15 @@
           </li>
           <li>
             <strong>Pre-Test on Lesson 2 Content</strong>
-            <div class="explanation">A comprehensive pre-test will help us consolidate our understanding of all Lesson 2 materials.</div>
+            <div class="explanation">A comprehensive pre-test will help us consolidate our understanding of all Lesson 2 material.</div>
           </li>
           <li>
             <strong>Maybe Final Exam (Multiple Choice)</strong>
-            <div class="explanation">There may be a multiple choice final exam administered on this day, depending on our progress. (Details for this exam are still tentative.)</div>
+            <div class="explanation">There may be a multiple choice final exam on this day depending on our progress. (Details for this exam are tentative.)</div>
           </li>
         </ul>
       </div>
-      
-      <!-- Sunday, 2/16 (Final Day) -->
+      <!-- Sunday, 2/16 -->
       <div class="day-card" data-date="2025-02-16">
         <div class="day-header">
           <h2>Sunday, 2/16</h2>
@@ -347,11 +423,11 @@
         <ul class="event-list">
           <li>
             <strong>Lesson 2 Final Exam Day</strong>
-            <div class="explanation">We will take our final exam covering all of Lesson 2’s content, which will include both multiple choice and written assignments. Detailed instructions will be provided during the session.</div>
+            <div class="explanation">We will take our final exam covering all of Lesson 2’s content, including both multiple choice and written assignments. Detailed instructions will be provided during the session.</div>
           </li>
           <li>
             <strong>Vs. Instructor or Vs. Peers Challenge</strong>
-            <div class="explanation">We will engage in a head-to-head website building contest, competing against the instructor or our peers to showcase our practical skills and creativity. Full instructions and evaluation criteria will be explained during the challenge.</div>
+            <div class="explanation">We will participate in a head-to-head website building contest to showcase our practical skills and creativity. Full instructions and evaluation criteria will be explained during the contest.</div>
           </li>
         </ul>
       </div>
@@ -365,13 +441,13 @@
     <h2>Lesson 1: The Basics of HTML5</h2>
     <p>
       <strong>Title:</strong> The Basics of HTML5<br>
-      In Lesson 1, we will learn the fundamental structure of an HTML document. We will be introduced to the DOCTYPE declaration and the essential tags such as <code>&lt;html&gt;</code>, <code>&lt;head&gt;</code>, <code>&lt;title&gt;</code>, and <code>&lt;body&gt;</code>. This lesson will lay the groundwork for our journey into modern web development.
+      In Lesson 1, we will learn the fundamental structure of an HTML document. We will be introduced to the DOCTYPE declaration and essential tags such as <code>&lt;html&gt;</code>, <code>&lt;head&gt;</code>, <code>&lt;title&gt;</code>, and <code>&lt;body&gt;</code>. This lesson will lay the groundwork for our journey into modern web development.
     </p>
     
     <h2>Lesson 2.1: Basic Content Elements</h2>
     <p>
       <strong>Theme:</strong> Adding Content to Our Webpages<br>
-      In Lesson 2.1, we will learn how to enrich our webpages by creating hyperlinks using the <code>&lt;a&gt;</code> tag, embedding images using the <code>&lt;img&gt;</code> tag, and constructing both ordered and unordered lists using <code>&lt;ul&gt;</code>, <code>&lt;ol&gt;</code>, and <code>&lt;li&gt;</code>. We will also discuss best practices for using descriptive alt text and meta tags.
+      In Lesson 2.1, we will learn to enhance our webpages by creating hyperlinks with the <code>&lt;a&gt;</code> tag, embedding images with the <code>&lt;img&gt;</code> tag, and constructing both ordered and unordered lists using <code>&lt;ul&gt;</code>, <code>&lt;ol&gt;</code>, and <code>&lt;li&gt;</code>. We will also focus on using descriptive alt text and proper meta tags to improve accessibility and SEO.
     </p>
     
     <h2>Lesson 2.2: Enhanced Content and Semantics</h2>
@@ -383,34 +459,60 @@
     <h2>Lesson 2.3: Basic HTML Forms</h2>
     <p>
       <strong>Theme:</strong> Creating Interactive Webpages<br>
-      In Lesson 2.3, we will learn to create HTML forms that enable user interaction. We will build forms using the <code>&lt;form&gt;</code> element and incorporate a variety of input types—such as text, email, password, and telephone inputs—as well as <code>&lt;textarea&gt;</code> for multi-line input and <code>&lt;select&gt;</code> with <code>&lt;option&gt;</code> for dropdown menus. We will also focus on accessibility by properly using <code>&lt;label&gt;</code> tags and enhancing functionality with attributes like <code>placeholder</code>, <code>required</code>, and <code>enctype</code>.
+      In Lesson 2.3, we will learn to create HTML forms that enable user interaction. We will build forms using the <code>&lt;form&gt;</code> element and incorporate a variety of input types—including text, email, password, and telephone inputs—along with <code>&lt;textarea&gt;</code> for multi-line text and <code>&lt;select&gt;</code> with <code>&lt;option&gt;</code> for dropdown menus. We will also focus on accessibility by using <code>&lt;label&gt;</code> tags and enhancing form functionality with attributes such as <code>placeholder</code>, <code>required</code>, and <code>enctype</code>.
     </p>
     
-    <p><em>Note: Future lessons have not yet been finalized. Additional topics and detailed lesson plans will be announced as the course progresses.</em></p>
+    <p><em>Note: Future lessons have not yet been finalized. Additional topics and detailed lesson plans will be announced as our course progresses.</em></p>
   </section>
 
   <!-- Exam Section -->
-  <section id="exam" style="display:none;">
-    <iframe src="/breadsite/portal/exam/"></iframe>
+  <section id="exam">
+    <iframe src="/breadsite/portal/exam/" scrolling="no"></iframe>
   </section>
 
-  <!-- Footer -->
-  <div class="footer-note">
+  <!-- Resources Section -->
+  <section id="resources" class="content-section">
+    <h1>Resources</h1>
+    <div class="resource-container">
+      <!-- HTML Online Viewer Card -->
+      <div class="resource-card" onclick="showSection('htmlviewer')">
+        <h3>HTML Online Viewer</h3>
+        <p>We will use this tool to view and debug HTML code online. Click to open a full-page embed of the HTML Online Viewer.</p>
+        <button>Open HTML Online Viewer</button>
+      </div>
+      <!-- VSCodeOnline Card -->
+      <div class="resource-card" onclick="window.open('https://vscode.dev/', '_blank')">
+        <h3>VSCodeOnline</h3>
+        <p>Access the online version of Visual Studio Code to write and test our code. Click to open VSCodeOnline in a new tab.</p>
+        <button>Open VSCodeOnline</button>
+      </div>
+    </div>
+  </section>
+  
+  <!-- HTML Viewer Section -->
+  <section id="htmlviewer" style="display:none; width:100%; height:calc(100vh - 50px); margin:0; padding:0; background:#fff; overflow:hidden;">
+    <button onclick="showSection('resources')" style="position:absolute; top:10px; left:10px; z-index:1001; padding:8px 15px; background:#007BFF; color:#fff; border:none; border-radius:5px; cursor:pointer;">Back to Resources</button>
+    <iframe src="https://html.onlineviewer.net/" scrolling="no"></iframe>
+  </section>
+  
+  <!-- Footer (only visible on non-fullscreen embed pages) -->
+  <div id="footer" class="footer-note">
     <p>© Dabicco 2025</p>
   </div>
   
   <script>
-    // Function to show a section and hide the others
+    // Function to show a section and hide the others. Hide footer on fullscreen embed pages.
     function showSection(sectionId) {
-      var sections = document.querySelectorAll('.content-section, #exam');
+      var sections = document.querySelectorAll('.content-section, #exam, #htmlviewer');
       sections.forEach(function(section) {
         section.style.display = 'none';
       });
-      // If the exam section is selected, show it without the content-section styling.
-      if(sectionId === 'exam') {
-        document.getElementById(sectionId).style.display = 'block';
+      document.getElementById(sectionId).style.display = 'block';
+      // Hide footer if exam or htmlviewer are shown
+      if(sectionId === 'exam' || sectionId === 'htmlviewer') {
+        document.getElementById('footer').style.display = 'none';
       } else {
-        document.getElementById(sectionId).style.display = 'block';
+        document.getElementById('footer').style.display = 'block';
       }
     }
     
@@ -451,13 +553,13 @@
           }
           var details = {
             "2025-02-09": "On Sunday, 2/9, we will begin our HTML journey by exploring the fundamental structure of an HTML document. We will be introduced to the DOCTYPE declaration and essential tags such as <code>&lt;html&gt;</code>, <code>&lt;head&gt;</code>, <code>&lt;title&gt;</code>, and <code>&lt;body&gt;</code>. We will work together through interactive demos and hands-on exercises that lay a strong foundation for the course.",
-            "2025-02-10": "On Monday, 2/10, we will review any missed material from Lesson 1 during our Make-Up session to ensure that our foundation is solid. Later, in Lessons 2.1 and 2.2, we will add content to our webpages by creating hyperlinks, embedding images with descriptive alt text, and building lists. We will also discuss the use of meta tags and semantic elements to enhance our pages. Detailed examples and collaborative practice will be provided.",
-            "2025-02-11": "On Tuesday, 2/11, we will focus on Lesson 2.3 by building and styling basic HTML forms. We will learn to use the <code>&lt;form&gt;</code> element along with various input types such as text, email, password, and telephone inputs. We will also create multi-line inputs with <code>&lt;textarea&gt;</code> and dropdown menus using <code>&lt;select&gt;</code> and <code>&lt;option&gt;</code>. A quiz covering Lessons 2.1-2.3 will follow to assess our understanding.",
-            "2025-02-12": "On Wednesday, 2/12, we will dive into Lessons 2.4 and 2.5 where we will explore advanced HTML topics. Through extensive live coding, detailed examples, and group exercises, we will work together to understand and master these complex concepts. We will also have dedicated time for studying and collaborative problem solving.",
-            "2025-02-13": "On Thursday, 2/13, we will be introduced to Lesson 2.6, which will cover additional advanced HTML topics. We will engage in hands-on coding challenges and in-depth discussions to further enhance our skills. Later, a quiz covering Lessons 2.4-2.6 will help us assess our progress. (Details for this day are still being finalized.)",
-            "2025-02-14": "On Friday, 2/14, we will tackle Lessons 2.7 and 2.8. These sessions will introduce challenging new HTML concepts through interactive demonstrations and collaborative exercises. A comprehensive quiz will be administered to test our mastery of these advanced topics. (Additional details for this day will be provided as the content is finalized.)",
-            "2025-02-15": "On Saturday, 2/15, we will conclude Lesson 2 with Lesson 2.9 and take a comprehensive pre-test covering all Lesson 2 content. Additionally, the schedule indicates a 'Maybe Final Exam (Multiple Choice)' – meaning that a final exam may or may not be given on this day, depending on our progress. (There is little more detail available for this day at present.)",
-            "2025-02-16": "On Sunday, 2/16, we will take our final exam for Lesson 2, which will include both multiple choice and written assignments covering all topics from Lesson 2. Following the exam, we will engage in a 'Vs. Instructor or Vs. Peers Challenge' – a website building contest where we compete head-to-head to showcase our practical skills and creativity. Full instructions and criteria will be provided during the session."
+            "2025-02-10": "On Monday, 2/10, we will review any missed material from Lesson 1 during our Make-Up session to ensure that our foundation in HTML5 is solid. Later, in Lessons 2.1 and 2.2, we will add content to our webpages by creating hyperlinks, embedding images with descriptive alt text, building lists, and using meta tags and semantic elements. Detailed examples, interactive practice, and collaborative exercises will guide us through these topics.",
+            "2025-02-11": "On Tuesday, 2/11, we will focus on Lesson 2.3 by building and styling HTML forms. We will learn to use the <code>&lt;form&gt;</code> element with various input types (text, email, password, tel), create multi-line inputs with <code>&lt;textarea&gt;</code>, and build dropdown menus using <code>&lt;select&gt;</code> with <code>&lt;option&gt;</code>. A quiz covering Lessons 2.1-2.3 will follow to assess our understanding.",
+            "2025-02-12": "On Wednesday, 2/12, we will dive into Lessons 2.4 and 2.5, where we will explore advanced HTML topics through extensive live coding, detailed examples, and group exercises. We will also have dedicated study sessions to review and practice all the material we have learned so far.",
+            "2025-02-13": "On Thursday, 2/13, we will be introduced to Lesson 2.6, which covers additional advanced HTML topics. We will engage in hands-on coding challenges and in-depth discussions to further enhance our skills. A quiz covering Lessons 2.4-2.6 will then help us evaluate our progress. (Future session details are still being finalized.)",
+            "2025-02-14": "On Friday, 2/14, we will tackle Lessons 2.7 and 2.8, where we will work on challenging new HTML concepts through interactive demonstrations and collaborative exercises. A challenging quiz will test our mastery of these advanced topics. Further details will be provided as the content is finalized.",
+            "2025-02-15": "On Saturday, 2/15, we will conclude Lesson 2 with Lesson 2.9 and take a comprehensive pre-test covering all Lesson 2 material. The schedule also indicates a 'Maybe Final Exam (Multiple Choice)' – meaning that a final exam may or may not be administered on this day, depending on our progress. (There is little more detail available for this day at present.)",
+            "2025-02-16": "On Sunday, 2/16, we will take our final exam for Lesson 2, which will include both multiple choice and written assignments covering all topics from Lesson 2. Following the exam, we will participate in a 'Vs. Instructor or Vs. Peers Challenge' – a website building contest to showcase our practical skills and creativity. Full instructions and evaluation criteria will be provided during the session."
           };
           var cardDate = card.getAttribute('data-date');
           var detailText = details[cardDate] || "Nothing written down yet.";
