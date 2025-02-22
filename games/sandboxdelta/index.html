@@ -45,7 +45,7 @@
       flex-grow: 1;
     }
 
-    /* Card Style */
+    /* Sandbox Card Style */
     .sandbox-card {
       background-color: #292929;
       width: 80%;
@@ -71,7 +71,7 @@
       margin-top: 15px;
     }
 
-    /* iFrame Embed Area */
+    /* iFrame Embed Area for Game */
     .game-iframe {
       width: 100%;
       height: 600px;
@@ -79,6 +79,16 @@
       border-radius: 5px;
       background-color: #000;
       margin: 20px 0;
+    }
+
+    /* iFrame for Mods in the "Custom Mods & Tools" card */
+    .mods-iframe {
+      width: 100%;
+      height: 300px;
+      border: 2px solid #333;
+      border-radius: 5px;
+      background-color: #000;
+      margin-top: 20px;
     }
 
     /* Fullscreen Button */
@@ -161,13 +171,18 @@
       </button>
     </div>
     
-    <!-- New Section: Mods Link -->
+    <!-- Custom Mods & Tools Card with embedded mods.html -->
     <div class="sandbox-card">
       <h2>Custom Mods & Tools</h2>
       <p>
-        Enhance your Sandbox Delta experience by exploring custom mods and tools.
-        You can find them <a href="/breadsite/games/sandboxdelta/mods.html" target="_blank" style="color: #ffcc00; text-decoration: underline;">here</a>.
+        Enhance your Sandbox Delta experience by exploring custom mods and tools below, just simply click "Copy" and paste the mod code into the mod manager in the above game!
       </p>
+      <iframe
+        id="modsFrame"
+        class="mods-iframe"
+        src="mods.html"
+        title="Custom Mods & Tools"
+      ></iframe>
     </div>
   </div>
 
