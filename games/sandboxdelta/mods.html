@@ -1064,6 +1064,645 @@
   window.addEventListener("keydown", logKeyDown);
   window.everythingLoggerKeyListener = logKeyDown;
 })();`
+      },
+      {
+        id: 'gameOfLifeMod',
+        title: 'Game Of Life Mod',
+        description: 'Adds a suite of Game Of Life variants as new elements under a dedicated "Game Of Life Mod" category. Includes Conway’s, StructuredX (B278/S3456/6), Walled Cities (B45678/S2345), Seeds (B2/S), Gnarl (B1/S1), Diamoeba (B35678/S5678), Stains (B3678/S235678), Long Life (B345/S5), Maze (B3/S12345), Coagulations (B378/S235678), 3-4 (B34/S34), Living On The Edge (B37/S3458/4), Assimilation (B345/S4567), and a Super rule that spawns a random 3×3 block.',
+        gameVersion: '0.4.9a',
+        code: `(function(){
+  // ----------------------------------------------------------------------
+  // FORCE MOD IDENTIFICATION
+  // ----------------------------------------------------------------------
+  window.forcedModInfo = {
+    id: 'gameOfLifeMod',
+    title: 'Game Of Life Mod',
+    description: 'Adds a suite of Game Of Life variants as new elements under a dedicated "Game Of Life Mod" category. Includes Conway’s, StructuredX (B278/S3456/6), Walled Cities (B45678/S2345), Seeds (B2/S), Gnarl (B1/S1), Diamoeba (B35678/S5678), Stains (B3678/S235678), Long Life (B345/S5), Maze (B3/S12345), Coagulations (B378/S235678), 3-4 (B34/S34), Living On The Edge (B37/S3458/4), Assimilation (B345/S4567), and a Super rule that spawns a random 3×3 block.',
+    gameVersion: '0.4.9a'
+  };
+
+  // ----------------------------------------------------------------------
+  // DEFINE MOD ELEMENT IDENTIFIERS (as strings)
+  // ----------------------------------------------------------------------
+  const CONWAYS         = "CONWAYS";
+  const STRUCTUREDX     = "STRUCTUREDX";
+  const WALLED_CITIES   = "WALLED_CITIES";
+  const SEEDS           = "SEEDS";
+  const GNARL           = "GNARL";
+  const DIAMOEBA        = "DIAMOEBA";
+  const STAINS          = "STAINS";
+  const LONG_LIFE       = "LONG_LIFE";
+  const MAZE            = "MAZE";
+  const COAGULATIONS    = "COAGULATIONS";
+  const THREE_FOUR      = "THREE_FOUR";
+  const LIVING_ON_THE_EDGE = "LIVING_ON_THE_EDGE";
+  const ASSIMILATION    = "ASSIMILATION";
+  const SUPER           = "SUPER";
+
+  // Array of all standard mod types (exclude SUPER)
+  const modTypes = [CONWAYS, STRUCTUREDX, WALLED_CITIES, SEEDS, GNARL, DIAMOEBA, STAINS, LONG_LIFE, MAZE, COAGULATIONS, THREE_FOUR, LIVING_ON_THE_EDGE, ASSIMILATION];
+
+  // ----------------------------------------------------------------------
+  // RULE SPECIFICATIONS
+  // ----------------------------------------------------------------------
+  // Each rule: "birth" and "survival" arrays; optionally "maxAge" for age‐tracked rules.
+  const ruleSet = {
+    [CONWAYS]:         { birth: [3],         survival: [2,3] },
+    [STRUCTUREDX]:     { birth: [2,7,8],     survival: [3,4,5,6], maxAge: 6 },
+    [WALLED_CITIES]:   { birth: [4,5,6,7,8],  survival: [2,3,4,5] },
+    [SEEDS]:           { birth: [2],         survival: [] },
+    [GNARL]:           { birth: [1],         survival: [1] },
+    [DIAMOEBA]:        { birth: [3,5,6,7,8],  survival: [5,6,7,8] },
+    [STAINS]:          { birth: [3,6,7,8],    survival: [2,3,5,6,7,8] },
+    [LONG_LIFE]:       { birth: [3,4,5],      survival: [5] },
+    [MAZE]:            { birth: [3],         survival: [1,2,3,4,5] },
+    [COAGULATIONS]:    { birth: [3,7,8],      survival: [2,3,5,6,7,8] },
+    [THREE_FOUR]:      { birth: [3,4],        survival: [3,4] },
+    [LIVING_ON_THE_EDGE]: { birth: [3,7],     survival: [3,4,5,8], maxAge: 4 },
+    [ASSIMILATION]:    { birth: [3,4,5],      survival: [4,5,6,7] }
+  };
+
+  // ----------------------------------------------------------------------
+  // GLOBAL AGE ARRAYS FOR AGE-TRACKED MOD CELLS
+  // ----------------------------------------------------------------------
+  // For StructuredX and Living On The Edge.
+  if(typeof window.structuredXAge === "undefined"){
+    window.structuredXAge = [];
+    for(let y=0; y<GRID_SIZE; y++){
+      structuredXAge[y] = [];
+      for(let x=0; x<GRID_SIZE; x++){
+        structuredXAge[y][x] = null;
+      }
+    }
+  }
+  if(typeof window.livingOnTheEdgeAge === "undefined"){
+    window.livingOnTheEdgeAge = [];
+    for(let y=0; y<GRID_SIZE; y++){
+      livingOnTheEdgeAge[y] = [];
+      for(let x=0; x<GRID_SIZE; x++){
+        livingOnTheEdgeAge[y][x] = null;
+      }
+    }
+  }
+
+  // ----------------------------------------------------------------------
+  // SAVE ORIGINAL CATEGORY BUTTON FUNCTIONALITY (for later cleanup)
+  // ----------------------------------------------------------------------
+  // (Assumes global filterTools exists.)
+  let origFilterTools = filterTools;
+  filterTools = function(){
+    origFilterTools();
+    // When activeCategory is not our mod category, remove selected styling from our mod tools.
+    if(activeCategory !== "game-of-life-mod"){
+      document.querySelectorAll(".tool").forEach(tool => {
+        if(tool.getAttribute("data-cat") === "game-of-life-mod"){
+          tool.classList.remove("selected");
+        }
+      });
+    }
+  };
+
+  // ----------------------------------------------------------------------
+  // ADD CUSTOM CSS FOR TOOLBAR & CATEGORY BUTTONS
+  // ----------------------------------------------------------------------
+  let style2 = document.createElement('style');
+  style2.innerHTML = \`
+    .tool.conways { background-color: #00aaff !important; }
+    .tool.structuredx { background-color: #ffaa00 !important; }
+    .tool.walled_cities { background-color: #aa00ff !important; }
+    .tool.seeds { background-color: #00ff00 !important; }
+    .tool.gnarl { background-color: #8888ff !important; }
+    .tool.diamoeba { background-color: #ff88aa !important; }
+    .tool.stains { background-color: #aaffaa !important; }
+    .tool.long_life { background-color: #ffcc00 !important; }
+    .tool.maze { background-color: #ccffcc !important; }
+    .tool.coagulations { background-color: #ff99ff !important; }
+    .tool.three_four { background-color: #99ffff !important; }
+    .tool.living_on_the_edge { background-color: #ff9999 !important; }
+    .tool.assimilation { background-color: #ffff99 !important; }
+    .tool.super { background-color: #ffffff !important; color: #000; }
+    /* Category button for Game Of Life Mod */
+    #categoryMenu button.game-of-life-mod {
+      background-color: #444;
+      color: #fff;
+      border: 1px solid #888;
+      border-radius: 3px;
+      margin-bottom: 5px;
+      padding: 10px;
+      text-align: center;
+      cursor: pointer;
+      outline: none;
+      box-shadow: none;
+    }
+    #categoryMenu button.game-of-life-mod.selectedCat {
+      border: 2px solid #ffd700;
+    }
+    #categoryMenu button:focus {
+      outline: none;
+      box-shadow: none;
+    }
+  \`;
+  document.head.appendChild(style2);
+
+  // ----------------------------------------------------------------------
+  // HARD CODE THE "Game Of Life Mod" CATEGORY BUTTON INTO THE CATEGORY MENU
+  // ----------------------------------------------------------------------
+  let categoryMenu = document.getElementById('categoryMenu');
+  if(categoryMenu){
+    if(!categoryMenu.querySelector("button[data-category='game-of-life-mod']")){
+      let btn = document.createElement("button");
+      btn.setAttribute("data-category", "game-of-life-mod");
+      btn.classList.add("game-of-life-mod");
+      btn.textContent = "Game Of Life Mod";
+      categoryMenu.appendChild(btn);
+      btn.addEventListener('click', function(){
+        document.querySelectorAll("#categoryMenu button").forEach(b => b.classList.remove("selectedCat"));
+        btn.classList.add("selectedCat");
+        activeCategory = "game-of-life-mod";
+        filterTools();
+      });
+    }
+  }
+
+  // ----------------------------------------------------------------------
+  // ADD TOOL BUTTONS FOR EACH MOD ELEMENT (including SUPER)
+  // ----------------------------------------------------------------------
+  function createToolButton(modId, label, cssClass) {
+    let btn = document.createElement('div');
+    btn.className = 'tool ' + cssClass;
+    btn.setAttribute('data-tool', modId);
+    btn.setAttribute('data-cat', 'game-of-life-mod');
+    btn.title = modId;
+    let span = document.createElement('span');
+    span.textContent = label;
+    btn.appendChild(span);
+    toolbar.appendChild(btn);
+    btn.addEventListener('click', function(){
+      selectTool(btn);
+    });
+  }
+  createToolButton(CONWAYS, "Con", "conways");
+  createToolButton(STRUCTUREDX, "Str", "structuredx");
+  createToolButton(WALLED_CITIES, "Wal", "walled_cities");
+  createToolButton(SEEDS, "Seed", "seeds");
+  createToolButton(GNARL, "Gnar", "gnarl");
+  createToolButton(DIAMOEBA, "Dia", "diamoeba");
+  createToolButton(STAINS, "Sta", "stains");
+  createToolButton(LONG_LIFE, "Lon", "long_life");
+  createToolButton(MAZE, "Maz", "maze");
+  createToolButton(COAGULATIONS, "Coag", "coagulations");
+  createToolButton(THREE_FOUR, "3-4", "three_four");
+  createToolButton(LIVING_ON_THE_EDGE, "Edge", "living_on_the_edge");
+  createToolButton(ASSIMILATION, "Assim", "assimilation");
+  createToolButton(SUPER, "Super", "super");
+
+  // ----------------------------------------------------------------------
+  // PATCH selectTool TO HANDLE OUR MOD TOOLS
+  // ----------------------------------------------------------------------
+  let origSelectTool = selectTool;
+  selectTool = function(el){
+    let tool = el.getAttribute('data-tool');
+    if(modTypes.concat([SUPER]).includes(tool)){
+      currentTool = tool;
+      Array.from(toolElements).forEach(t => t.classList.remove('selected'));
+      el.classList.add('selected');
+    } else {
+      origSelectTool(el);
+    }
+  };
+
+  // ----------------------------------------------------------------------
+  // PATCH placeElementAt TO PLACE OUR MOD CELLS
+  // ----------------------------------------------------------------------
+  let origPlaceElementAt = placeElementAt;
+  placeElementAt = function(x, y, tool){
+    if(modTypes.concat([SUPER]).includes(tool)){
+      // When placing a SUPER, simply place it.
+      if(tool === SUPER){
+        eraseCell(x,y);
+        grid[y][x] = SUPER;
+        temp[y][x] = 20;
+        return;
+      }
+      // For standard mod cells, place and initialize age if needed.
+      eraseCell(x,y);
+      grid[y][x] = tool;
+      temp[y][x] = 20;
+      if(tool === STRUCTUREDX){
+        structuredXAge[y][x] = 0;
+      }
+      if(tool === LIVING_ON_THE_EDGE){
+        livingOnTheEdgeAge[y][x] = 0;
+      }
+      return;
+    } else {
+      origPlaceElementAt(x, y, tool);
+    }
+  };
+
+  // ----------------------------------------------------------------------
+  // PATCH getElementName TO REPORT OUR MOD ELEMENT NAMES
+  // ----------------------------------------------------------------------
+  let origGetElementName = getElementName;
+  getElementName = function(e){
+    switch(e){
+      case CONWAYS: return "Conway's Game Of Life";
+      case STRUCTUREDX: return "StructuredX (B278/S3456/6)";
+      case WALLED_CITIES: return "Walled Cities (B45678/S2345)";
+      case SEEDS: return "Seeds (B2/S)";
+      case GNARL: return "Gnarl (B1/S1)";
+      case DIAMOEBA: return "Diamoeba (B35678/S5678)";
+      case STAINS: return "Stains (B3678/S235678)";
+      case LONG_LIFE: return "Long Life (B345/S5)";
+      case MAZE: return "Maze (B3/S12345)";
+      case COAGULATIONS: return "Coagulations (B378/S235678)";
+      case THREE_FOUR: return "3-4 (B34/S34)";
+      case LIVING_ON_THE_EDGE: return "Living On The Edge (B37/S3458/4)";
+      case ASSIMILATION: return "Assimilation (B345/S4567)";
+      case SUPER: return "Super [Modded]";
+      default: return origGetElementName(e);
+    }
+  };
+
+  // ----------------------------------------------------------------------
+  // PATCH renderCell TO RENDER OUR MOD CELLS WITH COLORS
+  // ----------------------------------------------------------------------
+  let origRenderCell = renderCell;
+  renderCell = function(x,y){
+    const cell = cells[y][x];
+    cell.className = 'cell';
+    cell.style.opacity = "";
+    cell.style.backgroundColor = "";
+    let e = grid[y][x];
+    switch(e){
+      case CONWAYS: cell.style.backgroundColor = "#00aaff"; break;
+      case STRUCTUREDX: cell.style.backgroundColor = "#ffaa00"; break;
+      case WALLED_CITIES: cell.style.backgroundColor = "#aa00ff"; break;
+      case SEEDS: cell.style.backgroundColor = "#00ff00"; break;
+      case GNARL: cell.style.backgroundColor = "#8888ff"; break;
+      case DIAMOEBA: cell.style.backgroundColor = "#ff88aa"; break;
+      case STAINS: cell.style.backgroundColor = "#aaffaa"; break;
+      case LONG_LIFE: cell.style.backgroundColor = "#ffcc00"; break;
+      case MAZE: cell.style.backgroundColor = "#ccffcc"; break;
+      case COAGULATIONS: cell.style.backgroundColor = "#ff99ff"; break;
+      case THREE_FOUR: cell.style.backgroundColor = "#99ffff"; break;
+      case LIVING_ON_THE_EDGE: cell.style.backgroundColor = "#ff9999"; break;
+      case ASSIMILATION: cell.style.backgroundColor = "#ffff99"; break;
+      case SUPER: cell.style.backgroundColor = "#ffffff"; break;
+      default: origRenderCell(x,y);
+    }
+  };
+
+  // ----------------------------------------------------------------------
+  // GAME OF LIFE SIMULATION FUNCTION
+  // ----------------------------------------------------------------------
+  function gameOfLifeStep(){
+    // We'll only update cells that are either EMPTY or one of our mod types.
+    let newState = [];
+    // For age-tracked cells.
+    let newStructuredXAge = [];
+    let newLivingOnTheEdgeAge = [];
+    for(let y=0; y<GRID_SIZE; y++){
+      newState[y] = [];
+      newStructuredXAge[y] = [];
+      newLivingOnTheEdgeAge[y] = [];
+      for(let x=0; x<GRID_SIZE; x++){
+        newState[y][x] = grid[y][x];
+        newStructuredXAge[y][x] = structuredXAge[y][x];
+        newLivingOnTheEdgeAge[y][x] = livingOnTheEdgeAge[y][x];
+      }
+    }
+    const offsets = [
+      [-1,-1],[0,-1],[1,-1],
+      [-1, 0],       [1, 0],
+      [-1, 1],[0, 1],[1, 1]
+    ];
+    // Process each cell.
+    for(let y=0; y<GRID_SIZE; y++){
+      for(let x=0; x<GRID_SIZE; x++){
+        let cell = grid[y][x];
+        // Only process if cell is EMPTY or one of our mod types.
+        if(cell === EMPTY || modTypes.concat([STRUCTUREDX, WALLED_CITIES, SEEDS, GNARL, DIAMOEBA, STAINS, LONG_LIFE, MAZE, COAGULATIONS, THREE_FOUR, LIVING_ON_THE_EDGE, ASSIMILATION, CONWAYS]).includes(cell)){
+          // Special handling for SUPER: immediately generate a 3x3 block.
+          if(cell === SUPER){
+            for(let dy = -1; dy <= 1; dy++){
+              for(let dx = -1; dx <= 1; dx++){
+                let nx = x + dx, ny = y + dy;
+                if(nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE){
+                  // Pick a random mod type (excluding SUPER).
+                  let rnd = modTypes[Math.floor(Math.random() * modTypes.length)];
+                  newState[ny][nx] = rnd;
+                  temp[ny][nx] = 20;
+                  if(rnd === STRUCTUREDX) newStructuredXAge[ny][nx] = 0;
+                  if(rnd === LIVING_ON_THE_EDGE) newLivingOnTheEdgeAge[ny][nx] = 0;
+                }
+              }
+            }
+            continue;
+          }
+          // For live mod cells, count neighbors of the same type.
+          let counts = {};
+          // We'll count only neighbors that are the same mod type.
+          if(cell !== EMPTY){
+            counts[cell] = 0;
+            offsets.forEach(off=>{
+              let nx = x + off[0], ny = y + off[1];
+              if(nx>=0 && nx<GRID_SIZE && ny>=0 && ny<GRID_SIZE){
+                if(grid[ny][nx] === cell) counts[cell]++;
+              }
+            });
+          }
+          // Process survival and death if cell is live.
+          if(cell !== EMPTY){
+            let rule = ruleSet[cell];
+            if(rule){
+              // For age-tracked rules.
+              if(rule.maxAge){
+                let age = (cell === STRUCTUREDX) ? (structuredXAge[y][x]||0) : (livingOnTheEdgeAge[y][x]||0);
+                if(!(rule.survival.includes(counts[cell]) && age < rule.maxAge)){
+                  newState[y][x] = EMPTY;
+                  if(cell === STRUCTUREDX) newStructuredXAge[y][x] = null;
+                  if(cell === LIVING_ON_THE_EDGE) newLivingOnTheEdgeAge[y][x] = null;
+                } else {
+                  newState[y][x] = cell;
+                  if(cell === STRUCTUREDX) newStructuredXAge[y][x] = age + 1;
+                  if(cell === LIVING_ON_THE_EDGE) newLivingOnTheEdgeAge[y][x] = age + 1;
+                }
+              } else {
+                if(!rule.survival.includes(counts[cell])){
+                  newState[y][x] = EMPTY;
+                } else {
+                  newState[y][x] = cell;
+                }
+              }
+            }
+          } else {
+            // For empty cells, try births in a fixed order.
+            for(let i=0; i<modTypes.length; i++){
+              let type = modTypes[i];
+              let rule = ruleSet[type];
+              let ncount = 0;
+              offsets.forEach(off=>{
+                let nx = x + off[0], ny = y + off[1];
+                if(nx>=0 && nx<GRID_SIZE && ny>=0 && ny<GRID_SIZE){
+                  if(grid[ny][nx] === type) ncount++;
+                }
+              });
+              if(rule && rule.birth.includes(ncount)){
+                newState[y][x] = type;
+                temp[y][x] = 20;
+                if(type === STRUCTUREDX) newStructuredXAge[y][x] = 0;
+                if(type === LIVING_ON_THE_EDGE) newLivingOnTheEdgeAge[y][x] = 0;
+                break;
+              }
+            }
+          }
+        }
+      }
+    }
+    // Write new state back to grid and update ages.
+    for(let y=0; y<GRID_SIZE; y++){
+      for(let x=0; x<GRID_SIZE; x++){
+        if(modTypes.concat([STRUCTUREDX, WALLED_CITIES, SEEDS, GNARL, DIAMOEBA, STAINS, LONG_LIFE, MAZE, COAGULATIONS, THREE_FOUR, LIVING_ON_THE_EDGE, ASSIMILATION, CONWAYS]).includes(newState[y][x])){
+          grid[y][x] = newState[y][x];
+          temp[y][x] = 20;
+          if(newState[y][x] === STRUCTUREDX) structuredXAge[y][x] = newStructuredXAge[y][x];
+          if(newState[y][x] === LIVING_ON_THE_EDGE) livingOnTheEdgeAge[y][x] = newLivingOnTheEdgeAge[y][x];
+        } else if(grid[y][x] !== EMPTY && newState[y][x] === EMPTY){
+          grid[y][x] = EMPTY;
+          temp[y][x] = null;
+          if(grid[y][x] === STRUCTUREDX) structuredXAge[y][x] = null;
+          if(grid[y][x] === LIVING_ON_THE_EDGE) livingOnTheEdgeAge[y][x] = null;
+        }
+      }
+    }
+    // Special interaction: if an empty cell has neighbors of at least two different mod types, with a small chance, spawn a new mod cell.
+    for(let y=0; y<GRID_SIZE; y++){
+      for(let x=0; x<GRID_SIZE; x++){
+        if(grid[y][x] === EMPTY){
+          let neighborTypes = new Set();
+          offsets.forEach(off=>{
+            let nx = x + off[0], ny = y + off[1];
+            if(nx>=0 && nx<GRID_SIZE && ny>=0 && ny<GRID_SIZE){
+              let n = grid[ny][nx];
+              if(modTypes.concat([STRUCTUREDX, WALLED_CITIES, SEEDS, GNARL, DIAMOEBA, STAINS, LONG_LIFE, MAZE, COAGULATIONS, THREE_FOUR, LIVING_ON_THE_EDGE, ASSIMILATION, CONWAYS]).includes(n)){
+                neighborTypes.add(n);
+              }
+            }
+          });
+          if(neighborTypes.size >= 2 && Math.random() < 0.005){
+            // Choose a new mod type that is not already present if possible.
+            let available = modTypes.filter(t => !neighborTypes.has(t));
+            let newType = available.length > 0 ? available[Math.floor(Math.random() * available.length)] : modTypes[Math.floor(Math.random() * modTypes.length)];
+            grid[y][x] = newType;
+            temp[y][x] = 20;
+            if(newType === STRUCTUREDX) structuredXAge[y][x] = 0;
+            if(newType === LIVING_ON_THE_EDGE) livingOnTheEdgeAge[y][x] = 0;
+          }
+        }
+      }
+    }
+  }
+
+  // ----------------------------------------------------------------------
+  // PATCH performSimulationStep TO INCLUDE GAME OF LIFE UPDATES
+  // ----------------------------------------------------------------------
+  let origPerformSimStep = performSimulationStep;
+  performSimulationStep = function(){
+    origPerformSimStep();
+    gameOfLifeStep();
+  };
+
+})();
+`
+      },
+      {
+        id: 'guiApiMod',
+        title: 'GUI API Mod',
+        description: 'Provides a comprehensive set of customizable GUI options (draggable/resizable windows, forms, etc.) that other mods can use via window.ModGUIAPI.',
+        gameVersion: '0.4.9a',
+        code: `(function(){
+  // FORCE MOD IDENTIFICATION
+  window.forcedModInfo = {
+    id: 'guiApiMod',
+    title: 'GUI API Mod',
+    description: 'Provides a comprehensive set of customizable GUI options (draggable/resizable windows, forms, etc.) that other mods can use via window.ModGUIAPI.',
+    gameVersion: '0.4.9a'
+  };
+
+  // Expose a global API object for creating GUI elements.
+  window.ModGUIAPI = {
+    /**
+     * Creates a draggable, resizable window.
+     * Options (all optional):
+     *   - title: Title text (default "Window")
+     *   - width: Width (default "300px")
+     *   - height: Height (default "200px")
+     *   - top: Top position (default "100px")
+     *   - left: Left position (default "100px")
+     *   - backgroundColor: Window background color (default "rgba(0,0,0,0.9)")
+     *   - color: Text color (default "#fff")
+     *   - headerColor: Header background (default "#222")
+     *   - content: HTML string or an HTMLElement to be placed inside the window
+     *   - onClose: Callback when window is closed.
+     */
+    createWindow: function(options) {
+      options = options || {};
+      let win = document.createElement("div");
+      win.style.position = "fixed";
+      win.style.top = options.top || "100px";
+      win.style.left = options.left || "100px";
+      win.style.width = options.width || "300px";
+      win.style.height = options.height || "200px";
+      win.style.backgroundColor = options.backgroundColor || "rgba(0,0,0,0.9)";
+      win.style.color = options.color || "#fff";
+      win.style.padding = "10px";
+      win.style.border = "1px solid #888";
+      win.style.zIndex = "3000";
+      win.style.boxSizing = "border-box";
+      win.style.overflow = "auto";
+      win.style.resize = "both";
+
+      // Header (for dragging)
+      let header = document.createElement("div");
+      header.textContent = options.title || "Window";
+      header.style.cursor = "move";
+      header.style.backgroundColor = options.headerColor || "#222";
+      header.style.padding = "5px";
+      header.style.fontWeight = "bold";
+      win.appendChild(header);
+
+      // Close button
+      let closeBtn = document.createElement("button");
+      closeBtn.textContent = "Close";
+      closeBtn.style.position = "absolute";
+      closeBtn.style.top = "5px";
+      closeBtn.style.right = "5px";
+      closeBtn.style.backgroundColor = "#444";
+      closeBtn.style.color = "#fff";
+      closeBtn.style.border = "none";
+      closeBtn.style.cursor = "pointer";
+      closeBtn.addEventListener("click", function(){
+        if(options.onClose) options.onClose();
+        win.parentNode.removeChild(win);
+      });
+      win.appendChild(closeBtn);
+
+      // Content container
+      let contentContainer = document.createElement("div");
+      contentContainer.style.marginTop = "40px"; // leave room for header/close
+      if(options.content){
+        if(typeof options.content === "string"){
+          contentContainer.innerHTML = options.content;
+        } else if(options.content instanceof HTMLElement){
+          contentContainer.appendChild(options.content);
+        }
+      }
+      win.appendChild(contentContainer);
+
+      // Draggable functionality for the header
+      header.onmousedown = function(e){
+        e.preventDefault();
+        let pos3 = e.clientX, pos4 = e.clientY;
+        document.onmouseup = closeDragElement;
+        document.onmousemove = elementDrag;
+        function elementDrag(e){
+          e.preventDefault();
+          let pos1 = pos3 - e.clientX;
+          let pos2 = pos4 - e.clientY;
+          pos3 = e.clientX;
+          pos4 = e.clientY;
+          win.style.top = (win.offsetTop - pos2) + "px";
+          win.style.left = (win.offsetLeft - pos1) + "px";
+        }
+        function closeDragElement(){
+          document.onmouseup = null;
+          document.onmousemove = null;
+        }
+      };
+
+      document.body.appendChild(win);
+      return win;
+    },
+
+    /**
+     * Creates a simple form.
+     * options.fields should be an array of objects, each with:
+     *   - label: string,
+     *   - type: "text", "number", or "checkbox",
+     *   - default: default value,
+     *   - onChange: function(value) {}
+     */
+    createForm: function(options) {
+      options = options || {};
+      let form = document.createElement("form");
+      form.style.fontFamily = "Arial, sans-serif";
+      if(options.fields && Array.isArray(options.fields)){
+        options.fields.forEach(function(field){
+          let fieldContainer = document.createElement("div");
+          fieldContainer.style.marginBottom = "8px";
+          let label = document.createElement("label");
+          label.textContent = field.label + ": ";
+          fieldContainer.appendChild(label);
+          let input;
+          if(field.type === "checkbox"){
+            input = document.createElement("input");
+            input.type = "checkbox";
+            input.checked = field.default;
+          } else {
+            input = document.createElement("input");
+            input.type = field.type || "text";
+            input.value = field.default || "";
+            input.style.width = "60px";
+          }
+          input.addEventListener("change", function(){
+            if(field.onChange) {
+              let val = (input.type === "checkbox") ? input.checked : input.value;
+              field.onChange(val);
+            }
+          });
+          fieldContainer.appendChild(input);
+          form.appendChild(fieldContainer);
+        });
+      }
+      return form;
+    },
+
+    /**
+     * Creates a button.
+     * options: { text: string, onClick: function() {}, style: {} }
+     */
+    createButton: function(options) {
+      options = options || {};
+      let btn = document.createElement("button");
+      btn.textContent = options.text || "Button";
+      if(options.style && typeof options.style === "object"){
+        Object.assign(btn.style, options.style);
+      }
+      btn.addEventListener("click", function(e){
+        if(options.onClick) options.onClick(e);
+      });
+      return btn;
+    },
+
+    /**
+     * Creates a simple label element.
+     * options: { text: string, style: {} }
+     */
+    createLabel: function(options) {
+      options = options || {};
+      let label = document.createElement("label");
+      label.textContent = options.text || "";
+      if(options.style && typeof options.style === "object"){
+        Object.assign(label.style, options.style);
+      }
+      return label;
+    }
+  };
+
+  console.log("[GUI API Mod] Loaded. Use window.ModGUIAPI to create custom GUI elements.");
+})();
+`
       }
     ];
 
