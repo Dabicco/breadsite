@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mod List</title>
+  <style>
+    /* Global styles */
+    body {
+      background: #f0f0f0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    #searchBar {
+      display: block;
+      margin: 0 auto 20px;
+      width: 80%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    #modContainer {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .mod-card {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .mod-card h2 {
+      margin-top: 0;
+      color: #222;
+    }
+    .mod-card p {
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .mod-card small {
+      color: #888;
+      font-size: 12px;
+    }
+    .mod-code {
+      background: #272822;
+      color: #f8f8f2;
+      padding: 10px;
+      border-radius: 5px;
+      overflow: auto;
+      white-space: pre-wrap;
+      font-family: 'Courier New', Courier, monospace;
+      max-height: 300px;
+      margin-top: 10px;
+      border: 1px solid #333;
+    }
+    .copy-button {
+      background: #007BFF;
+      color: #fff;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+    .copy-button:hover {
+      background: #0056b3;
+    }
+    /* Fancy scrollbar styling for code blocks */
+    .mod-code::-webkit-scrollbar {
+      width: 10px;
+    }
+    .mod-code::-webkit-scrollbar-track {
+      background: #444;
+      border-radius: 5px;
+    }
+    .mod-code::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 5px;
+    }
+    .mod-code::-webkit-scrollbar-thumb:hover {
+      background: #aaa;
+    }
+  </style>
+</head>
+<body>
+  <h1>Mod List</h1>
+  <input type="text" id="searchBar" placeholder="Search mods...">
+  <div id="modContainer"></div>
+  <script>
+    // Array of mod objects
+    const mods = [
+      {
+        id: 'magneticFieldMod',
+        title: 'Magnetic Field Mod',
+        description: 'Adds a new Magnet element that generates a magnetic field which gradually attracts metallic elements (copper, charged copper, steel) toward it.',
+        gameVersion: '0.4.9a',
+        code: `(function(){
+  // ----------------------------------------------------------------------
+  // FORCE MOD IDENTIFICATION
+  // ----------------------------------------------------------------------
+  window.forcedModInfo = {
+    id: 'magneticFieldMod',
+    title: 'Magnetic Field Mod',
+    description: 'Adds a new Magnet element that generates a magnetic field which gradually attracts metallic elements (copper, charged copper, steel) toward it.',
+    gameVersion: '0.4.9a'
+  };
+
+  // ----------------------------------------------------------------------
+  // DEFINE THE NEW ELEMENT CONSTANT
+  // ----------------------------------------------------------------------
+  if (typeof window.MAGNET === 'undefined') {
+    window.MAGNET = 68; // New element id for Magnet
+  }
+
+  // ----------------------------------------------------------------------
+  // INJECT CSS TO STYLE THE MOD'S TOOL AND CELLS
+  // ----------------------------------------------------------------------
+  var style = document.createElement('style');
+  style.innerHTML = \`
+    .tool.magnet { background-color: #8a2be2 !important; }
+    .magnet { background-color: #8a2be2 !important; }
+  \`;
+  document.head.appendChild(style);
+
+  // ----------------------------------------------------------------------
+  // SAVE ORIGINAL FUNCTIONS FOR TERMINATION
+  // ----------------------------------------------------------------------
+  if (!window.magneticFieldModOriginals) {
+    window.magneticFieldModOriginals = {
+      selectTool: selectTool,
+      placeElementAt: placeElementAt,
+      performSimulationStep: performSimulationStep,
+      getElementName: getElementName,
+      renderCell: renderCell
+    };
+  }
+
+  // ----------------------------------------------------------------------
+  // CREATE THE MOD TOOL BUTTON
+  // ----------------------------------------------------------------------
+  var magnetTool = document.createElement('div');
+  magnetTool.className = 'tool magnet';
+  magnetTool.setAttribute('data-tool', 'magnet');
+  magnetTool.setAttribute('data-cat', 'special');
+  magnetTool.title = 'Magnet';
+  var span = document.createElement('span');
+  span.textContent = 'Mag';
+  magnetTool.appendChild(span);
+  toolbar.appendChild(magnetTool);
+  magnetTool.addEventListener('click', function(){
+    selectTool(magnetTool);
+  });
+
+  // ----------------------------------------------------------------------
+  // PATCH THE selectTool FUNCTION
+  // ----------------------------------------------------------------------
+  selectTool = function(el) {
+    var toolName = el.getAttribute('data-tool');
+    if (toolName === 'magnet') {
+      currentTool = MAGNET;
+      Array.from(toolElements).forEach(function(t){ t.classList.remove('selected'); });
+      el.classList.add('selected');
+    } else {
+      window.magneticFieldModOriginals.selectTool(el);
+    }
+  };
+
+  // ----------------------------------------------------------------------
+  // PATCH THE placeElementAt FUNCTION
+  // ----------------------------------------------------------------------
+  placeElementAt = function(x, y, tool) {
+    if (tool === MAGNET) {
+      eraseCell(x, y);
+      grid[y][x] = MAGNET;
+      temp[y][x] = 20; // initial temperature
+    } else {
+      window.magneticFieldModOriginals.placeElementAt(x, y, tool);
+    }
+  };
+
+  // ----------------------------------------------------------------------
+  // PATCH getElementName TO SHOW "Magnet [Modded]"
+  // ----------------------------------------------------------------------
+  getElementName = function(e) {
+    if (e === MAGNET) return "Magnet [Modded]";
+    return window.magneticFieldModOriginals.getElementName(e);
+  };
+
+  // ----------------------------------------------------------------------
+  // PATCH THE renderCell FUNCTION TO RENDER MAGNET CELLS
+  // ----------------------------------------------------------------------
+  renderCell = function(x, y) {
+    const cell = cells[y][x];
+    cell.className = 'cell';
+    cell.style.opacity = "";
+    cell.style.backgroundColor = "";
+    var e = grid[y][x];
+    if (e === MAGNET) {
+      cell.classList.add('magnet');
+      cell.style.backgroundColor = "#8a2be2";
+    } else {
+      window.magneticFieldModOriginals.renderCell(x, y);
+    }
+  };
+
+  // ----------------------------------------------------------------------
+  // PATCH THE performSimulationStep FUNCTION TO HANDLE MAGNET
+  // ----------------------------------------------------------------------
+  var originalPerformSimStep = window.magneticFieldModOriginals.performSimulationStep;
+  performSimulationStep = function() {
+    // Process Magnet behavior before normal simulation step.
+    for (let y = 0; y < GRID_SIZE; y++){
+      for (let x = 0; x < GRID_SIZE; x++){
+        if (!moved[y][x] && grid[y][x] === MAGNET) {
+          // Define a longer radius for the magnetic field
+          var magneticRadius = 10;
+          // Scan all cells in a square around the magnet
+          for (let dy = -magneticRadius; dy <= magneticRadius; dy++){
+            for (let dx = -magneticRadius; dx <= magneticRadius; dx++){
+              let nx = x + dx, ny = y + dy;
+              if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {
+                // Check for metallic elements (copper, charged copper, or steel)
+                if (grid[ny][nx] === COPPER || grid[ny][nx] === CHARGED_COPPER || grid[ny][nx] === STEEL) {
+                  // Calculate the Euclidean distance
+                  let dist = Math.sqrt(dx * dx + dy * dy);
+                  // Only attempt to move if the element is not already adjacent and with a chance for gradual movement
+                  if (dist > 1 && Math.random() < 0.3) {
+                    // Compute a step of 1 cell toward the magnet
+                    let stepX = dx > 0 ? -1 : (dx < 0 ? 1 : 0);
+                    let stepY = dy > 0 ? -1 : (dy < 0 ? 1 : 0);
+                    let targetX = nx + stepX, targetY = ny + stepY;
+                    if (targetX >= 0 && targetX < GRID_SIZE && targetY >= 0 && targetY < GRID_SIZE && grid[targetY][targetX] === EMPTY) {
+                      moveCell(nx, ny, targetX, targetY, temp[ny][nx], grid[ny][nx]);
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    originalPerformSimStep();
+  };
+})();`
+      },
+      {
+        id: 'instantLightningStrikeMod',
+        title: 'Instant Lightning Strike Mod',
+        description: 'Adds a lightning strike element that instantly calculates a downward path—with random lateral shifts—leaving behind a visible trail for 0.7s, then explodes after 1s.',
+        gameVersion: '0.4.9a',
+        code: `(function(){
+  // ----------------------------------------------------------------------
+  // FORCE MOD IDENTIFICATION
+  // ----------------------------------------------------------------------
+  window.forcedModInfo = {
+    id: 'instantLightningStrikeMod',
+    title: 'Instant Lightning Strike Mod',
+    description: 'Adds a lightning strike element that instantly calculates a downward path—with random lateral shifts—leaving behind a visible trail for 0.7s, then explodes after 1s.',
+    gameVersion: '0.4.9a'
+  };
+
+  // ----------------------------------------------------------------------
+  // DEFINE NEW ELEMENT CONSTANTS
+  // ----------------------------------------------------------------------
+  if (typeof window.LIGHTNING_STRIKE === 'undefined') {
+    window.LIGHTNING_STRIKE = 69;
+  }
+  if (typeof window.LIGHTNING_TRAIL === 'undefined') {
+    window.LIGHTNING_TRAIL = 70;
+  }
+
+  // ----------------------------------------------------------------------
+  // INJECT CSS TO STYLE THE MOD'S TOOL, STRIKE, AND TRAIL CELLS
+  // ----------------------------------------------------------------------
+  var style = document.createElement('style');
+  style.innerHTML = \`
+    .tool.lightning { background-color: gold !important; }
+    .lightning { background-color: gold !important; }
+    .lightning-trail { background-color: #ffd700 !important; } /* pale gold */
+  \`;
+  document.head.appendChild(style);
+
+  // ----------------------------------------------------------------------
+  // SAVE ORIGINAL FUNCTIONS FOR TERMINATION
+  // ----------------------------------------------------------------------
+  if (!window.instantLightningStrikeModOriginals) {
+    window.instantLightningStrikeModOriginals = {
+      selectTool: selectTool,
+      placeElementAt: placeElementAt,
+      performSimulationStep: performSimulationStep,
+      getElementName: getElementName,
+      renderCell: renderCell
+    };
+  }
+
+  // ----------------------------------------------------------------------
+  // CREATE THE MOD TOOL BUTTON
+  // ----------------------------------------------------------------------
+  var lightningTool = document.createElement('div');
+  lightningTool.className = 'tool lightning';
+  lightningTool.setAttribute('data-tool', 'lightning');
+  lightningTool.setAttribute('data-cat', 'special');
+  lightningTool.title = 'Lightning Strike';
+  var span = document.createElement('span');
+  span.textContent = 'Lgt';
+  lightningTool.appendChild(span);
+  toolbar.appendChild(lightningTool);
+  lightningTool.addEventListener('click', function(){
+    selectTool(lightningTool);
+  });
+
+  // ----------------------------------------------------------------------
+  // PATCH THE selectTool FUNCTION
+  // ----------------------------------------------------------------------
+  selectTool = function(el) {
+    var toolName = el.getAttribute('data-tool');
+    if (toolName === 'lightning') {
+      currentTool = LIGHTNING_STRIKE;
+      Array.from(toolElements).forEach(function(t){ t.classList.remove('selected'); });
+      el.classList.add('selected');
+    } else {
+      window.instantLightningStrikeModOriginals.selectTool(el);
+    }
+  };
+
+  // ----------------------------------------------------------------------
+  // SET UP MOD-SPECIFIC ARRAYS FOR TIMERS
+  // ----------------------------------------------------------------------
+  if (typeof window.lightningTimers === 'undefined') {
+    window.lightningTimers = [];
+    for (let y = 0; y < GRID_SIZE; y++) {
+      lightningTimers[y] = [];
+      for (let x = 0; x < GRID_SIZE; x++) {
+        lightningTimers[y][x] = null;
+      }
+    }
+  }
+  if (typeof window.lightningTrailTimers === 'undefined') {
+    window.lightningTrailTimers = [];
+    for (let y = 0; y < GRID_SIZE; y++) {
+      lightningTrailTimers[y] = [];
+      for (let x = 0; x < GRID_SIZE; x++) {
+        lightningTrailTimers[y][x] = null;
+      }
+    }
+  }
+
+  // ----------------------------------------------------------------------
+  // PATCH THE placeElementAt FUNCTION
+  // ----------------------------------------------------------------------
+  // When placing a lightning strike, instantly compute its downward path with random lateral shifts.
+  placeElementAt = function(x, y, tool) {
+    if (tool === LIGHTNING_STRIKE) {
+      // Compute the entire path instantly.
+      let currentX = x, currentY = y;
+      let path = [];
+      path.push({ x: currentX, y: currentY });
+      // Continue downward until reaching bottom or encountering a non-empty cell.
+      while (currentY < GRID_SIZE - 1 && grid[currentY+1][currentX] === EMPTY) {
+        // With a 30% chance, try a lateral shift.
+        if (Math.random() < 0.3) {
+          let lateralDir = Math.random() < 0.5 ? -1 : 1;
+          let newX = currentX + lateralDir;
+          // Check lateral bounds and ensure both the lateral cell at the same row and below it are empty.
+          if (newX >= 0 && newX < GRID_SIZE && grid[currentY][newX] === EMPTY && grid[currentY+1][newX] === EMPTY) {
+            currentX = newX;
+          }
+        }
+        currentY++;
+        path.push({ x: currentX, y: currentY });
+      }
+      // For every cell in the path except the last one, mark it as a lightning trail.
+      for (let i = 0; i < path.length - 1; i++) {
+        let pos = path[i];
+        grid[pos.y][pos.x] = LIGHTNING_TRAIL;
+        temp[pos.y][pos.x] = 20;
+        lightningTrailTimers[pos.y][pos.x] = 0; // initialize trail timer
+      }
+      // The bottom cell becomes the active lightning strike.
+      let bottom = path[path.length - 1];
+      grid[bottom.y][bottom.x] = LIGHTNING_STRIKE;
+      temp[bottom.y][bottom.x] = 20;
+      lightningTimers[bottom.y][bottom.x] = 0; // initialize explosion timer
+      return;
+    } else {
+      window.instantLightningStrikeModOriginals.placeElementAt(x, y, tool);
+    }
+  };
+
+  // ----------------------------------------------------------------------
+  // PATCH getElementName TO SHOW "Lightning Strike [Modded]"
+  // ----------------------------------------------------------------------
+  getElementName = function(e) {
+    if (e === LIGHTNING_STRIKE) return "Lightning Strike [Modded]";
+    return window.instantLightningStrikeModOriginals.getElementName(e);
+  };
+
+  // ----------------------------------------------------------------------
+  // PATCH renderCell TO RENDER LIGHTNING STRIKE AND TRAIL CELLS
+  // ----------------------------------------------------------------------
+  renderCell = function(x, y) {
+    const cell = cells[y][x];
+    cell.className = 'cell';
+    cell.style.opacity = "";
+    cell.style.backgroundColor = "";
+    var e = grid[y][x];
+    if (e === LIGHTNING_STRIKE) {
+      cell.classList.add('lightning');
+      cell.style.backgroundColor = "gold";
+    } else if (e === LIGHTNING_TRAIL) {
+      cell.classList.add('lightning-trail');
+      cell.style.backgroundColor = "#ffd700";
+    } else {
+      window.instantLightningStrikeModOriginals.renderCell(x, y);
+    }
+  };
+
+  // ----------------------------------------------------------------------
+  // PATCH performSimulationStep TO HANDLE LIGHTNING STRIKE EXPLOSION AND TRAIL DECAY
+  // ----------------------------------------------------------------------
+  var origPerformSimStep = window.instantLightningStrikeModOriginals.performSimulationStep;
+  performSimulationStep = function() {
+    // Process lightning trail decay: any trail cell older than 0.7 seconds vanishes.
+    for (let y = 0; y < GRID_SIZE; y++) {
+      for (let x = 0; x < GRID_SIZE; x++) {
+        if (grid[y][x] === LIGHTNING_TRAIL) {
+          if (lightningTrailTimers[y][x] === null) {
+            lightningTrailTimers[y][x] = 0;
+          } else {
+            lightningTrailTimers[y][x] += simulationTimeStep;
+            if (lightningTrailTimers[y][x] >= 0.7) {
+              eraseCell(x, y);
+              lightningTrailTimers[y][x] = null;
+            }
+          }
+        }
+      }
+    }
+    // Process explosion for lightning strike cells.
+    for (let y = 0; y < GRID_SIZE; y++){
+      for (let x = 0; x < GRID_SIZE; x++){
+        if (!moved[y][x] && grid[y][x] === LIGHTNING_STRIKE) {
+          if (lightningTimers[y][x] === null) {
+            lightningTimers[y][x] = 0;
+          }
+          lightningTimers[y][x] += simulationTimeStep;
+          // After 1 second, trigger an explosion and clear the column (both strike and trail).
+          if (lightningTimers[y][x] >= 1.0) {
+            explodeBomb(x, y);
+            for (let clearY = y; clearY >= 0; clearY--) {
+              if (grid[clearY][x] === LIGHTNING_STRIKE || grid[clearY][x] === LIGHTNING_TRAIL) {
+                eraseCell(x, clearY);
+                lightningTimers[clearY][x] = null;
+                lightningTrailTimers[clearY][x] = null;
+              } else {
+                break;
+              }
+            }
+          }
+        }
+      }
+    }
+    origPerformSimStep();
+  };
+})();`
+      },
+      {
+        id: 'portalMod',
+        title: 'Portal Mod',
+        description: 'Adds two paired portal elements (Portal A and Portal B) that work in both directions. When an element touches either portal, it is teleported to a random empty neighbor around the partner portal. Teleported elements receive a cooldown so they aren’t reabsorbed immediately.',
+        gameVersion: '0.4.9a',
+        code: `(function(){
+  // ----------------------------------------------------------------------
+  // FORCE MOD IDENTIFICATION
+  // ----------------------------------------------------------------------
+  window.forcedModInfo = {
+    id: 'portalMod',
+    title: 'Portal Mod',
+    description: 'Adds two paired portal elements (Portal A and Portal B) that work in both directions. When an element touches either portal, it is teleported to a random empty neighbor around the partner portal. Teleported elements receive a cooldown so they aren’t reabsorbed immediately.',
+    gameVersion: '0.4.9a'
+  };
+
+  // ----------------------------------------------------------------------
+  // DEFINE NEW ELEMENT CONSTANTS
+  // ----------------------------------------------------------------------
+  if (typeof window.PORTAL_A === 'undefined') {
+    window.PORTAL_A = 71;
+  }
+  if (typeof window.PORTAL_B === 'undefined') {
+    window.PORTAL_B = 72;
+  }
+
+  // ----------------------------------------------------------------------
+  // INJECT CSS TO STYLE THE MOD'S TOOLS AND CELLS
+  // ----------------------------------------------------------------------
+  var style = document.createElement('style');
+  style.innerHTML = \`
+    .tool.portal-a { background-color: deepskyblue !important; }
+    .tool.portal-b { background-color: orchid !important; }
+    .portal-a { background-color: deepskyblue !important; }
+    .portal-b { background-color: orchid !important; }
+  \`;
+  document.head.appendChild(style);
+
+  // ----------------------------------------------------------------------
+  // SAVE ORIGINAL FUNCTIONS FOR TERMINATION
+  // ----------------------------------------------------------------------
+  if (!window.portalModOriginals) {
+    window.portalModOriginals = {
+      selectTool: selectTool,
+      placeElementAt: placeElementAt,
+      performSimulationStep: performSimulationStep,
+      getElementName: getElementName,
+      renderCell: renderCell
+    };
+  }
+
+  // ----------------------------------------------------------------------
+  // GLOBAL VARIABLES FOR PORTAL PAIR LOCATIONS & TELEPORT COOLDOWN
+  // ----------------------------------------------------------------------
+  // These store the coordinates of the most recently placed portals.
+  window.portalAPos = null;
+  window.portalBPos = null;
+  // Create a 2D array to track teleport cooldowns so teleported elements are not reabsorbed immediately.
+  if (typeof window.portalCooldown === 'undefined') {
+    window.portalCooldown = [];
+    for (let y = 0; y < GRID_SIZE; y++) {
+      portalCooldown[y] = [];
+      for (let x = 0; x < GRID_SIZE; x++) {
+        portalCooldown[y][x] = 0;
+      }
+    }
+  }
+
+  // ----------------------------------------------------------------------
+  // CREATE THE MOD TOOL BUTTONS
+  // ----------------------------------------------------------------------
+  // Create Portal A button.
+  var portalATool = document.createElement('div');
+  portalATool.className = 'tool portal-a';
+  portalATool.setAttribute('data-tool', 'portal-a');
+  portalATool.setAttribute('data-cat', 'special');
+  portalATool.title = 'Portal A';
+  var spanA = document.createElement('span');
+  spanA.textContent = 'PA';
+  portalATool.appendChild(spanA);
+  toolbar.appendChild(portalATool);
+  portalATool.addEventListener('click', function(){
+    selectTool(portalATool);
+  });
+  // Create Portal B button.
+  var portalBTool = document.createElement('div');
+  portalBTool.className = 'tool portal-b';
+  portalBTool.setAttribute('data-tool', 'portal-b');
+  portalBTool.setAttribute('data-cat', 'special');
+  portalBTool.title = 'Portal B';
+  var spanB = document.createElement('span');
+  spanB.textContent = 'PB';
+  portalBTool.appendChild(spanB);
+  toolbar.appendChild(portalBTool);
+  portalBTool.addEventListener('click', function(){
+    selectTool(portalBTool);
+  });
+
+  // ----------------------------------------------------------------------
+  // PATCH THE selectTool FUNCTION
+  // ----------------------------------------------------------------------
+  selectTool = function(el) {
+    var toolName = el.getAttribute('data-tool');
+    if (toolName === 'portal-a') {
+      currentTool = PORTAL_A;
+      Array.from(toolElements).forEach(function(t){ t.classList.remove('selected'); });
+      el.classList.add('selected');
+    } else if (toolName === 'portal-b') {
+      currentTool = PORTAL_B;
+      Array.from(toolElements).forEach(function(t){ t.classList.remove('selected'); });
+      el.classList.add('selected');
+    } else {
+      window.portalModOriginals.selectTool(el);
+    }
+  };
+
+  // ----------------------------------------------------------------------
+  // PATCH THE placeElementAt FUNCTION
+  // ----------------------------------------------------------------------
+  // When placing a portal element, record its coordinates.
+  placeElementAt = function(x, y, tool) {
+    if (tool === PORTAL_A) {
+      eraseCell(x, y);
+      grid[y][x] = PORTAL_A;
+      temp[y][x] = 20;
+      window.portalAPos = { x: x, y: y };
+      return;
+    } else if (tool === PORTAL_B) {
+      eraseCell(x, y);
+      grid[y][x] = PORTAL_B;
+      temp[y][x] = 20;
+      window.portalBPos = { x: x, y: y };
+      return;
+    } else {
+      window.portalModOriginals.placeElementAt(x, y, tool);
+    }
+  };
+
+  // ----------------------------------------------------------------------
+  // PATCH getElementName TO SHOW "Portal A [Modded]" OR "Portal B [Modded]"
+  // ----------------------------------------------------------------------
+  getElementName = function(e) {
+    if (e === PORTAL_A) return "Portal A [Modded]";
+    if (e === PORTAL_B) return "Portal B [Modded]";
+    return window.portalModOriginals.getElementName(e);
+  };
+
+  // ----------------------------------------------------------------------
+  // PATCH renderCell TO RENDER PORTAL CELLS
+  // ----------------------------------------------------------------------
+  renderCell = function(x, y) {
+    const cell = cells[y][x];
+    cell.className = 'cell';
+    cell.style.opacity = "";
+    cell.style.backgroundColor = "";
+    var e = grid[y][x];
+    if (e === PORTAL_A) {
+      cell.classList.add('portal-a');
+      cell.style.backgroundColor = "deepskyblue";
+    } else if (e === PORTAL_B) {
+      cell.classList.add('portal-b');
+      cell.style.backgroundColor = "orchid";
+    } else {
+      window.portalModOriginals.renderCell(x, y);
+    }
+  };
+
+  // ----------------------------------------------------------------------
+  // UTILITY: Get empty neighbors around a given position
+  // ----------------------------------------------------------------------
+  function getEmptyNeighbors(pos) {
+    let neighbors = [];
+    for (let dy = -1; dy <= 1; dy++){
+      for (let dx = -1; dx <= 1; dx++){
+        if (dx === 0 && dy === 0) continue;
+        let nx = pos.x + dx, ny = pos.y + dy;
+        if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE && grid[ny][nx] === EMPTY) {
+          neighbors.push({ x: nx, y: ny });
+        }
+      }
+    }
+    return neighbors;
+  }
+
+  // ----------------------------------------------------------------------
+  // PATCH performSimulationStep TO PROCESS PORTAL TELEPORTATION WITH COOLDOWN
+  // ----------------------------------------------------------------------
+  var origPerformSimStep = window.portalModOriginals.performSimulationStep;
+  performSimulationStep = function() {
+    // Update portal cooldowns for all cells.
+    for (let y = 0; y < GRID_SIZE; y++) {
+      for (let x = 0; x < GRID_SIZE; x++) {
+        if (portalCooldown[y][x] > 0) {
+          portalCooldown[y][x] -= simulationTimeStep;
+          if (portalCooldown[y][x] < 0) portalCooldown[y][x] = 0;
+        }
+      }
+    }
+    // Process portal teleportation for both portals.
+    for (let y = 0; y < GRID_SIZE; y++){
+      for (let x = 0; x < GRID_SIZE; x++){
+        if ((grid[y][x] === PORTAL_A || grid[y][x] === PORTAL_B)) {
+          // Determine partner portal position.
+          let partnerPos = null;
+          if (grid[y][x] === PORTAL_A && window.portalBPos) {
+            partnerPos = window.portalBPos;
+          } else if (grid[y][x] === PORTAL_B && window.portalAPos) {
+            partnerPos = window.portalAPos;
+          }
+          if (partnerPos) {
+            let adjacent = [];
+            for (let dy = -1; dy <= 1; dy++){
+              for (let dx = -1; dx <= 1; dx++){
+                if (dx === 0 && dy === 0) continue;
+                let nx = x + dx, ny = y + dy;
+                if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {
+                  // Only consider non-empty, non-portal cells that are not on cooldown.
+                  if (grid[ny][nx] !== EMPTY && grid[ny][nx] !== PORTAL_A && grid[ny][nx] !== PORTAL_B && portalCooldown[ny][nx] === 0) {
+                    adjacent.push({ x: nx, y: ny });
+                  }
+                }
+              }
+            }
+            if (adjacent.length > 0) {
+              adjacent.forEach(function(pos) {
+                let targetCandidates = getEmptyNeighbors(partnerPos);
+                if (targetCandidates.length > 0) {
+                  let target = targetCandidates[Math.floor(Math.random() * targetCandidates.length)];
+                  moveCell(pos.x, pos.y, target.x, target.y, temp[pos.y][pos.x], grid[pos.y][pos.x]);
+                  // Set a cooldown for the teleported cell to prevent immediate reabsorption.
+                  portalCooldown[target.y][target.x] = 1.0;
+                }
+              });
+            }
+          }
+        }
+      }
+    }
+    origPerformSimStep();
+  };
+})();`
+      },
+      {
+        id: 'dabyFPSMod',
+        title: 'DabyFPS Mod',
+        description: 'Caps the game FPS at 60 and, if FPS falls below 60, internally speeds up simulation steps (based on a base speed of ~0.3) to keep the game in time without changing the speed slider.',
+        gameVersion: '0.4.9a',
+        code: `(function(){
+  // ----------------------------------------------------------------------
+  // FORCE MOD IDENTIFICATION
+  // ----------------------------------------------------------------------
+  window.forcedModInfo = {
+    id: 'dabyFPSMod',
+    title: 'DabyFPS Mod',
+    description: 'Caps the game FPS at 60 and, if FPS falls below 60, internally speeds up simulation steps (based on a base speed of ~0.3) to keep the game in time without changing the speed slider.',
+    gameVersion: '0.4.9a'
+  };
+
+  // ----------------------------------------------------------------------
+  // SAVE ORIGINAL FUNCTIONS FOR TERMINATION
+  // ----------------------------------------------------------------------
+  if (!window.dabyFPSModOriginals) {
+    window.dabyFPSModOriginals = {
+      requestAnimationFrame: window.requestAnimationFrame,
+      gameLoop: gameLoop
+    };
+  }
+
+  // ----------------------------------------------------------------------
+  // OVERRIDE requestAnimationFrame TO CAP FPS AT 60
+  // ----------------------------------------------------------------------
+  window.requestAnimationFrame = function(callback) {
+    return window.setTimeout(callback, 1000/60);
+  };
+
+  // ----------------------------------------------------------------------
+  // PATCH THE gameLoop FUNCTION TO COMPENSATE FOR LOW FPS
+  // ----------------------------------------------------------------------
+  var originalGameLoop = window.dabyFPSModOriginals.gameLoop;
+  gameLoop = function() {
+    frames++;
+    const now = performance.now();
+    if(now - lastTime >= 1000){
+      fps = frames;
+      frames = 0;
+      lastTime = now;
+    }
+    hudFPS.textContent = \`FPS: \${fps}\`;
+    spamPlace();
+    let effectiveSpeed = speed;
+    if(fps > 0 && fps < 60){
+      effectiveSpeed = speed * (60 / fps);
+    }
+    stepAccumulator += effectiveSpeed;
+    while(stepAccumulator >= 1){
+      resetMoved();
+      performSimulationStep();
+      updateTemperature();
+      unifyCopperClusters();
+      processTransformations();
+      stepAccumulator -= 1;
+    }
+    updateHUD();
+    renderGrid();
+    requestAnimationFrame(gameLoop);
+  };
+})();`
+      },
+      {
+        id: 'debugMod',
+        title: 'Daby Debug Mod',
+        description: 'Press "s" to toggle a draggable, resizable debug console overlay that displays all console.log messages. It auto-scrolls to the bottom unless you scroll up; a "Scroll Down" button restores auto scroll.',
+        gameVersion: '0.4.9a',
+        code: `(function(){
+  // ----------------------------------------------------------------------
+  // FORCE MOD IDENTIFICATION
+  // ----------------------------------------------------------------------
+  window.forcedModInfo = {
+    id: 'debugMod',
+    title: 'Daby Debug Mod',
+    description: 'Press "s" to toggle a draggable, resizable debug console overlay that displays all console.log messages. It auto-scrolls to the bottom unless you scroll up; a "Scroll Down" button restores auto scroll.',
+    gameVersion: '0.4.9a'
+  };
+
+  // ----------------------------------------------------------------------
+  // SAVE ORIGINAL FUNCTIONS FOR TERMINATION
+  // ----------------------------------------------------------------------
+  if (!window.debugModOriginals) {
+    window.debugModOriginals = {
+      consoleLog: console.log,
+      addKeyListener: window.addEventListener
+    };
+  }
+
+  // ----------------------------------------------------------------------
+  // GLOBAL DEBUG MESSAGE STORAGE & AUTO-SCROLL FLAG
+  // ----------------------------------------------------------------------
+  window.debugMessages = [];
+  window.autoScrollEnabled = true;
+
+  // Override console.log to capture messages.
+  console.log = function(...args) {
+    window.debugModOriginals.consoleLog.apply(console, args);
+    let message = args.map(arg => {
+      if (typeof arg === "object") {
+        try {
+          return JSON.stringify(arg);
+        } catch(e) {
+          return String(arg);
+        }
+      }
+      return String(arg);
+    }).join(" ");
+    let timestamp = new Date().toLocaleTimeString();
+    let fullMessage = \`[\${timestamp}] \${message}\`;
+    window.debugMessages.push(fullMessage);
+    if (window.debugConsoleDiv && window.debugConsoleDiv.style.display === "block") {
+      updateDebugConsole();
+    }
+  };
+
+  function createDebugConsole(){
+    if(window.debugConsoleDiv) return;
+
+    let div = document.createElement("div");
+    div.id = "debugConsole";
+    div.style.position = "fixed";
+    div.style.top = "10px";
+    div.style.left = "10px";
+    div.style.width = "80%";
+    div.style.height = "300px";
+    div.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
+    div.style.color = "#0f0";
+    div.style.fontFamily = "monospace";
+    div.style.fontSize = "12px";
+    div.style.overflow = "hidden";
+    div.style.zIndex = "2000";
+    div.style.border = "1px solid #444";
+
+    let header = document.createElement("div");
+    header.id = "debugConsoleHeader";
+    header.style.backgroundColor = "#222";
+    header.style.cursor = "move";
+    header.style.padding = "5px";
+    header.style.fontWeight = "bold";
+    header.textContent = "Debug Console";
+    
+    let autoScrollBtn = document.createElement("button");
+    autoScrollBtn.textContent = "Scroll Down";
+    autoScrollBtn.style.float = "right";
+    autoScrollBtn.style.marginLeft = "5px";
+    autoScrollBtn.style.backgroundColor = "#444";
+    autoScrollBtn.style.color = "#fff";
+    autoScrollBtn.style.border = "none";
+    autoScrollBtn.style.cursor = "pointer";
+    autoScrollBtn.addEventListener("click", function(){
+      window.autoScrollEnabled = true;
+      scrollToBottom();
+    });
+    header.appendChild(autoScrollBtn);
+    
+    let closeBtn = document.createElement("button");
+    closeBtn.textContent = "X";
+    closeBtn.style.float = "right";
+    closeBtn.style.backgroundColor = "#444";
+    closeBtn.style.color = "#fff";
+    closeBtn.style.border = "none";
+    closeBtn.style.cursor = "pointer";
+    closeBtn.addEventListener("click", function(){
+      div.style.display = "none";
+    });
+    header.appendChild(closeBtn);
+    div.appendChild(header);
+
+    let messagesDiv = document.createElement("div");
+    messagesDiv.id = "debugMessagesContainer";
+    messagesDiv.style.marginTop = "40px";
+    messagesDiv.style.padding = "5px";
+    messagesDiv.style.overflowY = "auto";
+    messagesDiv.style.height = "calc(100% - 40px)";
+    div.appendChild(messagesDiv);
+
+    let resizer = document.createElement("div");
+    resizer.id = "debugConsoleResizer";
+    resizer.style.width = "15px";
+    resizer.style.height = "15px";
+    resizer.style.background = "#444";
+    resizer.style.position = "absolute";
+    resizer.style.right = "0";
+    resizer.style.bottom = "0";
+    resizer.style.cursor = "se-resize";
+    div.appendChild(resizer);
+
+    document.body.appendChild(div);
+    window.debugConsoleDiv = div;
+
+    header.onmousedown = dragMouseDown;
+    function dragMouseDown(e) {
+      e = e || window.event;
+      e.preventDefault();
+      let pos3 = e.clientX, pos4 = e.clientY;
+      document.onmouseup = closeDragElement;
+      document.onmousemove = elementDrag;
+      function elementDrag(e) {
+        e = e || window.event;
+        e.preventDefault();
+        let pos1 = pos3 - e.clientX;
+        let pos2 = pos4 - e.clientY;
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        div.style.top = (div.offsetTop - pos2) + "px";
+        div.style.left = (div.offsetLeft - pos1) + "px";
+      }
+      function closeDragElement() {
+        document.onmouseup = null;
+        document.onmousemove = null;
+      }
+    }
+
+    resizer.onmousedown = resizeMouseDown;
+    function resizeMouseDown(e) {
+      e = e || window.event;
+      e.preventDefault();
+      document.onmouseup = stopResizing;
+      document.onmousemove = resizeElement;
+      function resizeElement(e) {
+        e = e || window.event;
+        e.preventDefault();
+        div.style.width = (e.clientX - div.offsetLeft) + "px";
+        div.style.height = (e.clientY - div.offsetTop) + "px";
+      }
+      function stopResizing() {
+        document.onmouseup = null;
+        document.onmousemove = null;
+      }
+    }
+
+    messagesDiv.addEventListener("scroll", function(){
+      let threshold = 20;
+      if (messagesDiv.scrollTop + messagesDiv.clientHeight >= messagesDiv.scrollHeight - threshold) {
+        window.autoScrollEnabled = true;
+      } else {
+        window.autoScrollEnabled = false;
+      }
+    });
+  }
+
+  function scrollToBottom(){
+    if(window.debugConsoleDiv){
+      let messagesDiv = window.debugConsoleDiv.querySelector("#debugMessagesContainer");
+      if(messagesDiv){
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      }
+    }
+  }
+
+  function updateDebugConsole(){
+    if(!window.debugConsoleDiv) return;
+    let messagesDiv = window.debugConsoleDiv.querySelector("#debugMessagesContainer");
+    if(messagesDiv){
+      messagesDiv.innerHTML = window.debugMessages.join("<br>");
+      if(window.autoScrollEnabled){
+        scrollToBottom();
+      }
+    }
+  }
+
+  function debugToggleConsole(e){
+    if(e.key === "s" && !["INPUT", "TEXTAREA"].includes(e.target.tagName)){
+      if(!window.debugConsoleDiv){
+        createDebugConsole();
+        window.debugConsoleDiv.style.display = "block";
+        updateDebugConsole();
+      } else {
+        if(window.debugConsoleDiv.style.display === "none" || window.debugConsoleDiv.style.display === ""){
+          window.debugConsoleDiv.style.display = "block";
+          updateDebugConsole();
+        } else {
+          window.debugConsoleDiv.style.display = "none";
+        }
+      }
+    }
+  }
+  window.debugToggleConsole = debugToggleConsole;
+  window.addEventListener("keydown", debugToggleConsole);
+})();`
+      },
+      {
+        id: 'everythingLoggerMod',
+        title: 'Everything Logger Mod',
+        description: 'Logs key events in the game (element placements, cell erasures, movements, mod loading, menu interactions, and key events) to the console. Simulation steps are not logged to reduce clutter.',
+        gameVersion: '0.4.9a',
+        code: `(function(){
+  // ----------------------------------------------------------------------
+  // FORCE MOD IDENTIFICATION
+  // ----------------------------------------------------------------------
+  window.forcedModInfo = {
+    id: 'everythingLoggerMod',
+    title: 'Everything Logger Mod',
+    description: 'Logs key events in the game (element placements, cell erasures, movements, mod loading, menu interactions, and key events) to the console. Simulation steps are not logged to reduce clutter.',
+    gameVersion: '0.4.9a'
+  };
+
+  // ----------------------------------------------------------------------
+  // SAVE ORIGINAL FUNCTIONS FOR TERMINATION
+  // ----------------------------------------------------------------------
+  var originalPlaceElementAt = placeElementAt;
+  var originalEraseCell = eraseCell;
+  var originalMoveCell = moveCell;
+  
+  // ----------------------------------------------------------------------
+  // OVERRIDE CORE FUNCTIONS WITH LOGGING (EXCEPT SIMULATION STEPS)
+  // ----------------------------------------------------------------------
+  placeElementAt = function(x, y, tool) {
+    console.log("[Everything Logger] placeElementAt called at (" + x + ", " + y + ") with tool:", tool);
+    return originalPlaceElementAt(x, y, tool);
+  };
+
+  eraseCell = function(x, y) {
+    console.log("[Everything Logger] eraseCell called at (" + x + ", " + y + ")");
+    return originalEraseCell(x, y);
+  };
+
+  moveCell = function(x, y, nx, ny, oldT, newElem) {
+    console.log("[Everything Logger] moveCell from (" + x + ", " + y + ") to (" + nx + ", " + ny + ") - oldTemp: " + oldT + ", newElem:", newElem);
+    return originalMoveCell(x, y, nx, ny, oldT, newElem);
+  };
+
+  console.log("[Everything Logger] Everything Logger Mod loaded.");
+
+  var modMenu = document.getElementById('modMenu');
+  if(modMenu){
+    modMenu.addEventListener('click', function(e){
+      console.log("[Everything Logger] Mod menu clicked:", e);
+    });
+  }
+  
+  var sidePanel = document.getElementById('sidePanel');
+  if(sidePanel){
+    sidePanel.addEventListener('click', function(e){
+      console.log("[Everything Logger] Side panel clicked:", e);
+    });
+  }
+
+  function logKeyDown(e){
+    console.log("[Everything Logger] KeyDown: " + e.key, e);
+  }
+  window.addEventListener("keydown", logKeyDown);
+  window.everythingLoggerKeyListener = logKeyDown;
+})();`
+      }
+    ];
+
+    // Function to create mod cards
+    function createModCards() {
+      const container = document.getElementById('modContainer');
+      container.innerHTML = '';
+      mods.forEach(mod => {
+        const card = document.createElement('div');
+        card.className = 'mod-card';
+        card.innerHTML = `
+          <h2>${mod.title}</h2>
+          <p>${mod.description}</p>
+          <small>Game Version: ${mod.gameVersion}</small>
+          <pre class="mod-code" id="code-${mod.id}">${mod.code.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre>
+          <button class="copy-button" data-modid="${mod.id}">Copy Code</button>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // Copy button functionality
+    document.addEventListener('click', function(e) {
+      if (e.target && e.target.classList.contains('copy-button')) {
+        const modId = e.target.getAttribute('data-modid');
+        const codeElement = document.getElementById('code-' + modId);
+        if (codeElement) {
+          const codeText = codeElement.textContent;
+          navigator.clipboard.writeText(codeText).then(() => {
+            e.target.textContent = 'Copied!';
+            setTimeout(() => {
+              e.target.textContent = 'Copy Code';
+            }, 2000);
+          });
+        }
+      }
+    });
+
+    // Search functionality
+    document.getElementById('searchBar').addEventListener('input', function(e) {
+      const query = e.target.value.toLowerCase();
+      const cards = document.querySelectorAll('.mod-card');
+      cards.forEach(card => {
+        const title = card.querySelector('h2').textContent.toLowerCase();
+        const desc = card.querySelector('p').textContent.toLowerCase();
+        if (title.includes(query) || desc.includes(query)) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+
+    // Initialize
+    createModCards();
+  </script>
+</body>
+</html>
