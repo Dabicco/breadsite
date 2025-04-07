@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Sandbox</title>
+  <title>Sandbox Delta 0.4.9b</title>
   <style>
     /* Basic layout: center the page content, side panel on the right */
     html, body {
@@ -29,7 +29,7 @@
       padding: 10px;
       box-sizing: border-box;
     }
-    /* The game grid => 500×500 square */
+    /* The game grid; its size will be determined by GRID_SIZE */
     #grid {
       width: 500px;
       height: 500px;
@@ -42,8 +42,8 @@
       grid-template-rows: repeat(50, 1fr);
     }
     .cell {
-      width: 10px;
-      height: 10px;
+      width: 120%;
+      height: 120%;
       background-color: #000;
       box-sizing: border-box;
     }
@@ -293,6 +293,23 @@
       cursor: pointer;
     }
     #clearAllBtn:hover { background-color: #444; }
+    /* Extra Sidebar Buttons */
+    #optionsButtonContainer, #saveLoadButtonContainer, #modButtonContainer {
+      text-align: center;
+      margin-top: 10px;
+    }
+    #optionsButton, #saveLoadButton, #modButton {
+      background-color: #444;
+      border: 1px solid #888;
+      border-radius: 3px;
+      color: #fff;
+      padding: 8px 12px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    #optionsButton:hover, #saveLoadButton:hover, #modButton:hover {
+      background-color: #555;
+    }
     /* Mod Manager Modal styles */
     .modal {
       display: none;
@@ -331,7 +348,9 @@
       text-decoration: none;
       cursor: pointer;
     }
-    .modal textarea {
+    .modal input[type="text"],
+    .modal textarea,
+    .modal select {
       width: 100%;
       padding: 8px;
       margin: 5px 0;
@@ -350,22 +369,6 @@
       cursor: pointer;
     }
     .modal button:hover {
-      background-color: #555;
-    }
-    /* Mod Manager button style */
-    #modButtonContainer {
-      text-align: center;
-      margin-top: 10px;
-    }
-    #modButton {
-      background-color: #444;
-      border: 1px solid #888;
-      border-radius: 3px;
-      color: #fff;
-      padding: 8px 12px;
-      cursor: pointer;
-    }
-    #modButton:hover {
       background-color: #555;
     }
     /* Styles for mod cards in the mod menu */
@@ -406,7 +409,7 @@
 </head>
 <body>
   <div id="mainContainer">
-    <!-- The simulation grid (500×500) -->
+    <!-- The simulation grid (will be rebuilt based on stage size) -->
     <div id="grid"></div>
     <!-- Side panel -->
     <div id="sidePanel">
@@ -493,9 +496,16 @@
         </div>
         <button id="clearAllBtn">Clear All</button>
       </div>
+      <!-- Extra Sidebar Buttons -->
+      <div id="optionsButtonContainer">
+        <button id="optionsButton">Options</button>
+      </div>
+      <div id="saveLoadButtonContainer">
+        <button id="saveLoadButton">Save/Load</button>
+      </div>
       <!-- Mod Manager Button -->
       <div id="modButtonContainer">
-        <button id="modButton">Mods</button>
+        <button id="modButton">Mods (Beta)</button>
       </div>
     </div>
   </div>
@@ -504,7 +514,8 @@
     /***************************************
      * GLOBAL CONSTANTS & ARRAYS
      ***************************************/
-    const GRID_SIZE         = 50;
+    // Stage size is dynamic; default is 50.
+    let GRID_SIZE = 50;
     const EMPTY             = 0;
     const ERASER            = 5;
     // Basic elements
@@ -637,7 +648,7 @@
       [COAL]:1, [COAL_LUMP]:1,
       [BURNING_COAL]:0.1, [BURNING_COAL_LUMP]:0.1
     };
-    // Grid data and timers
+    // Global arrays for grid state
     let grid = [], temp = [], moved = [];
     let vaporLife = [], cloudLife = [];
     let fireLife = [], smokeLife = [];
@@ -652,82 +663,137 @@
     let grassStage = [];
     let burningGasTime = [];
     let chargedStateTime = [];
-    for (let y = 0; y < GRID_SIZE; y++) {
-      let row = [], trow = [], mrow = [];
-      let vrow = [], crow = [], frow = [], srow = [], bwrow = [];
-      let wH = [], wMH = [], sGT = [], rLifeRow = [];
-      let spLifeRow = [], spTimerRow = [];
-      let smaxrow = [], cmaxrow = [];
-      let bLevel = [], bLen = [], bMax = [], bSub = [], bDirXrow = [], bDirYrow = [];
-      let otGrowth = [], otHeight = [], otMaxHeight = [];
-      let otRootTimer = [], otRootDepth = [], otRootMax = [];
-      let grassRow = [];
-      let burnGasRow = [];
-      let cdtRow = [];
-      for (let x = 0; x < GRID_SIZE; x++) {
-        row.push(EMPTY);
-        trow.push(null);
-        mrow.push(false);
-        vrow.push(0);
-        crow.push(0);
-        frow.push(0);
-        srow.push(0);
-        bwrow.push(0);
-        wH.push(0);
-        wMH.push(0);
-        sGT.push(0);
-        rLifeRow.push(0);
-        spLifeRow.push(0);
-        spTimerRow.push(0);
-        smaxrow.push(1.0 + 2.0 * Math.random());
-        cmaxrow.push(5.0 + 5.0 * Math.random());
-        bLevel.push(-1);
-        bLen.push(0);
-        bMax.push(0);
-        bSub.push(-1);
-        bDirXrow.push(0);
-        bDirYrow.push(0);
-        otGrowth.push(0);
-        otHeight.push(0);
-        otMaxHeight.push(0);
-        otRootTimer.push(0);
-        otRootDepth.push(0);
-        otRootMax.push(0);
-        grassRow.push(1);
-        burnGasRow.push(0);
-        cdtRow.push(0);
+
+    // Game version updated to 0.4.9b
+    const currentGameVersion = "0.4.9b";
+
+    // Function to initialize the grid based on GRID_SIZE.
+    function initGrid(newSize) {
+      GRID_SIZE = newSize;
+      // Update grid DOM: set grid template columns/rows according to new size.
+      gridContainer.innerHTML = "";
+      gridContainer.style.gridTemplateColumns = `repeat(${GRID_SIZE}, 1fr)`;
+      gridContainer.style.gridTemplateRows = `repeat(${GRID_SIZE}, 1fr)`;
+      // Reset arrays.
+      grid = [];
+      temp = [];
+      moved = [];
+      vaporLife = [];
+      cloudLife = [];
+      fireLife = [];
+      smokeLife = [];
+      burningWoodTime = [];
+      wheatHeight = [];
+      wheatMaxHeight = [];
+      seedGrowthTime = [];
+      rootLife = [];
+      sparkLife = [];
+      sparkTimer = [];
+      smokeMaxLife = [];
+      cloudMaxLife = [];
+      branchLevel = [];
+      branchLen = [];
+      branchMaxArr = [];
+      branchSubCount = [];
+      branchDirX = [];
+      branchDirY = [];
+      oakTreeGrowthTime = [];
+      oakTreeHeight = [];
+      oakTreeMaxHeight = [];
+      oakTreeRootTimer = [];
+      oakTreeRootDepth = [];
+      oakTreeRootMax = [];
+      grassStage = [];
+      burningGasTime = [];
+      chargedStateTime = [];
+      cells.length = 0;
+      for (let y = 0; y < GRID_SIZE; y++) {
+        let row = [], trow = [], mrow = [];
+        let vrow = [], crow = [], frow = [], srow = [], bwrow = [];
+        let wH = [], wMH = [], sGT = [], rLifeRow = [];
+        let spLifeRow = [], spTimerRow = [];
+        let smaxrow = [], cmaxrow = [];
+        let bLevel = [], bLen = [], bMax = [], bSub = [], bDirXrow = [], bDirYrow = [];
+        let otGrowth = [], otHeight = [], otMaxHeight = [];
+        let otRootTimer = [], otRootDepth = [], otRootMax = [];
+        let grassRow = [];
+        let burnGasRow = [];
+        let cdtRow = [];
+        for (let x = 0; x < GRID_SIZE; x++) {
+          row.push(EMPTY);
+          trow.push(null);
+          mrow.push(false);
+          vrow.push(0);
+          crow.push(0);
+          frow.push(0);
+          srow.push(0);
+          bwrow.push(0);
+          wH.push(0);
+          wMH.push(0);
+          sGT.push(0);
+          rLifeRow.push(0);
+          spLifeRow.push(0);
+          spTimerRow.push(0);
+          smaxrow.push(1.0 + 2.0 * Math.random());
+          cmaxrow.push(5.0 + 5.0 * Math.random());
+          bLevel.push(-1);
+          bLen.push(0);
+          bMax.push(0);
+          bSub.push(-1);
+          bDirXrow.push(0);
+          bDirYrow.push(0);
+          otGrowth.push(0);
+          otHeight.push(0);
+          otMaxHeight.push(0);
+          otRootTimer.push(0);
+          otRootDepth.push(0);
+          otRootMax.push(0);
+          grassRow.push(1);
+          burnGasRow.push(0);
+          cdtRow.push(0);
+        }
+        grid.push(row);
+        temp.push(trow);
+        moved.push(mrow);
+        vaporLife.push(vrow);
+        cloudLife.push(crow);
+        fireLife.push(frow);
+        smokeLife.push(srow);
+        burningWoodTime.push(bwrow);
+        wheatHeight.push(wH);
+        wheatMaxHeight.push(wMH);
+        seedGrowthTime.push(sGT);
+        rootLife.push(rLifeRow);
+        sparkLife.push(spLifeRow);
+        sparkTimer.push(spTimerRow);
+        smokeMaxLife.push(smaxrow);
+        cloudMaxLife.push(cmaxrow);
+        branchLevel.push(bLevel);
+        branchLen.push(bLen);
+        branchMaxArr.push(bMax);
+        branchSubCount.push(bSub);
+        branchDirX.push(bDirXrow);
+        branchDirY.push(bDirYrow);
+        oakTreeGrowthTime.push(otGrowth);
+        oakTreeHeight.push(otHeight);
+        oakTreeMaxHeight.push(otMaxHeight);
+        oakTreeRootTimer.push(otRootTimer);
+        oakTreeRootDepth.push(otRootDepth);
+        oakTreeRootMax.push(otRootMax);
+        grassStage.push(grassRow);
+        burningGasTime.push(burnGasRow);
+        chargedStateTime.push(cdtRow);
+        // Create cell divs.
+        let rowOfCells = [];
+        for (let x = 0; x < GRID_SIZE; x++) {
+          const cell = document.createElement('div');
+          cell.classList.add('cell');
+          cell.id = `cell-${x}-${y}`;
+          gridContainer.appendChild(cell);
+          rowOfCells.push(cell);
+        }
+        cells.push(rowOfCells);
       }
-      grid.push(row);
-      temp.push(trow);
-      moved.push(mrow);
-      vaporLife.push(vrow);
-      cloudLife.push(crow);
-      fireLife.push(frow);
-      smokeLife.push(srow);
-      burningWoodTime.push(bwrow);
-      wheatHeight.push(wH);
-      wheatMaxHeight.push(wMH);
-      seedGrowthTime.push(sGT);
-      rootLife.push(rLifeRow);
-      sparkLife.push(spLifeRow);
-      sparkTimer.push(spTimerRow);
-      smokeMaxLife.push(smaxrow);
-      cloudMaxLife.push(cmaxrow);
-      branchLevel.push(bLevel);
-      branchLen.push(bLen);
-      branchMaxArr.push(bMax);
-      branchSubCount.push(bSub);
-      branchDirX.push(bDirXrow);
-      branchDirY.push(bDirYrow);
-      oakTreeGrowthTime.push(otGrowth);
-      oakTreeHeight.push(otHeight);
-      oakTreeMaxHeight.push(otMaxHeight);
-      oakTreeRootTimer.push(otRootTimer);
-      oakTreeRootDepth.push(otRootDepth);
-      oakTreeRootMax.push(otRootMax);
-      grassStage.push(grassRow);
-      burningGasTime.push(burnGasRow);
-      chargedStateTime.push(cdtRow);
     }
     /***************************************
      * DOM
@@ -745,17 +811,8 @@
     const categoryButtons = document.querySelectorAll('#categoryMenu button');
     let activeCategory = 'all';
     const cells = [];
-    for (let y = 0; y < GRID_SIZE; y++) {
-      let rowOfCells = [];
-      for (let x = 0; x < GRID_SIZE; x++) {
-        const cell = document.createElement('div');
-        cell.classList.add('cell');
-        cell.id = `cell-${x}-${y}`;
-        gridContainer.appendChild(cell);
-        rowOfCells.push(cell);
-      }
-      cells.push(rowOfCells);
-    }
+    // The initGrid function will create the cells.
+    initGrid(50); // Default stage size 50x50x50
     let currentTool = SAND;
     function selectTool(el) {
       Array.from(toolElements).forEach(t => t.classList.remove('selected'));
@@ -2692,8 +2749,6 @@
       });
     }
     filterTools();
-    // Current game version
-    const currentGameVersion = "0.4.9a";
   </script>
 
   <!-- Mod Manager Modal -->
@@ -2718,6 +2773,50 @@
     </div>
   </div>
 
+  <!-- Options Modal -->
+  <div id="optionsModal" class="modal">
+    <div class="modal-content">
+      <span id="closeOptionsModal" class="close">&times;</span>
+      <h2>Options</h2>
+      <label for="stageSizeSelect">Stage Size:</label>
+      <select id="stageSizeSelect">
+        <option value="25">25x25x25</option>
+        <option value="50" selected>50x50x50</option>
+        <option value="75">75x75x75</option>
+        <option value="100">100x100x100</option>
+        <option value="125">125x125x125</option>
+      </select>
+      <button id="applyOptionsButton">Apply</button>
+    </div>
+  </div>
+
+  <!-- Save/Load Modal -->
+  <div id="saveLoadModal" class="modal">
+    <div class="modal-content">
+      <span id="closeSaveLoadModal" class="close">&times;</span>
+      <h2>Save / Load</h2>
+      <div>
+        <h3>Save Current Game</h3>
+        <input type="text" id="saveTitle" placeholder="Save Title">
+        <input type="text" id="saveDescription" placeholder="Save Description">
+        <button id="saveGameButton">Save Game</button>
+      </div>
+      <hr>
+      <div>
+        <h3>Saved Games</h3>
+        <div id="savedGamesList">
+          <!-- List of saved games will appear here -->
+        </div>
+      </div>
+      <hr>
+      <div>
+        <h3>Import Save File (.dbr)</h3>
+        <input type="file" id="importFileInput" accept=".dbr">
+        <button id="importSaveButton">Import Save</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     // Global mods list
     const modsList = [];
@@ -2727,7 +2826,6 @@
       const match = modCode.match(regex);
       if (match && match[1]) {
         try {
-          // Use Function constructor to safely evaluate the object literal and return it.
           return (new Function("return " + match[1]))();
         } catch (e) {
           console.error("Error parsing forcedModInfo:", e);
@@ -2736,7 +2834,7 @@
       }
       return null;
     }
-    // Add the default mod (Orange Juice mod) replacing the milk mod.
+    // Add the default mod (Orange Juice mod) to the modsList.
     const orangeJuiceModCode = `(function(){
   // ----------------------------------------------------------------------
   // FORCE MOD IDENTIFICATION
@@ -2929,7 +3027,6 @@
     origPerformSimStep();
   };
 })();`;
-    // Termination code for the Orange Juice mod to restore originals.
     const orangeJuiceTerminateCode = `(function(){
   if(window.orangeJuiceModOriginals) {
     selectTool = window.orangeJuiceModOriginals.selectTool;
@@ -2940,7 +3037,6 @@
     performSimulationStep = window.orangeJuiceModOriginals.performSimulationStep;
   }
 })();`;
-    // Add the default mod (Orange Juice mod) to the modsList.
     modsList.push({
       id: 'orangeJuiceMod',
       title: 'Orange Juice (Acid) Mod',
@@ -2950,11 +3046,9 @@
       terminateCode: orangeJuiceTerminateCode,
       enabled: false
     });
-    // Utility: check compatibility of a mod with the current game version.
     function isModCompatible(mod) {
-      return mod.gameVersion === currentGameVersion;
+      return (mod.gameVersion === currentGameVersion) || (mod.gameVersion === "0.4.9a");
     }
-    // Update the mod list UI in the Mod Manager.
     function updateModListUI() {
       const container = document.getElementById('modListContainer');
       container.innerHTML = '';
@@ -3008,7 +3102,6 @@
         container.appendChild(card);
       });
     }
-    // Modal handling for the Mod Manager.
     const modButton = document.getElementById('modButton');
     const modMenu = document.getElementById('modMenu');
     const closeModMenu = document.getElementById('closeModMenu');
@@ -3024,7 +3117,6 @@
         modMenu.style.display = 'none';
       }
     });
-    // Modal handling for adding a new mod.
     const addModButton = document.getElementById('addModButton');
     const addModModal = document.getElementById('addModModal');
     const closeAddModModal = document.getElementById('closeAddModModal');
@@ -3051,7 +3143,7 @@
             description: forcedInfo.description,
             gameVersion: forcedInfo.gameVersion,
             code: modCode,
-            terminateCode: '', // No termination code provided by user.
+            terminateCode: '',
             enabled: false
           };
           modsList.push(newMod);
@@ -3061,6 +3153,185 @@
         }
       }
     });
+    const optionsButton = document.getElementById('optionsButton');
+    const optionsModal = document.getElementById('optionsModal');
+    const closeOptionsModal = document.getElementById('closeOptionsModal');
+    optionsButton.addEventListener('click', function() {
+      optionsModal.style.display = 'block';
+    });
+        closeOptionsModal.addEventListener('click', function() {
+      optionsModal.style.display = 'none';
+    });
+    window.addEventListener('click', function(event) {
+      if (event.target == optionsModal) {
+        optionsModal.style.display = 'none';
+      }
+    });
+    document.getElementById('applyOptionsButton').addEventListener('click', function() {
+      const size = parseInt(document.getElementById('stageSizeSelect').value);
+      initGrid(size);
+      optionsModal.style.display = 'none';
+    });
+    const saveLoadButton = document.getElementById('saveLoadButton');
+    const saveLoadModal = document.getElementById('saveLoadModal');
+    const closeSaveLoadModal = document.getElementById('closeSaveLoadModal');
+    saveLoadButton.addEventListener('click', function() {
+      saveLoadModal.style.display = 'block';
+      updateSavedGamesList();
+    });
+    closeSaveLoadModal.addEventListener('click', function() {
+      saveLoadModal.style.display = 'none';
+    });
+    window.addEventListener('click', function(event) {
+      if (event.target == saveLoadModal) {
+        saveLoadModal.style.display = 'none';
+      }
+    });
+    function getSaveIndex() {
+      const index = localStorage.getItem("dbr_save_index");
+      return index ? JSON.parse(index) : [];
+    }
+    function setSaveIndex(index) {
+      localStorage.setItem("dbr_save_index", JSON.stringify(index));
+    }
+    function saveGame() {
+      const title = document.getElementById('saveTitle').value.trim();
+      const description = document.getElementById('saveDescription').value.trim();
+      if (!title) return;
+      const saveData = {
+        GRID_SIZE,
+        grid, temp, vaporLife, cloudLife, fireLife, smokeLife, burningWoodTime, wheatHeight, wheatMaxHeight,
+        seedGrowthTime, rootLife, sparkLife, sparkTimer, smokeMaxLife, cloudMaxLife, branchLevel,
+        branchLen, branchMaxArr, branchSubCount, branchDirX, branchDirY, oakTreeGrowthTime, oakTreeHeight,
+        oakTreeMaxHeight, oakTreeRootTimer, oakTreeRootDepth, oakTreeRootMax, grassStage, burningGasTime,
+        chargedStateTime
+      };
+      const key = "dbr_save_" + Date.now();
+      localStorage.setItem(key, JSON.stringify(saveData));
+      let index = getSaveIndex();
+      index.push({ key, title, description, timestamp: Date.now() });
+      setSaveIndex(index);
+      updateSavedGamesList();
+      document.getElementById('saveTitle').value = '';
+      document.getElementById('saveDescription').value = '';
+    }
+    document.getElementById('saveGameButton').addEventListener('click', saveGame);
+    function updateSavedGamesList() {
+      const container = document.getElementById('savedGamesList');
+      container.innerHTML = "";
+      const index = getSaveIndex();
+      index.forEach(item => {
+        const div = document.createElement('div');
+        div.style.border = "1px solid #888";
+        div.style.padding = "5px";
+        div.style.margin = "5px 0";
+        div.innerHTML = "<strong>" + item.title + "</strong><br>" + item.description;
+        const loadBtn = document.createElement('button');
+        loadBtn.textContent = "Load";
+        loadBtn.addEventListener('click', () => {
+          const data = localStorage.getItem(item.key);
+if (data) {
+  const save = JSON.parse(data);
+  GRID_SIZE = save.GRID_SIZE;
+  initGrid(GRID_SIZE); // Create the grid DOM elements first.
+  // Then restore the saved state into your global variables:
+  grid = save.grid;
+  temp = save.temp;
+  vaporLife = save.vaporLife;
+  cloudLife = save.cloudLife;
+  fireLife = save.fireLife;
+  smokeLife = save.smokeLife;
+  burningWoodTime = save.burningWoodTime;
+  wheatHeight = save.wheatHeight;
+  wheatMaxHeight = save.wheatMaxHeight;
+  seedGrowthTime = save.seedGrowthTime;
+  rootLife = save.rootLife;
+  sparkLife = save.sparkLife;
+  sparkTimer = save.sparkTimer;
+  smokeMaxLife = save.smokeMaxLife;
+  cloudMaxLife = save.cloudMaxLife;
+  branchLevel = save.branchLevel;
+  branchLen = save.branchLen;
+  branchMaxArr = save.branchMaxArr;
+  branchSubCount = save.branchSubCount;
+  branchDirX = save.branchDirX;
+  branchDirY = save.branchDirY;
+  oakTreeGrowthTime = save.oakTreeGrowthTime;
+  oakTreeHeight = save.oakTreeHeight;
+  oakTreeMaxHeight = save.oakTreeMaxHeight;
+  oakTreeRootTimer = save.oakTreeRootTimer;
+  oakTreeRootDepth = save.oakTreeRootDepth;
+  oakTreeRootMax = save.oakTreeRootMax;
+  grassStage = save.grassStage;
+  burningGasTime = save.burningGasTime;
+  chargedStateTime = save.chargedStateTime;
+  renderGrid(); // Update the canvas with the loaded state.
+}
+
+        });
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = "Delete";
+        deleteBtn.addEventListener('click', () => {
+          let index = getSaveIndex();
+          index = index.filter(i => i.key !== item.key);
+          setSaveIndex(index);
+          localStorage.removeItem(item.key);
+          updateSavedGamesList();
+        });
+        const exportBtn = document.createElement('button');
+        exportBtn.textContent = "Export";
+        exportBtn.addEventListener('click', () => {
+          const data = localStorage.getItem(item.key);
+          if (data) {
+            const blob = new Blob([data], {type: "application/json"});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = item.title + ".dbr";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+          }
+        });
+        div.appendChild(loadBtn);
+        div.appendChild(deleteBtn);
+        div.appendChild(exportBtn);
+        container.appendChild(div);
+      });
+    }
+    document.getElementById('importSaveButton').addEventListener('click', () => {
+      const fileInput = document.getElementById('importFileInput');
+      const file = fileInput.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const save = JSON.parse(e.target.result);
+          const key = "dbr_save_" + Date.now();
+          localStorage.setItem(key, JSON.stringify(save));
+          let index = getSaveIndex();
+          index.push({ key, title: file.name, description: "Imported Save", timestamp: Date.now() });
+          setSaveIndex(index);
+          updateSavedGamesList();
+        } catch (err) {
+          console.error("Import error", err);
+        }
+      };
+      reader.readAsText(file);
+    });
+  </script>
+  <script>
+      function scaleGame() {
+  const container = document.getElementById('mainContainer');
+  // Calculate a scale factor based on the window's inner width relative to 1200px.
+  const scaleFactor = window.innerWidth / 1200;
+  // Use the calculated scale factor even if it's greater than 1.
+  container.style.transform = `scale(${scaleFactor})`;
+  container.style.transformOrigin = 'top center';
+}
+window.addEventListener('load', scaleGame);
+window.addEventListener('resize', scaleGame);
   </script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sandbox Delta - The Sandbox Site</title>
+  <title>Sandbox Delta - The Breadsite</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Bitter:wght@400;700&display=swap');
 
@@ -90,6 +90,16 @@
       background-color: #000;
       margin-top: 20px;
     }
+    
+    #optionsButton, #saveLoadButton, #updateLogButton, #modButton {
+      background-color: #444;
+      border: 1px solid #888;
+      border-radius: 3px;
+      color: #fff;
+      padding: 8px 12px;
+      cursor: pointer;
+      margin: 5px;
+    }
 
     /* Fullscreen Button */
     .sandbox-button {
@@ -130,6 +140,67 @@
       transition: background-color 0.3s ease, transform 0.3s ease;
       width: 250px;
     }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.8);
+    }
+    .modal .modal-content {
+      background-color: #333;
+      margin: 10% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 600px;
+      color: #fff;
+      border-radius: 5px;
+      position: relative;
+    }
+    .modal .close {
+      color: #aaa;
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .modal .close:hover,
+    .modal .close:focus {
+      color: #fff;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .modal input[type="text"],
+    .modal textarea,
+    .modal select {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0;
+      background-color: #222;
+      color: #fff;
+      border: 1px solid #888;
+      border-radius: 3px;
+      box-sizing: border-box;
+    }
+    .modal button {
+      background-color: #444;
+      border: 1px solid #888;
+      border-radius: 3px;
+      color: #fff;
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+    .modal button:hover {
+      background-color: #555;
+    }
     .go-back-button:hover {
       background-color: #444444;
       transform: scale(1.05);
@@ -141,7 +212,7 @@
   <!-- Banner Section -->
   <div class="sandbox-banner">
     <h1>Sandbox Delta</h1>
-    <p>Create, experiment, and explore a dynamic world of elements</p>
+    <p>Create, experiment, and explore using a world of elements!</p>
   </div>
 
   <!-- Main Container -->
@@ -150,7 +221,7 @@
       <h2>Welcome to Sandbox Delta</h2>
       <p>
         Enjoy an immersive simulation where you can mix, build, and discover endless possibilities.
-        Use your mouse and keyboard to interact with a vast array of elements and create your own world.
+        Use your mouse and keyboard to interact with a vast array of elements and create your own world. <br><br>Version 0.4.9b<br> <button id="updateLogButton">Update Log</button>
       </p>
       <p class="performance-tip">
         For the best performance, please close other tabs and windows.
@@ -185,7 +256,41 @@
       ></iframe>
     </div>
   </div>
-
+  <div id="updateLogModal" class="modal">
+    <div class="modal-content">
+      <span id="closeUpdateLogModal" class="close">&times;</span>
+      <h2>Update Log - Version 0.4.9b</h2>
+      <p>
+        Welcome to version 0.4.9b of Sandbox Delta! This update brings several improvements and new features:
+      </p>
+      <ul>
+        <li>
+          <strong>Responsive Scaling:</strong> The game interface now dynamically adjusts to your window size.
+          We’ve implemented a new scaling system that recalculates the grid and cell dimensions to ensure a
+          crisp and gap-free display across all devices.
+        </li>
+        <li>
+          <strong>Update Log Sidebar:</strong> A new “Update Log” button has been added to the sidebar. Click it to view
+          a detailed log of the changes and improvements included in this release.
+        </li>
+        <li>
+          <strong>Version Information Display:</strong> The banner now clearly displays the current game version (0.4.9b)
+          so you always know you’re running the latest update.
+        </li>
+        <li>
+          <strong>New Options Menu & Save/Load Features:</strong> We have added the Options menu with an option for <strong>stage size adjustments</strong>,
+          and a Save/Load system which supports using titles, descriptions, and allows export/import functionality for sharing!.
+        </li>
+        <li>
+          <strong>Minor Performance & Visual Tweaks:</strong> Several under-the-hood optimizations have been made to improve
+          overall performance and ensure a smoother user experience.
+        </li>
+      </ul>
+      <p>
+        Thank you for playing Sandbox Delta. We hope these improvements enhance your creative experience!
+      </p>
+    </div>
+  </div>
   <!-- Dark Background for "Go back" Button -->
   <div class="dark-background">
     <button class="go-back-button" onclick="window.location.href='/breadsite/games'">
@@ -209,6 +314,26 @@
         alert("Fullscreen is not supported in your browser.");
       }
     }
+
+    // Modal functionality for Update Log
+    const updateLogButton = document.getElementById("updateLogButton");
+    const updateLogModal = document.getElementById("updateLogModal");
+    const closeUpdateLogModal = document.getElementById("closeUpdateLogModal");
+
+    updateLogButton.addEventListener("click", function() {
+      updateLogModal.style.display = "block";
+    });
+
+    closeUpdateLogModal.addEventListener("click", function() {
+      updateLogModal.style.display = "none";
+    });
+
+    // Close the modal if the user clicks outside of the modal content
+    window.addEventListener("click", function(event) {
+      if (event.target === updateLogModal) {
+        updateLogModal.style.display = "none";
+      }
+    });
   </script>
 
 </body>
