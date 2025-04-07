@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rock Paper Scissors Simulation</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #111;
+      color: #eee;
+    }
+    #game {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+    }
+    .entity {
+      position: absolute;
+      font-size: 12px;
+      user-select: none;
+      pointer-events: auto;
+      cursor: grab;
+    }
+    /* Main Menu, Creation, Help, and Winner Modal Styles */
+    .modal {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.9);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      text-align: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    #mainMenu h1 {
+      font-size: 48px;
+      margin-bottom: 40px;
+      color: #f90;
+      text-shadow: 2px 2px 4px #000;
+    }
+    .menuButton {
+      padding: 12px 24px;
+      margin: 10px;
+      font-size: 20px;
+      background: #333;
+      color: #fff;
+      border: 2px solid #f90;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+    .menuButton:hover {
+      background: #444;
+      transform: scale(1.05);
+    }
+    .sliderContainer {
+      margin: 10px 0;
+      text-align: center;
+    }
+    .sliderContainer label {
+      display: block;
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+    .sliderContainer input[type=range] {
+      width: 300px;
+    }
+    /* Editor Top Bar */
+    #editorBar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 60px;
+      background: rgba(0, 0, 0, 0.75);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      z-index: 300;
+    }
+    #editorBar .editorButton {
+      padding: 8px 16px;
+      font-size: 18px;
+      background: #333;
+      color: #fff;
+      border: 2px solid #f90;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+    #editorBar .editorButton:hover {
+      background: #444;
+      transform: scale(1.05);
+    }
+    /* Editor Palette */
+    #palette {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 20px;
+      z-index: 300;
+    }
+    .paletteButton {
+      font-size: 24px;
+      padding: 10px;
+      border: 2px solid #333;
+      background: #fff;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: border-color 0.3s, transform 0.2s;
+    }
+    .paletteButton.selected {
+      border-color: #f90;
+      transform: scale(1.1);
+    }
+    /* Help Modal and Slides */
+    #helpModal {
+      display: none;
+      flex-direction: column;
+    }
+    #helpModal .slide {
+      max-width: 600px;
+      margin: 20px;
+      font-size: 18px;
+      line-height: 1.5;
+    }
+    #helpModal .helpNav {
+      margin-top: 20px;
+    }
+    #helpModal .helpNav button {
+      padding: 8px 16px;
+      margin: 0 10px;
+      font-size: 18px;
+      background: #333;
+      color: #fff;
+      border: 2px solid #f90;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+    #helpModal .helpNav button:hover {
+      background: #444;
+      transform: scale(1.05);
+    }
+    /* Winner Modal */
+    #winnerModal h2 {
+      font-size: 48px;
+      color: #f90;
+      margin-bottom: 30px;
+      text-shadow: 2px 2px 4px #000;
+    }
+    /* Version and Speed Control */
+    #version {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      padding: 5px 10px;
+      color: #fff;
+      font-size: 14px;
+      z-index: 500;
+    }
+    #speedControl {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      z-index: 400;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 5px 10px;
+      border-radius: 4px;
+      color: #fff;
+      font-size: 14px;
+    }
+    #speedControl input[type=range] {
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+  <div id="game"></div>
+
+  <!-- Version Display -->
+  <div id="version">Version: 1.0.0a</div>
+
+  <!-- Speed Control (visible during gameplay) -->
+  <div id="speedControl" style="display: none;">
+    Speed: <input id="speedSlider" type="range" min="0" max="10" step="0.1" value="1"> <span id="speedValue">1x</span>
+  </div>
+
+  <!-- Main Menu -->
+  <div id="mainMenu" class="modal">
+    <h1>Rock Paper Scissors</h1>
+    <button id="createScenario" class="menuButton">Create New Scenario</button>
+    <button id="helpButton" class="menuButton">Help</button>
+  </div>
+
+  <!-- Creation Options Modal -->
+  <div id="creationModal" class="modal" style="display: none;">
+    <h2 style="color:#f90;">Creation Options</h2>
+    <div class="sliderContainer">
+      <label>Rocks 🪨: <span id="rockCountLabel">500</span></label>
+      <input type="range" id="rockSlider" min="0" max="1000" value="500">
+    </div>
+    <div class="sliderContainer">
+      <label>Papers 📄: <span id="paperCountLabel">500</span></label>
+      <input type="range" id="paperSlider" min="0" max="1000" value="500">
+    </div>
+    <div class="sliderContainer">
+      <label>Scissors ✂️: <span id="scissorsCountLabel">500</span></label>
+      <input type="range" id="scissorsSlider" min="0" max="1000" value="500">
+    </div>
+    <div>
+      <button id="manualPlaceButton" class="menuButton">Manually Place</button>
+      <button id="beginScenarioButton" class="menuButton">Begin Scenario</button>
+    </div>
+  </div>
+
+  <!-- Editor Top Bar (for manual placement mode) -->
+  <div id="editorBar" style="display:none;">
+    <button id="exitEditorButton" class="editorButton">Exit Editor</button>
+    <button id="beginEditorScenarioButton" class="editorButton">Begin Scenario</button>
+  </div>
+
+  <!-- Editor Palette -->
+  <div id="palette" style="display: none;"></div>
+
+  <!-- Help Modal -->
+  <div id="helpModal" class="modal">
+    <h2 style="color:#f90;">How to Play</h2>
+    <div id="helpSlide" class="slide">
+      <!-- Slide content will be set dynamically -->
+    </div>
+    <div class="helpNav">
+      <button id="prevSlide" class="menuButton">Previous</button>
+      <button id="nextSlide" class="menuButton">Next</button>
+      <button id="closeHelp" class="menuButton">Close Help</button>
+    </div>
+  </div>
+
+  <!-- Winner Modal -->
+  <div id="winnerModal" class="modal" style="display: none;">
+    <h2 id="winnerAnnouncement"></h2>
+    <button id="returnToMenu" class="menuButton">Return to Menu</button>
+  </div>
+
+  <script>
+    // Global variables and configuration
+    const game = document.getElementById("game");
+    const entities = [];
+    const size = 12;
+    const types = {
+      rock: { emoji: "🪨", prey: "scissors", predator: "paper" },
+      paper: { emoji: "📄", prey: "rock", predator: "scissors" },
+      scissors: { emoji: "✂️", prey: "paper", predator: "rock" }
+    };
+    let lastTime = 0;
+    const gridSize = 50;
+    let simulationRunning = false;
+    let editorMode = false;
+    let currentEditorType = "rock"; // default selection
+    let globalDragging = false; // tracks if any dragging is occurring
+    let speedFactor = 1; // default simulation speed multiplier
+
+    // DOM elements for menus and modals
+    const mainMenu = document.getElementById("mainMenu");
+    const creationModal = document.getElementById("creationModal");
+    const createScenarioButton = document.getElementById("createScenario");
+    const helpButton = document.getElementById("helpButton");
+    const manualPlaceButton = document.getElementById("manualPlaceButton");
+    const beginScenarioButton = document.getElementById("beginScenarioButton");
+    const exitEditorButton = document.getElementById("exitEditorButton");
+    const beginEditorScenarioButton = document.getElementById("beginEditorScenarioButton");
+    const editorBar = document.getElementById("editorBar");
+    const palette = document.getElementById("palette");
+    const winnerModal = document.getElementById("winnerModal");
+    const winnerAnnouncement = document.getElementById("winnerAnnouncement");
+    const returnToMenu = document.getElementById("returnToMenu");
+    const speedControl = document.getElementById("speedControl");
+    const speedSlider = document.getElementById("speedSlider");
+    const speedValue = document.getElementById("speedValue");
+
+    // Slider elements and labels for creation options
+    const rockSlider = document.getElementById("rockSlider");
+    const paperSlider = document.getElementById("paperSlider");
+    const scissorsSlider = document.getElementById("scissorsSlider");
+    const rockCountLabel = document.getElementById("rockCountLabel");
+    const paperCountLabel = document.getElementById("paperCountLabel");
+    const scissorsCountLabel = document.getElementById("scissorsCountLabel");
+
+    rockSlider.addEventListener("input", () => { rockCountLabel.textContent = rockSlider.value; });
+    paperSlider.addEventListener("input", () => { paperCountLabel.textContent = paperSlider.value; });
+    scissorsSlider.addEventListener("input", () => { scissorsCountLabel.textContent = scissorsSlider.value; });
+
+    // Update speed multiplier on slider change
+    speedSlider.addEventListener("input", () => {
+      speedFactor = parseFloat(speedSlider.value);
+      speedValue.textContent = speedFactor + "x";
+    });
+
+    // Help slides content
+    const slides = [
+      "Welcome to Rock Paper Scissors Simulation! Use the sliders or manual placement to set up your scenario.",
+      "In manual placement mode, select an element from the palette and click on the map to place it. Drag entities by left-clicking and moving, and remove them with a right-click.",
+      "During the simulation, each entity chases its prey and avoids its predator. If no one is chasing you, your target is chosen from the entire map!",
+      "Use the speed slider at the top left during gameplay to adjust the simulation speed from 0x to 10x."
+    ];
+    let currentSlideIndex = 0;
+    const helpModal = document.getElementById("helpModal");
+    const helpSlide = document.getElementById("helpSlide");
+    const prevSlide = document.getElementById("prevSlide");
+    const nextSlide = document.getElementById("nextSlide");
+    const closeHelp = document.getElementById("closeHelp");
+
+    function updateHelpSlide() {
+      helpSlide.textContent = slides[currentSlideIndex];
+    }
+    prevSlide.addEventListener("click", () => {
+      currentSlideIndex = (currentSlideIndex - 1 + slides.length) % slides.length;
+      updateHelpSlide();
+    });
+    nextSlide.addEventListener("click", () => {
+      currentSlideIndex = (currentSlideIndex + 1) % slides.length;
+      updateHelpSlide();
+    });
+    closeHelp.addEventListener("click", () => {
+      helpModal.style.display = "none";
+    });
+    helpButton.addEventListener("click", () => {
+      helpModal.style.display = "flex";
+      currentSlideIndex = 0;
+      updateHelpSlide();
+    });
+
+    // Editor Palette setup
+    ["rock", "paper", "scissors"].forEach(type => {
+      const btn = document.createElement("button");
+      btn.className = "paletteButton";
+      btn.textContent = types[type].emoji;
+      btn.dataset.type = type;
+      if (type === currentEditorType) btn.classList.add("selected");
+      btn.addEventListener("click", () => {
+        currentEditorType = btn.dataset.type;
+        document.querySelectorAll(".paletteButton").forEach(b => b.classList.remove("selected"));
+        btn.classList.add("selected");
+      });
+      palette.appendChild(btn);
+    });
+
+    // In editor mode, only place if not dragging
+    game.addEventListener("click", (e) => {
+      if (editorMode && !globalDragging) {
+        const rect = game.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        spawnAt(currentEditorType, x, y);
+      }
+    });
+
+    // Function to enable dragging and deletion on an entity
+    function enableEntityInteractions(entityObj) {
+      const el = entityObj.el;
+      let offsetX, offsetY;
+      let dragging = false;
+      el.addEventListener("mousedown", (e) => {
+        if (e.button === 0) { // left click
+          dragging = true;
+          globalDragging = true;
+          offsetX = e.offsetX;
+          offsetY = e.offsetY;
+          el.style.cursor = "grabbing";
+          e.stopPropagation();
+        }
+      });
+      document.addEventListener("mousemove", (e) => {
+        if (dragging && editorMode) {
+          const rect = game.getBoundingClientRect();
+          entityObj.x = e.clientX - rect.left - offsetX;
+          entityObj.y = e.clientY - rect.top - offsetY;
+          entityObj.el.style.left = entityObj.x + "px";
+          entityObj.el.style.top = entityObj.y + "px";
+        }
+      });
+      document.addEventListener("mouseup", () => {
+        if (dragging) {
+          dragging = false;
+          el.style.cursor = "grab";
+          setTimeout(() => { globalDragging = false; }, 50);
+        }
+      });
+      // Right-click deletion
+      el.addEventListener("contextmenu", (e) => {
+        e.preventDefault();
+        game.removeChild(el);
+        const index = entities.indexOf(entityObj);
+        if (index !== -1) entities.splice(index, 1);
+      });
+    }
+
+    // Functions for spawning entities
+    function spawn(type) {
+      const div = document.createElement("div");
+      div.className = "entity";
+      div.textContent = types[type].emoji;
+      const x = Math.random() * (window.innerWidth - size);
+      const y = Math.random() * (window.innerHeight - size);
+      div.style.left = x + "px";
+      div.style.top = y + "px";
+      game.appendChild(div);
+      const entityObj = { el: div, x, y, vx: 0, vy: 0, type };
+      entities.push(entityObj);
+      enableEntityInteractions(entityObj);
+    }
+
+    function spawnAt(type, x, y) {
+      const div = document.createElement("div");
+      div.className = "entity";
+      div.textContent = types[type].emoji;
+      div.style.left = x + "px";
+      div.style.top = y + "px";
+      game.appendChild(div);
+      const entityObj = { el: div, x, y, vx: 0, vy: 0, type };
+      entities.push(entityObj);
+      enableEntityInteractions(entityObj);
+    }
+
+    // Simulation update functions
+    function distance(a, b) {
+      return Math.hypot(a.x - b.x, a.y - b.y);
+    }
+
+    function update(deltaTime) {
+      // Build spatial hash grid
+      const grid = {};
+      entities.forEach(entity => {
+        const gridX = Math.floor(entity.x / gridSize);
+        const gridY = Math.floor(entity.y / gridSize);
+        const key = `${gridX},${gridY}`;
+        if (!grid[key]) grid[key] = [];
+        grid[key].push(entity);
+      });
+      entities.forEach(entity => {
+        const gridX = Math.floor(entity.x / gridSize);
+        const gridY = Math.floor(entity.y / gridSize);
+        let preyList = [];
+        let predatorList = [];
+        const neighbors = [
+          `${gridX},${gridY}`,
+          `${gridX - 1},${gridY}`, `${gridX + 1},${gridY}`,
+          `${gridX},${gridY - 1}`, `${gridX},${gridY + 1}`
+        ];
+        neighbors.forEach(key => {
+          const nearby = grid[key];
+          if (nearby) {
+            nearby.forEach(neighbor => {
+              if (entity !== neighbor) {
+                if (neighbor.type === types[entity.type].predator) predatorList.push(neighbor);
+              }
+            });
+          }
+        });
+        // If predators are nearby, look locally for prey; otherwise search globally.
+        if (predatorList.length > 0) {
+          neighbors.forEach(key => {
+            const nearby = grid[key];
+            if (nearby) {
+              nearby.forEach(neighbor => {
+                if (entity !== neighbor && neighbor.type === types[entity.type].prey) {
+                  preyList.push(neighbor);
+                }
+              });
+            }
+          });
+        } else {
+          preyList = entities.filter(e => e.type === types[entity.type].prey && e !== entity);
+        }
+        let dx = 0, dy = 0;
+        if (preyList.length > 0) {
+          let closestPrey = preyList.reduce((min, e) => distance(entity, e) < distance(entity, min) ? e : min);
+          dx += (closestPrey.x - entity.x);
+          dy += (closestPrey.y - entity.y);
+        }
+        if (predatorList.length > 0) {
+          let closestPred = predatorList.reduce((min, e) => distance(entity, e) < distance(entity, min) ? e : min);
+          dx -= (closestPred.x - entity.x);
+          dy -= (closestPred.y - entity.y);
+        }
+        const mag = Math.hypot(dx, dy) || 1;
+        dx = dx / mag * 2 + (Math.random() - 0.5) * 2;
+        dy = dy / mag * 2 + (Math.random() - 0.5) * 2;
+        entity.vx = dx;
+        entity.vy = dy;
+        // Speed boost if last of its type
+        const remainingTypeCount = entities.filter(e => e.type === entity.type).length;
+        if (remainingTypeCount === 1) {
+          entity.vx *= 2;
+          entity.vy *= 2;
+        }
+        entity.x += entity.vx * deltaTime / 16;
+        entity.y += entity.vy * deltaTime / 16;
+        entity.x = Math.max(0, Math.min(window.innerWidth - size, entity.x));
+        entity.y = Math.max(0, Math.min(window.innerHeight - size, entity.y));
+        entity.el.style.left = entity.x + "px";
+        entity.el.style.top = entity.y + "px";
+      });
+      handleCollisions();
+    }
+
+    function handleCollisions() {
+      for (let i = 0; i < entities.length; i++) {
+        for (let j = i + 1; j < entities.length; j++) {
+          const a = entities[i];
+          const b = entities[j];
+          if (distance(a, b) < size) {
+            if (types[a.type].prey === b.type) {
+              b.type = a.type;
+              b.el.textContent = types[b.type].emoji;
+            } else if (types[b.type].prey === a.type) {
+              a.type = b.type;
+              a.el.textContent = types[a.type].emoji;
+            }
+          }
+        }
+      }
+    }
+
+    function checkForWinner() {
+      if (entities.length === 0) return false;
+      const uniqueTypes = new Set(entities.map(e => e.type));
+      return uniqueTypes.size === 1;
+    }
+
+    function announceWinner() {
+      simulationRunning = false;
+      const winnerType = entities[0].type;
+      winnerAnnouncement.textContent = "Winner: " + types[winnerType].emoji;
+      winnerModal.style.display = "flex";
+      speedControl.style.display = "none";
+    }
+
+    function gameLoop(timestamp) {
+      const deltaTime = (timestamp - lastTime) * speedFactor;
+      lastTime = timestamp;
+      update(deltaTime);
+      if (checkForWinner()) {
+        announceWinner();
+      }
+      if (simulationRunning) requestAnimationFrame(gameLoop);
+    }
+
+    // Functions to initialize scenarios
+    function initScenarioFromSliders() {
+      const rockCount = parseInt(rockSlider.value);
+      const paperCount = parseInt(paperSlider.value);
+      const scissorsCount = parseInt(scissorsSlider.value);
+      for (let i = 0; i < rockCount; i++) spawn("rock");
+      for (let i = 0; i < paperCount; i++) spawn("paper");
+      for (let i = 0; i < scissorsCount; i++) spawn("scissors");
+    }
+
+    // UI Button events
+    createScenarioButton.addEventListener("click", () => {
+      mainMenu.style.display = "none";
+      creationModal.style.display = "flex";
+    });
+
+    manualPlaceButton.addEventListener("click", () => {
+      creationModal.style.display = "none";
+      editorMode = true;
+      editorBar.style.display = "flex";
+      palette.style.display = "flex";
+    });
+
+    beginScenarioButton.addEventListener("click", () => {
+      creationModal.style.display = "none";
+      startSimulation(initScenarioFromSliders);
+    });
+
+    exitEditorButton.addEventListener("click", () => {
+      editorBar.style.display = "none";
+      palette.style.display = "none";
+      editorMode = false;
+      creationModal.style.display = "flex";
+    });
+
+    beginEditorScenarioButton.addEventListener("click", () => {
+      editorBar.style.display = "none";
+      palette.style.display = "none";
+      editorMode = false;
+      startSimulation();
+    });
+
+    returnToMenu.addEventListener("click", () => {
+      // Reset simulation and UI
+      simulationRunning = false;
+      winnerModal.style.display = "none";
+      // Clear all entities from game and array
+      while (game.firstChild) {
+        if (game.firstChild.id !== "version" && game.firstChild.id !== "speedControl") {
+          game.removeChild(game.firstChild);
+        } else {
+          game.firstChild.remove();
+        }
+      }
+      entities.length = 0;
+      // Hide speed control, show main menu
+      speedControl.style.display = "none";
+      mainMenu.style.display = "flex";
+    });
+
+    function startSimulation(initCallback) {
+      if (initCallback) initCallback();
+      simulationRunning = true;
+      lastTime = performance.now();
+      speedControl.style.display = "block";
+      requestAnimationFrame(gameLoop);
+    }
+  </script>
+</body>
+</html>

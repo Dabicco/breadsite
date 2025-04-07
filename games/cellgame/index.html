@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Untitled Cell Game - The Breadsite</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Bitter:wght@400;700&display=swap');
+
+    body {
+      margin: 0;
+      font-family: 'Bitter', serif;
+      color: #fff;
+      background-color: #1a1a1a;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* Banner */
+    .cellgame-banner {
+      background: linear-gradient(135deg, #2b2b2b, #444444);
+      padding: 40px 0;
+      text-align: center;
+      color: white;
+    }
+    .cellgame-banner h1 {
+      font-size: 3rem;
+      margin-bottom: 10px;
+    }
+    .cellgame-banner p {
+      font-size: 1.2rem;
+      color: #ccc;
+    }
+
+    /* Main Container */
+    .cellgame-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      padding: 40px;
+      background: linear-gradient(135deg, #1e1e1e, #2f2f2f);
+      flex-grow: 1;
+    }
+
+    /* Card Style */
+    .cellgame-card {
+      background-color: #292929;
+      width: 80%;
+      max-width: 800px;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      transition: transform 0.3s ease, filter 0.3s ease;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+    .cellgame-card h2 {
+      margin-top: 0;
+    }
+    .cellgame-card p {
+      color: #ccc;
+      margin: 10px 0;
+      line-height: 1.4;
+    }
+
+    /* iFrame embed area */
+    .game-iframe {
+      width: 100%;
+      height: 600px;
+      border: 2px solid #333;
+      border-radius: 5px;
+      background-color: #000;
+      margin: 20px 0;
+    }
+
+    /* Fullscreen Button */
+    .cellgame-button {
+      background: linear-gradient(135deg, #0066cc, #003366);
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 25px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      position: relative;
+      z-index: 10;
+    }
+    .cellgame-button:hover {
+      background-color: #004c99;
+      transform: scale(1.1);
+    }
+
+    /* Dark Background for "Go back" Button */
+    .dark-background {
+      background-color: #141414;
+      padding: 20px 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Bottom Button */
+    .go-back-button {
+      background: linear-gradient(135deg, #333333, #555555);
+      color: white;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 30px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      width: 250px;
+    }
+    .go-back-button:hover {
+      background-color: #444444;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Banner Section -->
+  <div class="cellgame-banner">
+    <h1>Untitled Cell Game</h1>
+    <p>Experience the microscopic world of evolving cells</p>
+  </div>
+
+  <!-- Main Container -->
+  <div class="cellgame-container">
+    <div class="cellgame-card">
+      <h2>Welcome to Cell Game</h2>
+      <p>
+        Dive into a dynamic simulation where cells mutate, interact, and evolve.
+        Watch them grow, compete, and adapt in a vibrant microcosm!
+      </p>
+
+      <!-- iFrame embedding the Cell Game -->
+      <iframe
+        id="cellGameFrame"
+        class="game-iframe"
+        src="/breadsite/games/cellgame/assets/game.html"
+        title="Cell Game"
+        allowfullscreen
+      ></iframe>
+
+      <!-- Fullscreen Button -->
+      <button class="cellgame-button" onclick="goFullscreen()">Go Fullscreen</button>
+    </div>
+  </div>
+
+  <!-- Dark Background for "Go back" Button -->
+  <div class="dark-background">
+    <button class="go-back-button" onclick="window.location.href='/breadsite/games'">
+      Go back to Games
+    </button>
+  </div>
+
+  <script>
+    function goFullscreen() {
+      const frame = document.getElementById('cellGameFrame');
+      if (frame.requestFullscreen) {
+        frame.requestFullscreen();
+      } else if (frame.mozRequestFullScreen) {
+        frame.mozRequestFullScreen();
+      } else if (frame.webkitRequestFullscreen) {
+        frame.webkitRequestFullscreen();
+      } else if (frame.msRequestFullscreen) {
+        frame.msRequestFullscreen();
+      } else {
+        alert("Fullscreen not supported in this browser or iFrame setup.");
+      }
+    }
+  </script>
+
+</body>
+</html>

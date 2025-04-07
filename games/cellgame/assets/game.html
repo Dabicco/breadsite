@@ -1,0 +1,1596 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cell Game - v1.0a</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      overflow: hidden;
+    }
+    /* Sidebar spanning full viewport height with custom scrollbar */
+    #sidebar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 300px;
+      height: 100vh;
+      background: linear-gradient(135deg, #3a3a3a, #1a1a1a);
+      color: #f0f0f0;
+      padding: 20px;
+      box-sizing: border-box;
+      overflow-y: auto;
+      z-index: 30;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.5);
+    }
+    /* Custom scrollbar */
+    #sidebar::-webkit-scrollbar {
+      width: 10px;
+    }
+    #sidebar::-webkit-scrollbar-track {
+      background: #1a1a1a;
+    }
+    #sidebar::-webkit-scrollbar-thumb {
+      background-color: #008cba;
+      border-radius: 10px;
+      border: 2px solid #1a1a1a;
+    }
+    /* Version display */
+    #version {
+      position: absolute;
+      bottom: 10px;
+      left: 20px;
+      font-size: 14px;
+      opacity: 0.8;
+    }
+    /* Pause overlay (top right) */
+    #pauseOverlay {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 48px;
+      color: red;
+      opacity: 0;
+      transition: opacity 0.5s;
+      pointer-events: none;
+      z-index: 40;
+    }
+    /* Larger fonts and button styling */
+    #sidebar label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 16px;
+    }
+    #sidebar input,
+    #sidebar select,
+    #sidebar button,
+    #sidebar textarea {
+      width: 100%;
+      margin-bottom: 15px;
+      padding: 10px;
+      font-size: 16px;
+      box-sizing: border-box;
+      border: none;
+      border-radius: 6px;
+    }
+    /* Ensure color inputs show selected color and are tall enough */
+    input[type="color"] {
+      padding: 0;
+      height: 40px;
+      cursor: pointer;
+    }
+    /* Textarea styling to match inputs */
+    #sidebar textarea {
+      resize: vertical;
+      background-color: #fff;
+      color: #333;
+    }
+    #sidebar input,
+    #sidebar select,
+    #sidebar textarea {
+      background-color: #fff;
+      color: #333;
+    }
+    #sidebar button {
+      background-color: #008cba;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    #sidebar button:hover {
+      background-color: #0079a1;
+    }
+    /* Menus – only one visible at a time */
+    .menu {
+      display: none;
+    }
+    /* Canvas placed immediately to the right of the sidebar */
+    #gameCanvas {
+      position: absolute;
+      top: 0;
+      left: 300px;
+      background-color: #ffffff;
+    }
+    /* Hover info tooltip */
+    #hoverInfo {
+      position: absolute;
+      background: rgba(0,0,0,0.8);
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 4px;
+      pointer-events: none;
+      font-size: 14px;
+      display: none;
+      z-index: 20;
+      max-height: 300px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <!-- Canvas element -->
+  <canvas id="gameCanvas"></canvas>
+  
+  <!-- Sidebar with menus -->
+  <div id="sidebar">
+    <!-- Start Menu -->
+    <div id="startMenu" class="menu" style="display:block;">
+      <label for="startCells" title="Enter a number between 0 and 200.">Random Cells to Generate:</label>
+      <input type="number" id="startCells" min="0" max="200" value="20" step="1" title="Default is 20 cells.">
+      <label for="startPhages" title="Enter a number between 0 and 200.">Viron (Phage) to Spawn:</label>
+      <input type="number" id="startPhages" min="0" max="200" value="0" step="1" title="Default is 0.">
+      <button id="startGameBtn" title="Start the simulation.">Start Game</button>
+      <button id="loadGameBtn" title="Load a saved game.">Load Save</button>
+    </div>
+    <!-- Main Menu -->
+    <div id="mainMenu" class="menu">
+      <button id="customEditorBtn" title="Open custom cell editor.">Custom Cell Editor</button>
+      <button id="itemSpawnerBtn" title="Open item spawner.">Item Spawner</button>
+      <button id="globalBtn" title="Open global options.">Global</button>
+      <button id="saveGameBtn" title="Save your current game.">Save Game</button>
+      <button id="exitBtn" title="Exit to start menu.">Exit</button>
+    </div>
+    <!-- Custom Cell Editor Menu -->
+    <div id="customMenu" class="menu">
+      <label for="cellType" title="Select cell type.">Cell Type:</label>
+      <select id="cellType" title="Choose cell type.">
+        <option value="Photosynthesize">Photosynthesize</option>
+        <option value="Hunt">Hunt</option>
+      </select>
+      <label for="cellColor" title="Pick cell color.">Cell Color:</label>
+      <input type="color" id="cellColor" value="#ff0000" title="Select cell color.">
+      <label for="cellSize" title="Set initial size.">Initial Size (units):</label>
+      <input type="number" id="cellSize" value="20" min="5" step="1" title="Size between 5 and higher.">
+      <label for="mutationChance" title="Mutation chance (in %).">Mutation Chance (%):</label>
+      <input type="number" id="mutationChance" value="5" min="1" max="10" step="0.1" title="Between 1 and 10.">
+      <label for="metabolism" title="Metabolism multiplier.">Metabolism (multiplier):</label>
+      <input type="number" id="metabolism" value="1" min="0.5" max="2" step="0.1" title="Between 0.5 and 2.">
+      <label for="growthRate" title="Growth rate multiplier.">Growth Rate (multiplier):</label>
+      <input type="number" id="growthRate" value="1" min="0.5" max="2" step="0.1" title="Between 0.5 and 2.">
+      <label for="speedGene" title="Speed multiplier.">Speed Gene (multiplier):</label>
+      <input type="number" id="speedGene" value="1" min="0.5" max="2" step="0.1" title="Between 0.5 and 2.">
+      <label for="stomachMultiplier" title="Stomach capacity multiplier.">Stomach Multiplier:</label>
+      <input type="number" id="stomachMultiplier" value="1.2" min="1" max="1.5" step="0.1" title="Between 1 and 1.5.">
+      <label for="immunity" title="Select immunity.">Immunity:</label>
+      <select id="immunity" title="Choose immunity.">
+        <option value="none">None</option>
+        <option value="bacteriophage">Bacteriophage</option>
+      </select>
+      <button id="backFromCustomBtn" title="Back to main menu.">Back</button>
+      <p style="font-size:14px; margin-top:10px;">A preview of your cell appears under your mouse. Click on the canvas to place it.</p>
+    </div>
+    <!-- Item Spawner Menu -->
+    <div id="itemSpawnerMenu" class="menu">
+      <label for="itemTypeSelect" title="Select item type.">Item Type:</label>
+      <select id="itemTypeSelect" title="Choose an item.">
+        <option value="Food" selected>Food</option>
+        <option value="Chromosome">Chromosome</option>
+        <option value="Bacteriophage">Viron (Phage)</option>
+      </select>
+      <!-- Chromosome options -->
+      <div id="chromosomeOptions" style="display:none;">
+        <label for="chromMutationChance" title="Chromosome mutation chance (in %).">Mutation Chance (%):</label>
+        <input type="number" id="chromMutationChance" value="5" min="1" max="10" step="0.1" title="Between 1 and 10.">
+        <label for="chromMetabolism" title="Metabolism multiplier.">Metabolism:</label>
+        <input type="number" id="chromMetabolism" value="1" min="0.5" max="2" step="0.1" title="Between 0.5 and 2.">
+        <label for="chromGrowthRate" title="Growth rate multiplier.">Growth Rate:</label>
+        <input type="number" id="chromGrowthRate" value="1" min="0.5" max="2" step="0.1" title="Between 0.5 and 2.">
+        <label for="chromSpeedGene" title="Speed multiplier.">Speed Gene:</label>
+        <input type="number" id="chromSpeedGene" value="1" min="0.5" max="2" step="0.1" title="Between 0.5 and 2.">
+        <label for="chromStomachMultiplier" title="Stomach multiplier.">Stomach Multiplier:</label>
+        <input type="number" id="chromStomachMultiplier" value="1.2" min="1" max="1.5" step="0.1" title="Between 1 and 1.5.">
+        <label for="chromImmunity" title="Chromosome immunity.">Immunity:</label>
+        <select id="chromImmunity" title="Choose immunity.">
+          <option value="none">None</option>
+          <option value="bacteriophage">Bacteriophage</option>
+        </select>
+        <label for="chromColor" title="Select chromosome color.">Chromosome Color:</label>
+        <input type="color" id="chromColor" value="#ffffff" title="Select a color.">
+        <label for="chromCellType" title="Select the cell type for this chromosome.">Cell Type:</label>
+        <select id="chromCellType" title="Choose cell type.">
+          <option value="Photosynthesize">Photosynthesize</option>
+          <option value="Hunt">Hunt</option>
+        </select>
+      </div>
+      <!-- Bacteriophage options -->
+      <div id="phageOptions" style="display:none;">
+        <label for="phageColor" title="Select viron (phage) color.">Color:</label>
+        <input type="color" id="phageColor" value="#0000ff" title="Select a color.">
+        <label for="phageShape" title="Select viron (phage) shape.">Shape:</label>
+        <select id="phageShape" title="Choose a shape.">
+          <option value="hexagon">Hexagon</option>
+          <option value="triangle">Triangle</option>
+          <option value="circle">Circle</option>
+        </select>
+      </div>
+      <button id="backFromItemSpawnerBtn" title="Back to main menu.">Back</button>
+      <p style="font-size:14px; margin-top:10px;">A preview of your item appears under your mouse. Click on the canvas to spawn it.</p>
+    </div>
+    <!-- Global Menu -->
+    <div id="globalMenu" class="menu">
+      <button id="spawnOneCellBtn" title="Spawn one random cell.">Spawn Random Cell</button>
+      <button id="spawnTenCellsBtn" title="Spawn 10 random cells.">Spawn 10 Random Cells</button>
+      <button id="spawnPhageBtn" title="Spawn a random Viron (Phage).">Spawn Random Viron (Phage)</button>
+      <button id="clearAllBtn" title="Clear all objects.">Clear All</button>
+      <label for="speedMultiplier" title="Adjust game speed (0 = paused, 5 = 5× speed).">Game Speed Multiplier (0-5):</label>
+      <input type="range" id="speedMultiplier" min="0" max="5" step="0.1" value="1" title="Adjust game speed.">
+      <button id="backFromGlobalBtn" title="Back to main menu.">Back</button>
+    </div>
+    <!-- Save Menu -->
+    <div id="saveMenu" class="menu">
+      <label for="saveName" title="Enter a name for your save.">Save Name:</label>
+      <input type="text" id="saveName" placeholder="Enter save name">
+      <label for="saveDesc" title="Enter an optional description.">Description (optional):</label>
+      <textarea id="saveDesc" placeholder="Enter description"></textarea>
+      <button id="doSaveBtn" title="Save the game.">Save</button>
+      <button id="cancelSaveBtn" title="Cancel saving.">Cancel</button>
+    </div>
+    <!-- Load Menu -->
+    <div id="loadMenu" class="menu">
+      <h3>Load Saved Games</h3>
+      <div id="saveList"></div>
+      <button id="importSaveBtn" title="Import a save from a file.">Import Save</button>
+      <input type="file" id="importInput" accept=".dbr" style="display:none;">
+      <button id="backFromLoadBtn" title="Back to Start Menu.">Back</button>
+    </div>
+    <!-- Version Display -->
+    <div id="version">v1.0a</div>
+  </div>
+  
+  <div id="hoverInfo"></div>
+  <div id="pauseOverlay"></div>
+  
+  <script>
+    window.onload = function() {
+      // Define helper functions.
+      function wrap(val, max) { return ((val % max) + max) % max; }
+      function clamp(val, min, max) { return Math.max(min, Math.min(val, max)); }
+      
+      // Color conversion functions.
+      function hexToRgb(hex) {
+        hex = hex.replace(/^#/, "");
+        if(hex.length === 3) { hex = hex.split("").map(c => c + c).join(""); }
+        let bigint = parseInt(hex, 16);
+        return { r: (bigint >> 16) & 255, g: (bigint >> 8) & 255, b: bigint & 255 };
+      }
+      function rgbToHex(r, g, b) {
+        return "#" + [r, g, b].map(x => {
+          let hex = x.toString(16);
+          return hex.length === 1 ? "0" + hex : hex;
+        }).join("");
+      }
+      function convertHexToRgbString(hex) {
+        let { r, g, b } = hexToRgb(hex);
+        return `rgb(${r}, ${g}, ${b})`;
+      }
+      function mutateColor(rgbStr) {
+        let parts = rgbStr.match(/\d+/g).map(Number);
+        let r = Math.min(255, Math.max(0, parts[0] + Math.floor(randomBetween(-10, 10))));
+        let g = Math.min(255, Math.max(0, parts[1] + Math.floor(randomBetween(-10, 10))));
+        let b = Math.min(255, Math.max(0, parts[2] + Math.floor(randomBetween(-10, 10))));
+        return `rgb(${r}, ${g}, ${b})`;
+      }
+      
+      // Global variables.
+      const sidebarWidth = 300;
+      let customMode = false;
+      let itemSpawnerMode = false;
+      let customPreview = null;
+      let currentItemType = null;
+      let itemCount = 0;
+      let gameSpeedMultiplier = 1;
+      let paused = false;
+      let pauseMessage = "";
+      let pauseMessageTimer = 0;
+      let prevGameSpeed = gameSpeedMultiplier;
+      
+      // Menu elements.
+      const startMenu = document.getElementById('startMenu');
+      const mainMenu = document.getElementById('mainMenu');
+      const customMenu = document.getElementById('customMenu');
+      const globalMenu = document.getElementById('globalMenu');
+      const itemSpawnerMenu = document.getElementById('itemSpawnerMenu');
+      const saveMenu = document.getElementById('saveMenu');
+      const loadMenu = document.getElementById('loadMenu');
+      const startGameBtn = document.getElementById('startGameBtn');
+      const customEditorBtn = document.getElementById('customEditorBtn');
+      const itemSpawnerBtn = document.getElementById('itemSpawnerBtn');
+      const globalBtn = document.getElementById('globalBtn');
+      const saveGameBtn = document.getElementById('saveGameBtn');
+      const loadGameBtn = document.getElementById('loadGameBtn');
+      const exitBtn = document.getElementById('exitBtn');
+      const backFromCustomBtn = document.getElementById('backFromCustomBtn');
+      const backFromItemSpawnerBtn = document.getElementById('backFromItemSpawnerBtn');
+      const backFromGlobalBtn = document.getElementById('backFromGlobalBtn');
+      const doSaveBtn = document.getElementById('doSaveBtn');
+      const cancelSaveBtn = document.getElementById('cancelSaveBtn');
+      const backFromLoadBtn = document.getElementById('backFromLoadBtn');
+      
+      // Pre-start options.
+      const startCellsInput = document.getElementById('startCells');
+      const startPhagesInput = document.getElementById('startPhages');
+      
+      // Global Menu buttons.
+      const spawnOneCellBtn = document.getElementById('spawnOneCellBtn');
+      const spawnTenCellsBtn = document.getElementById('spawnTenCellsBtn');
+      const spawnPhageBtn = document.getElementById('spawnPhageBtn');
+      const clearAllBtn = document.getElementById('clearAllBtn');
+      const speedMultiplierSlider = document.getElementById('speedMultiplier');
+      
+      // Item Spawner dropdown.
+      const itemTypeSelect = document.getElementById('itemTypeSelect');
+      const chromosomeOptions = document.getElementById('chromosomeOptions');
+      const phageOptions = document.getElementById('phageOptions');
+      itemTypeSelect.addEventListener('change', function(){
+        currentItemType = this.value;
+        if(currentItemType === "Chromosome"){
+          chromosomeOptions.style.display = "block";
+          phageOptions.style.display = "none";
+        } else if(currentItemType === "Bacteriophage"){
+          chromosomeOptions.style.display = "none";
+          phageOptions.style.display = "block";
+        } else {
+          chromosomeOptions.style.display = "none";
+          phageOptions.style.display = "none";
+        }
+      });
+      itemTypeSelect.value = "Food";
+      currentItemType = "Food";
+      
+      // Save and Load menus.
+      const saveNameInput = document.getElementById('saveName');
+      const saveDescInput = document.getElementById('saveDesc');
+      const saveListDiv = document.getElementById('saveList');
+      const importSaveBtn = document.getElementById('importSaveBtn');
+      const importInput = document.getElementById('importInput');
+      
+      // Button handlers.
+      startGameBtn.addEventListener('click', function(){
+        simulationRunning = true;
+        startMenu.style.display = "none";
+        mainMenu.style.display = "block";
+        let cellCountStart = parseInt(startCellsInput.value);
+        let phageCountStart = parseInt(startPhagesInput.value);
+        for(let i = 0; i < cellCountStart; i++){
+          let x = randomBetween(0, canvas.width);
+          let y = randomBetween(0, canvas.height);
+          createCell(x, y, randomBetween(15,25), randomDNA());
+        }
+        for(let i = 0; i < phageCountStart; i++){
+          let x = randomBetween(0, canvas.width);
+          let y = randomBetween(0, canvas.height);
+          spawnPhage(x, y);
+        }
+        update();
+      });
+      customEditorBtn.addEventListener('click', function(){
+        mainMenu.style.display = "none";
+        customMenu.style.display = "block";
+        customMode = true;
+      });
+      itemSpawnerBtn.addEventListener('click', function(){
+        mainMenu.style.display = "none";
+        itemSpawnerMenu.style.display = "block";
+        itemSpawnerMode = true;
+      });
+      globalBtn.addEventListener('click', function(){
+        mainMenu.style.display = "none";
+        globalMenu.style.display = "block";
+      });
+      saveGameBtn.addEventListener('click', function(){
+        prevGameSpeed = gameSpeedMultiplier;
+        gameSpeedMultiplier = 0;
+        paused = true;
+        mainMenu.style.display = "none";
+        saveMenu.style.display = "block";
+      });
+      doSaveBtn.addEventListener('click', function(){
+        let saveName = saveNameInput.value.trim();
+        if(!saveName) { alert("Please enter a save name."); return; }
+        let saveDesc = saveDescInput.value;
+        let saveData = {
+          cells: cells,
+          foods: foods,
+          phages: phages,
+          chromosomes: chromosomes,
+          developingCells: developingCells,
+          timestamp: Date.now(),
+          name: saveName,
+          description: saveDesc
+        };
+        let saves = JSON.parse(localStorage.getItem("cellGameSaves") || "[]");
+        saves.push(saveData);
+        localStorage.setItem("cellGameSaves", JSON.stringify(saves));
+        alert("Game saved!");
+        saveNameInput.value = "";
+        saveDescInput.value = "";
+        saveMenu.style.display = "none";
+        mainMenu.style.display = "block";
+        paused = false;
+        gameSpeedMultiplier = prevGameSpeed;
+      });
+      cancelSaveBtn.addEventListener('click', function(){
+        saveMenu.style.display = "none";
+        mainMenu.style.display = "block";
+        paused = false;
+        gameSpeedMultiplier = prevGameSpeed;
+      });
+      loadGameBtn.addEventListener('click', function(){
+        startMenu.style.display = "none";
+        loadMenu.style.display = "block";
+        populateSaveList();
+      });
+      backFromLoadBtn.addEventListener('click', function(){
+        loadMenu.style.display = "none";
+        startMenu.style.display = "block";
+      });
+      exitBtn.addEventListener('click', function(){
+        simulationRunning = false;
+        cells = [];
+        foods = [];
+        phages = [];
+        chromosomes = [];
+        developingCells = [];
+        mainMenu.style.display = "none";
+        saveMenu.style.display = "none";
+        loadMenu.style.display = "none";
+        itemSpawnerMenu.style.display = "none";
+        globalMenu.style.display = "none";
+        startMenu.style.display = "block";
+      });
+      spawnOneCellBtn.addEventListener('click', function(){
+        let x = randomBetween(0, canvas.width);
+        let y = randomBetween(0, canvas.height);
+        createCell(x, y, randomBetween(15,25), randomDNA());
+      });
+      spawnTenCellsBtn.addEventListener('click', function(){
+        for(let i = 0; i < 10; i++){
+          let x = randomBetween(0, canvas.width);
+          let y = randomBetween(0, canvas.height);
+          createCell(x, y, randomBetween(15,25), randomDNA());
+        }
+      });
+      spawnPhageBtn.addEventListener('click', function(){
+        let x = randomBetween(0, canvas.width);
+        let y = randomBetween(0, canvas.height);
+        spawnPhage(x, y);
+      });
+      clearAllBtn.addEventListener('click', function(){
+        cells = [];
+        foods = [];
+        phages = [];
+        chromosomes = [];
+        developingCells = [];
+      });
+      speedMultiplierSlider.addEventListener('input', function(){
+        gameSpeedMultiplier = parseFloat(this.value);
+      });
+      backFromGlobalBtn.addEventListener('click', function(){
+        globalMenu.style.display = "none";
+        mainMenu.style.display = "block";
+      });
+      backFromCustomBtn.addEventListener('click', function(){
+        customMenu.style.display = "none";
+        mainMenu.style.display = "block";
+        customMode = false;
+        customPreview = null;
+      });
+      backFromItemSpawnerBtn.addEventListener('click', function(){
+        itemSpawnerMenu.style.display = "none";
+        mainMenu.style.display = "block";
+        itemSpawnerMode = false;
+        customPreview = null;
+      });
+      importSaveBtn.addEventListener('click', function(){
+        importInput.click();
+      });
+      importInput.addEventListener('change', function(e){
+        let file = e.target.files[0];
+        if(!file) return;
+        let reader = new FileReader();
+        reader.onload = function(ev) {
+          try {
+            let saveData = JSON.parse(ev.target.result);
+            let saves = JSON.parse(localStorage.getItem("cellGameSaves") || "[]");
+            saves.push(saveData);
+            localStorage.setItem("cellGameSaves", JSON.stringify(saves));
+            alert("Save imported successfully!");
+            populateSaveList();
+          } catch(err) {
+            alert("Failed to import save file.");
+          }
+        };
+        reader.readAsText(file);
+      });
+      function populateSaveList() {
+        let saves = JSON.parse(localStorage.getItem("cellGameSaves") || "[]");
+        saveListDiv.innerHTML = "";
+        if(saves.length === 0) {
+          saveListDiv.innerHTML = "<p>No saves found.</p>";
+          return;
+        }
+        saves.forEach((save, index) => {
+          let div = document.createElement("div");
+          div.style.border = "1px solid #ccc";
+          div.style.padding = "5px";
+          div.style.marginBottom = "5px";
+          div.innerHTML = `<strong>${save.name}</strong><br>
+                           ${save.description ? save.description + "<br>" : ""}
+                           <small>${new Date(save.timestamp).toLocaleString()}</small><br>`;
+          let loadBtn = document.createElement("button");
+          loadBtn.textContent = "Load Save";
+          loadBtn.addEventListener("click", function(){
+            loadSave(index);
+          });
+          let deleteBtn = document.createElement("button");
+          deleteBtn.textContent = "Delete";
+          deleteBtn.addEventListener("click", function(){
+            if(confirm("Delete this save?")) {
+              saves.splice(index, 1);
+              localStorage.setItem("cellGameSaves", JSON.stringify(saves));
+              populateSaveList();
+            }
+          });
+          let exportBtn = document.createElement("button");
+          exportBtn.textContent = "Export";
+          exportBtn.addEventListener("click", function(){
+            exportSave(save);
+          });
+          div.appendChild(loadBtn);
+          div.appendChild(deleteBtn);
+          div.appendChild(exportBtn);
+          saveListDiv.appendChild(div);
+        });
+      }
+      function loadSave(index) {
+        let saves = JSON.parse(localStorage.getItem("cellGameSaves") || "[]");
+        if(index < 0 || index >= saves.length) return;
+        let saveData = saves[index];
+        cells = saveData.cells || [];
+        foods = saveData.foods || [];
+        phages = saveData.phages || [];
+        chromosomes = saveData.chromosomes || [];
+        developingCells = saveData.developingCells || [];
+        loadMenu.style.display = "none";
+        mainMenu.style.display = "block";
+        paused = false;
+        gameSpeedMultiplier = prevGameSpeed || 1;
+      }
+      function exportSave(saveData) {
+        let dataStr = JSON.stringify(saveData, null, 2);
+        let blob = new Blob([dataStr], { type: "application/json" });
+        let url = URL.createObjectURL(blob);
+        let a = document.createElement("a");
+        a.href = url;
+        a.download = saveData.name + ".dbr";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+      
+      const canvas = document.getElementById('gameCanvas');
+      function resizeCanvas() {
+        canvas.width = window.innerWidth - sidebarWidth;
+        canvas.height = window.innerHeight;
+      }
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+      
+      const ctx = canvas.getContext('2d');
+      const hoverInfo = document.getElementById('hoverInfo');
+      const pauseOverlay = document.getElementById('pauseOverlay');
+      
+      let shiftDown = false, altDown = false;
+      document.addEventListener('keydown', e => {
+        // Do not toggle pause if an input or textarea is focused.
+        if(document.activeElement && (document.activeElement.tagName === "INPUT" || document.activeElement.tagName === "TEXTAREA")) {
+          // Allow normal typing.
+        } else if(e.code === "Space"){
+          paused = !paused;
+          if(paused){
+            prevGameSpeed = gameSpeedMultiplier;
+            gameSpeedMultiplier = 0;
+            pauseMessage = "Paused";
+            pauseMessageTimer = 3000;
+          } else {
+            pauseMessage = "Unpaused";
+            pauseMessageTimer = 3000;
+            gameSpeedMultiplier = prevGameSpeed;
+          }
+        }
+        shiftDown = e.shiftKey;
+        altDown = e.altKey;
+        if(shiftDown && e.key.toLowerCase()==='c' && hoverInfo.innerText){
+          navigator.clipboard.writeText(hoverInfo.innerText);
+        }
+      });
+      document.addEventListener('keyup', e => { shiftDown = e.shiftKey; altDown = e.altKey; });
+      
+      // Right-click deletion for all objects.
+      canvas.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        let rect = canvas.getBoundingClientRect();
+        let mouseX = e.clientX - rect.left;
+        let mouseY = e.clientY - rect.top;
+        // Check cells.
+        for(let i = cells.length - 1; i >= 0; i--){
+          let cell = cells[i];
+          if(Math.sqrt((cell.x - mouseX)**2 + (cell.y - mouseY)**2) < cell.size){
+            cells.splice(i, 1);
+            return;
+          }
+        }
+        // Check chromosomes (hitbox increased to 15).
+        for(let i = chromosomes.length - 1; i >= 0; i--){
+          let chr = chromosomes[i];
+          if(Math.sqrt((chr.x - mouseX)**2 + (chr.y - mouseY)**2) < 15){
+            chromosomes.splice(i, 1);
+            return;
+          }
+        }
+        // Check foods (hitbox margin +5).
+        for(let i = foods.length - 1; i >= 0; i--){
+          let food = foods[i];
+          if(Math.sqrt((food.x - mouseX)**2 + (food.y - mouseY)**2) < food.amount + 5){
+            foods.splice(i, 1);
+            return;
+          }
+        }
+        // Check phages.
+        for(let i = phages.length - 1; i >= 0; i--){
+          let phage = phages[i];
+          if(Math.sqrt((phage.x - mouseX)**2 + (phage.y - mouseY)**2) < phage.size + 5){
+            phages.splice(i, 1);
+            return;
+          }
+        }
+        // Check developing cells.
+        for(let i = developingCells.length - 1; i >= 0; i--){
+          let dev = developingCells[i];
+          if(Math.sqrt((dev.x - mouseX)**2 + (dev.y - mouseY)**2) < dev.size){
+            developingCells.splice(i, 1);
+            return;
+          }
+        }
+      });
+      
+      let animations = [];
+      function addAnimation(type, x, y, duration, extra = {}) {
+        animations.push({ type, x, y, duration, timer: 0, ...extra });
+      }
+      
+      let cells = [];
+      let foods = [];
+      let phages = [];
+      let chromosomes = [];
+      let developingCells = [];
+      let cellCount = 0;
+      const MIN_CELL_SIZE = 10;
+      const cellTypes = ["Photosynthesize", "Hunt"];
+      const organelleTypes = ["RNA", "Ribosome", "Mitochondria", "Golgi", "Lysosome"];
+      
+      function randomBetween(min, max) { return Math.random() * (max - min) + min; }
+      function randomColor() { 
+        return `rgb(${Math.floor(randomBetween(0,255))}, ${Math.floor(randomBetween(0,255))}, ${Math.floor(randomBetween(0,255))})`;
+      }
+      function randomDNA() {
+        return {
+          mutationChance: randomBetween(0.01, 0.1),
+          metabolism: randomBetween(0.8, 1.2),
+          growthRate: randomBetween(0.8, 1.2),
+          speedGene: randomBetween(0.8, 1.2),
+          stomachMultiplier: randomBetween(1, 1.5),
+          immunity: (Math.random() < 0.4) ? "bacteriophage" : "none",
+          cellType: (Math.random() < 0.5) ? "Photosynthesize" : "Hunt",
+          color: randomColor()
+        };
+      }
+      function createBaseDNA(cellType, formDNA) {
+        return {
+          mutationChance: parseFloat(formDNA.mutationChance) / 100,
+          metabolism: parseFloat(formDNA.metabolism),
+          growthRate: parseFloat(formDNA.growthRate),
+          speedGene: parseFloat(formDNA.speedGene),
+          stomachMultiplier: parseFloat(document.getElementById('stomachMultiplier').value),
+          immunity: document.getElementById('immunity').value,
+          cellType: cellType,
+          color: randomColor()
+        };
+      }
+      function createOrganelles(cell) {
+        let organelles = [];
+        let count = Math.floor(cell.size / 5) + Math.floor(randomBetween(1, 4));
+        for(let i = 0; i < count; i++){
+          let type = organelleTypes[Math.floor(randomBetween(0, organelleTypes.length))];
+          let angle = randomBetween(0, Math.PI * 2);
+          let radius = randomBetween(0, cell.size * 0.7);
+          let ox = Math.cos(angle) * radius;
+          let oy = Math.sin(angle) * radius;
+          let ovx = randomBetween(-0.2, 0.2);
+          let ovy = randomBetween(-0.2, 0.2);
+          organelles.push({ type, offsetX: ox, offsetY: oy, vx: ovx, vy: ovy });
+        }
+        cell.organelles = organelles;
+      }
+      function calculateMaxEnergy(cell) {
+        let base = 100;
+        let stomach = cell.dna.stomachMultiplier;
+        let sizeFactor = cell.size / 20;
+        let metabolism = cell.dna.metabolism;
+        let speedFactor = (2 - cell.dna.speedGene);
+        let huntFactor = (cell.cellType === "Hunt") ? 0.8 : 1;
+        let maxEnergy = base * stomach * sizeFactor * metabolism * speedFactor * huntFactor;
+        return Math.max(10, Math.min(maxEnergy, 300));
+      }
+      function createCell(x, y, size, dna, type, team, color) {
+        let cellType = type || cellTypes[Math.floor(randomBetween(0, cellTypes.length))];
+        if(!dna) { dna = randomDNA(); }
+        if(color && color.startsWith("#")){
+          color = convertHexToRgbString(color);
+        }
+        if(cellType === "Hunt" && size < 25){ size = randomBetween(25, 35); }
+        let cell = {
+          id: "Cell-" + (++cellCount),
+          x: wrap(x, canvas.width),
+          y: wrap(y, canvas.height),
+          size: size,
+          color: color || randomColor(),
+          energy: 200,
+          dna: dna,
+          cellType: cellType,
+          lastFed: Date.now(),
+          birthTime: Date.now(),
+          infected: false,
+          infectionStart: 0,
+          hasProducedPhages: false,
+          enemy: null,
+          itemID: "Cell-" + cellCount
+        };
+        if(cell.cellType !== "Photosynthesize"){
+          cell.maxAge = randomBetween(60000, 180000);
+        }
+        let speedFactor = cell.dna.speedGene;
+        if(cellType === "Hunt"){
+          cell.vx = randomBetween(-1, 1) * speedFactor;
+          cell.vy = randomBetween(-1, 1) * speedFactor;
+        } else if(cellType === "Photosynthesize"){
+          cell.vx = randomBetween(-0.2, 0.2) * speedFactor;
+          cell.vy = randomBetween(-0.2, 0.2) * speedFactor;
+        }
+        createOrganelles(cell);
+        cells.push(cell);
+      }
+      function createFood(x, y, amount) {
+        let food = {
+          id: "Food-" + (++cellCount),
+          x: wrap(x, canvas.width),
+          y: wrap(y, canvas.height),
+          amount: amount,
+          color: "yellow",
+          vx: randomBetween(-0.5, 0.5),
+          vy: randomBetween(-0.5, 0.5),
+          itemID: "Food-" + cellCount
+        };
+        foods.push(food);
+      }
+      function spawnPhage(x, y, gene) {
+        let shapes = ["hexagon", "triangle", "circle"];
+        let phageGene = gene || {
+          color: randomColor(),
+          shape: shapes[Math.floor(randomBetween(0, shapes.length))]
+        };
+        if(phageGene.color && phageGene.color.startsWith("#")){
+          phageGene.color = convertHexToRgbString(phageGene.color);
+        }
+        let phage = {
+          id: "Phage-" + (++cellCount),
+          x: wrap(x, canvas.width),
+          y: wrap(y, canvas.height),
+          vx: randomBetween(-2, 2),
+          vy: randomBetween(-2, 2),
+          size: 4,
+          state: "searching",
+          created: Date.now(),
+          gene: phageGene,
+          itemID: "Phage-" + cellCount,
+          fade: 1
+        };
+        phages.push(phage);
+      }
+      function drawPhage(phage) {
+        ctx.save();
+        ctx.globalAlpha = phage.fade !== undefined ? phage.fade : 1;
+        ctx.fillStyle = phage.gene.color;
+        ctx.beginPath();
+        if(phage.gene.shape === "hexagon"){
+          let sides = 6;
+          for(let i = 0; i < sides; i++){
+            let angle = (i / sides) * Math.PI * 2;
+            let px = phage.x + phage.size * Math.cos(angle);
+            let py = phage.y + phage.size * Math.sin(angle);
+            if(i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+          }
+          ctx.closePath();
+        } else if(phage.gene.shape === "triangle"){
+          let sides = 3;
+          for(let i = 0; i < sides; i++){
+            let angle = (i / sides) * Math.PI * 2;
+            let px = phage.x + phage.size * Math.cos(angle);
+            let py = phage.y + phage.size * Math.sin(angle);
+            if(i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+          }
+          ctx.closePath();
+        } else {
+          ctx.arc(phage.x, phage.y, phage.size, 0, Math.PI * 2);
+        }
+        ctx.fill();
+        ctx.restore();
+        if(shiftDown){
+          ctx.save();
+          ctx.fillStyle = "#fff";
+          ctx.font = "8px Arial";
+          let aliveTime = Math.floor((Date.now() - phage.created) / 1000);
+          ctx.fillText(`Viron: ${aliveTime}s`, phage.x, phage.y - 10);
+          ctx.restore();
+        }
+        if(shiftDown && phage.id){
+          ctx.save();
+          ctx.fillStyle = "#000";
+          ctx.font = "8px Arial";
+          ctx.textAlign = "center";
+          ctx.fillText(phage.id, phage.x, phage.y);
+          ctx.restore();
+        }
+      }
+      // Draw cell with nucleus drawn as a black circle behind the DNA dots.
+      function drawCell(cell) {
+        let drawX = cell.x;
+        let drawY = cell.y;
+        // Draw main cell body.
+        ctx.save();
+        ctx.globalAlpha = 0.7;
+        ctx.fillStyle = cell.color;
+        ctx.beginPath();
+        ctx.arc(drawX, drawY, cell.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+        // Draw nucleus as a black circle with slight transparency (behind the DNA dots)
+        let nucleusRadius = cell.size / 3;
+        ctx.save();
+        ctx.globalAlpha = 0.8;
+        ctx.fillStyle = "#000";
+        ctx.beginPath();
+        ctx.arc(drawX, drawY, nucleusRadius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+        // Draw DNA dots on top of the nucleus.
+        ctx.fillStyle = "#fff";
+        for(let i = 0; i < 8; i++){
+          let angle = randomBetween(0, Math.PI * 2);
+          let r = randomBetween(0, nucleusRadius * 0.8);
+          let dx = drawX + r * Math.cos(angle);
+          let dy = drawY + r * Math.sin(angle);
+          ctx.beginPath();
+          ctx.arc(dx, dy, 1, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        // Draw organelles.
+        if(cell.organelles){
+          cell.organelles.forEach(org => {
+            let ox = drawX + org.offsetX;
+            let oy = drawY + org.offsetY;
+            if(org.type === "RNA"){
+              ctx.fillStyle = "lime";
+              ctx.beginPath();
+              ctx.arc(ox, oy, 2, 0, Math.PI * 2);
+              ctx.fill();
+            } else if(org.type === "Ribosome"){
+              ctx.fillStyle = "orange";
+              ctx.fillRect(ox - 2, oy - 2, 4, 4);
+            } else if(org.type === "Mitochondria"){
+              ctx.fillStyle = "purple";
+              ctx.beginPath();
+              ctx.ellipse(ox, oy, 3, 2, Math.PI / 4, 0, Math.PI * 2);
+              ctx.fill();
+            } else if(org.type === "Golgi"){
+              ctx.fillStyle = "pink";
+              ctx.beginPath();
+              ctx.arc(ox, oy, 3, 0, Math.PI * 2);
+              ctx.fill();
+            } else if(org.type === "Lysosome"){
+              ctx.fillStyle = "brown";
+              ctx.beginPath();
+              ctx.arc(ox, oy, 2, 0, Math.PI * 2);
+              ctx.fill();
+            }
+            if(shiftDown){
+              ctx.save();
+              ctx.fillStyle = "#000";
+              ctx.font = "8px Arial";
+              ctx.fillText(org.type, ox, oy - 5);
+              ctx.restore();
+            }
+          });
+        }
+      }
+      function drawFood(food) {
+        ctx.fillStyle = food.color;
+        ctx.beginPath();
+        ctx.arc(food.x, food.y, food.amount, 0, Math.PI * 2);
+        ctx.fill();
+        if(shiftDown && food.id){
+          ctx.save();
+          ctx.fillStyle = "#000";
+          ctx.font = "10px Arial";
+          ctx.textAlign = "center";
+          ctx.fillText(food.id, food.x, food.y);
+          ctx.restore();
+        }
+      }
+      function drawChromosomes() {
+        chromosomes.forEach(chr => {
+          ctx.save();
+          ctx.fillStyle = "#888";
+          ctx.font = "16px Arial";
+          ctx.textAlign = "center";
+          ctx.fillText(")(", chr.x, chr.y);
+          if(shiftDown && chr.id) {
+            ctx.fillStyle = "#000";
+            ctx.font = "10px Arial";
+            ctx.fillText(chr.id, chr.x, chr.y + 16);
+          }
+          ctx.restore();
+        });
+      }
+      function drawDevelopingCells() {
+        developingCells.forEach(dev => {
+          ctx.save();
+          ctx.strokeStyle = dev.color;
+          ctx.setLineDash([4, 2]);
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(dev.x, dev.y, dev.size, 0, Math.PI * 2);
+          ctx.stroke();
+          if(shiftDown && dev.id) {
+            ctx.fillStyle = "#000";
+            ctx.font = "10px Arial";
+            ctx.fillText(dev.id, dev.x, dev.y);
+          }
+          ctx.restore();
+        });
+      }
+      function updateAnimations(delta) {
+        for(let i = animations.length - 1; i >= 0; i--){
+          let anim = animations[i];
+          anim.timer += delta;
+          let progress = anim.timer / anim.duration;
+          ctx.save();
+          if(anim.type === "division"){
+            ctx.strokeStyle = "rgba(0,150,255," + (1 - progress) + ")";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(anim.x, anim.y, progress * 30, 0, Math.PI * 2);
+            ctx.stroke();
+          } else if(anim.type === "eating"){
+            ctx.fillStyle = "rgba(255,200,0," + (1 - progress) + ")";
+            ctx.beginPath();
+            ctx.arc(anim.x, anim.y, progress * 20, 0, Math.PI * 2);
+            ctx.fill();
+          } else if(anim.type === "injection"){
+            ctx.strokeStyle = "rgba(255,0,0," + (1 - progress) + ")";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(anim.x, anim.y);
+            ctx.lineTo(anim.tx, anim.ty);
+            ctx.stroke();
+          } else if(anim.type === "explosion"){
+            ctx.fillStyle = "rgba(255,50,0," + (1 - progress) + ")";
+            ctx.beginPath();
+            ctx.arc(anim.x, anim.y, progress * 40, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          ctx.restore();
+          if(anim.timer > anim.duration) animations.splice(i, 1);
+        }
+      }
+      function updateFoods() {
+        for(let i = foods.length - 1; i >= 0; i--){
+          let food = foods[i];
+          food.x = wrap(food.x + food.vx * gameSpeedMultiplier, canvas.width);
+          food.y = wrap(food.y + food.vy * gameSpeedMultiplier, canvas.height);
+        }
+      }
+      function updateChromosomes(delta) {
+        chromosomes.forEach(chr => {
+          chr.x = wrap(chr.x + chr.vx * gameSpeedMultiplier, canvas.width);
+          chr.y = wrap(chr.y + chr.vy * gameSpeedMultiplier, canvas.height);
+        });
+        // Increase hitbox threshold to 15 for easier merging.
+        for(let i = 0; i < chromosomes.length; i++){
+          for(let j = i + 1; j < chromosomes.length; j++){
+            let a = chromosomes[i], b = chromosomes[j];
+            if(Date.now() - a.created >= 10000 && Date.now() - b.created >= 10000){
+              let dx = a.x - b.x, dy = a.y - b.y;
+              if(Math.sqrt(dx * dx + dy * dy) < 15){
+                let newDNA = {};
+                for(let key in a.traits) {
+                  if(key === "divisionType") continue;
+                  if(key === "color") {
+                    // 50% chance to pick one parent's color; 50% chance to average.
+                    if(Math.random() < 0.5) {
+                      newDNA.color = (Math.random() < 0.5) ? a.traits.color : b.traits.color;
+                    } else {
+                      let rgbA = hexToRgb(a.traits.color);
+                      let rgbB = hexToRgb(b.traits.color);
+                      let r = Math.floor((rgbA.r + rgbB.r) / 2);
+                      let g = Math.floor((rgbA.g + rgbB.g) / 2);
+                      let bVal = Math.floor((rgbA.b + rgbB.b) / 2);
+                      newDNA.color = `rgb(${r}, ${g}, ${bVal})`;
+                    }
+                    // Mutation: randomize color if mutation triggers.
+                    if(Math.random() < a.traits.mutationChance) {
+                      newDNA.color = randomColor();
+                    }
+                  } else if(key === "cellType") {
+                    if(Math.random() < a.traits.mutationChance || Math.random() < b.traits.mutationChance) {
+                      newDNA.cellType = (Math.random() < 0.5) ? "Photosynthesize" : "Hunt";
+                    } else {
+                      newDNA.cellType = (Math.random() < 0.5) ? a.traits.cellType : b.traits.cellType;
+                    }
+                  } else if(key === "immunity") {
+                    if(Math.random() < a.traits.mutationChance || Math.random() < b.traits.mutationChance) {
+                      newDNA.immunity = (Math.random() < 0.5) ? "none" : "bacteriophage";
+                    } else {
+                      newDNA.immunity = (Math.random() < 0.5) ? a.traits.immunity : b.traits.immunity;
+                    }
+                  } else if(typeof a.traits[key] === "number" && typeof b.traits[key] === "number") {
+                    let mutationProb = a.traits.mutationChance;
+                    if(Math.random() < mutationProb) {
+                      if(key === "mutationChance") {
+                        newDNA[key] = randomBetween(0.01, 0.1);
+                      } else if(key === "metabolism" || key === "growthRate" || key === "speedGene") {
+                        newDNA[key] = randomBetween(0.8, 1.2);
+                      } else if(key === "stomachMultiplier") {
+                        newDNA[key] = randomBetween(1, 1.5);
+                      }
+                    } else {
+                      let extraMutation = (a.traits.cellType === "Hunt" || b.traits.cellType === "Hunt") ? 0.10 : 0;
+                      if(Math.random() < 0.5) {
+                        let w = Math.random();
+                        newDNA[key] = a.traits[key] * w + b.traits[key] * (1 - w);
+                      } else {
+                        newDNA[key] = (Math.random() < 0.5) ? a.traits[key] : b.traits[key];
+                      }
+                      if(Math.random() < extraMutation) {
+                        if(key === "mutationChance") {
+                          newDNA[key] = randomBetween(0.01, 0.1);
+                        } else if(key === "metabolism" || key === "growthRate" || key === "speedGene") {
+                          newDNA[key] = randomBetween(0.8, 1.2);
+                        } else if(key === "stomachMultiplier") {
+                          newDNA[key] = randomBetween(1, 1.5);
+                        }
+                      }
+                    }
+                  } else {
+                    newDNA[key] = (Math.random() < 0.5) ? a.traits[key] : b.traits[key];
+                  }
+                }
+                let newDev = {
+                  id: "Dev-" + (++itemCount),
+                  x: (a.x + b.x) / 2,
+                  y: (a.y + b.y) / 2,
+                  size: 5,
+                  color: newDNA.color || a.traits.color,
+                  dna: newDNA,
+                  birthTime: Date.now(),
+                  itemID: "Dev-" + itemCount
+                };
+                developingCells.push(newDev);
+                chromosomes.splice(j, 1);
+                chromosomes.splice(i, 1);
+                i = -1;
+                break;
+              }
+            }
+          }
+        }
+      }
+      function updateDevelopingCells(delta) {
+        for(let i = developingCells.length - 1; i >= 0; i--){
+          let dev = developingCells[i];
+          let age = Date.now() - dev.birthTime;
+          dev.size = 5 + (15 * Math.min(age / 10000, 1));
+          if(age >= 10000){
+            createCell(dev.x, dev.y, dev.size, dev.dna, dev.dna.cellType, null, dev.color);
+            developingCells.splice(i, 1);
+          }
+        }
+      }
+      function cellDieWithInsides(cell, index) {
+        let numChr = Math.floor(randomBetween(3, 5));
+        for(let i = 0; i < numChr; i++){
+          chromosomes.push({
+            id: "Chrom-" + (++itemCount),
+            x: cell.x + randomBetween(-cell.size, cell.size),
+            y: cell.y + randomBetween(-cell.size, cell.size),
+            vx: randomBetween(-0.5, 0.5),
+            vy: randomBetween(-0.5, 0.5),
+            traits: { ...cell.dna, color: cell.color, cellType: cell.cellType },
+            created: Date.now(),
+            itemID: "Chrom-" + itemCount
+          });
+        }
+        let foodCount = Math.floor(cell.size * 1.5);
+        for(let j = 0; j < foodCount; j++){
+          createFood(cell.x + randomBetween(-cell.size, cell.size),
+                     cell.y + randomBetween(-cell.size, cell.size),
+                     randomBetween(2, 4));
+        }
+        addAnimation("explosion", cell.x, cell.y, 500);
+        cells.splice(index, 1);
+      }
+      function explodeCell(cell, index) {
+        cellDieWithInsides(cell, index);
+      }
+      let draggingObj = null;
+      let draggingType = null;
+      let dragOffsetX = 0;
+      let dragOffsetY = 0;
+      canvas.addEventListener('mousedown', function(e){
+        let rect = canvas.getBoundingClientRect();
+        let mouseX = e.clientX - rect.left;
+        let mouseY = e.clientY - rect.top;
+        if(customMode || itemSpawnerMode) return;
+        for(let i = cells.length - 1; i >= 0; i--){
+          let cell = cells[i];
+          let dx = cell.x - mouseX;
+          let dy = cell.y - mouseY;
+          if(Math.sqrt(dx * dx + dy * dy) < cell.size){
+            draggingObj = cell;
+            draggingType = "cell";
+            dragOffsetX = cell.x - mouseX;
+            dragOffsetY = cell.y - mouseY;
+            return;
+          }
+        }
+        for(let i = chromosomes.length - 1; i >= 0; i--){
+          let chr = chromosomes[i];
+          let dx = chr.x - mouseX;
+          let dy = chr.y - mouseY;
+          if(Math.sqrt(dx * dx + dy * dy) < 15){ // Increased hitbox for chromosomes
+            draggingObj = chr;
+            draggingType = "chromosome";
+            dragOffsetX = chr.x - mouseX;
+            dragOffsetY = chr.y - mouseY;
+            return;
+          }
+        }
+        for(let i = phages.length - 1; i >= 0; i--){
+          let phage = phages[i];
+          let dx = phage.x - mouseX;
+          let dy = phage.y - mouseY;
+          if(Math.sqrt(dx * dx + dy * dy) < phage.size + 5){
+            draggingObj = phage;
+            draggingType = "phage";
+            dragOffsetX = phage.x - mouseX;
+            dragOffsetY = phage.y - mouseY;
+            return;
+          }
+        }
+        for(let i = foods.length - 1; i >= 0; i--){
+          let food = foods[i];
+          let dx = food.x - mouseX;
+          let dy = food.y - mouseY;
+          if(Math.sqrt(dx * dx + dy * dy) < food.amount + 5){ // extra margin for food
+            draggingObj = food;
+            draggingType = "food";
+            dragOffsetX = food.x - mouseX;
+            dragOffsetY = food.y - mouseY;
+            return;
+          }
+        }
+      });
+      canvas.addEventListener('mousemove', function(e){
+        let rect = canvas.getBoundingClientRect();
+        let mouseX = e.clientX - rect.left;
+        let mouseY = e.clientY - rect.top;
+        if(customMode || itemSpawnerMode) {
+          customPreview = { x: wrap(mouseX, canvas.width), y: wrap(mouseY, canvas.height) };
+        }
+        if(draggingObj){
+          draggingObj.x = wrap(mouseX + dragOffsetX, canvas.width);
+          draggingObj.y = wrap(mouseY + dragOffsetY, canvas.height);
+        }
+      });
+      canvas.addEventListener('mouseup', function(e){
+        draggingObj = null;
+        draggingType = null;
+      });
+      canvas.addEventListener('click', function(e){
+        if(customMode && customPreview) {
+          let cellType = document.getElementById('cellType').value;
+          let size = parseFloat(document.getElementById('cellSize').value);
+          let color = document.getElementById('cellColor').value;
+          color = convertHexToRgbString(color);
+          let formDNA = {
+            mutationChance: document.getElementById('mutationChance').value,
+            metabolism: document.getElementById('metabolism').value,
+            growthRate: document.getElementById('growthRate').value,
+            speedGene: document.getElementById('speedGene').value
+          };
+          let dna = createBaseDNA(cellType, formDNA);
+          createCell(customPreview.x, customPreview.y, size, dna, cellType, null, color);
+          customPreview = null;
+        } else if(itemSpawnerMode && customPreview) {
+          if(currentItemType === "Chromosome") {
+            let chromDNA = {
+              mutationChance: parseFloat(document.getElementById('chromMutationChance').value) / 100,
+              metabolism: parseFloat(document.getElementById('chromMetabolism').value),
+              growthRate: parseFloat(document.getElementById('chromGrowthRate').value),
+              speedGene: parseFloat(document.getElementById('chromSpeedGene').value),
+              stomachMultiplier: parseFloat(document.getElementById('chromStomachMultiplier').value),
+              immunity: document.getElementById('chromImmunity').value
+            };
+            let chromColor = document.getElementById('chromColor').value;
+            let chromCellType = document.getElementById('chromCellType').value;
+            chromDNA.color = convertHexToRgbString(chromColor);
+            chromDNA.cellType = chromCellType;
+            let newChrom = {
+              id: "Chrom-" + (++itemCount),
+              x: customPreview.x,
+              y: customPreview.y,
+              vx: randomBetween(-0.5, 0.5),
+              vy: randomBetween(-0.5, 0.5),
+              traits: chromDNA,
+              created: Date.now(),
+              itemID: "Chrom-" + itemCount
+            };
+            chromosomes.push(newChrom);
+          } else if(currentItemType === "Bacteriophage") {
+            let phageColor = document.getElementById('phageColor').value;
+            let phageShape = document.getElementById('phageShape').value;
+            let gene = { color: convertHexToRgbString(phageColor), shape: phageShape };
+            spawnPhage(customPreview.x, customPreview.y, gene);
+          } else if(currentItemType === "Food") {
+            createFood(customPreview.x, customPreview.y, randomBetween(2,4));
+          }
+          customPreview = null;
+        }
+      });
+      function updateHuntEnemies(){
+        cells.forEach(cell => {
+          if(cell.cellType === "Hunt"){
+            if(!cell.enemy || !cells.includes(cell.enemy) || cell.enemy.size >= cell.size){
+              let candidates = cells.filter(c => c.id !== cell.id && c.size < cell.size);
+              cell.enemy = candidates.length > 0 ? candidates[Math.floor(Math.random() * candidates.length)] : null;
+            }
+            if(cell.enemy){
+              let dx = cell.enemy.x - cell.x;
+              let dy = cell.enemy.y - cell.y;
+              let dist = Math.sqrt(dx * dx + dy * dy);
+              if(dist > 0){
+                let targetVx = (dx / dist) * 1 * cell.dna.speedGene;
+                let targetVy = (dy / dist) * 1 * cell.dna.speedGene;
+                cell.vx = (cell.vx + targetVx + randomBetween(-0.1, 0.1)) / 2;
+                cell.vy = (cell.vy + targetVy + randomBetween(-0.1, 0.1)) / 2;
+              }
+            }
+            cells.forEach(other => {
+              if(other.id !== cell.id && other.size < cell.size){
+                let dx = other.x - cell.x;
+                let dy = other.y - cell.y;
+                if(Math.sqrt(dx * dx + dy * dy) < cell.size * 0.8){
+                  cell.energy += other.energy;
+                  addAnimation("eating", cell.x, cell.y, 300);
+                  let idx = cells.findIndex(c => c.id === other.id);
+                  if(idx !== -1) { cells.splice(idx, 1); }
+                  cell.enemy = null;
+                }
+              }
+            });
+          }
+        });
+      }
+      function updatePhages(delta){
+        for(let i = phages.length - 1; i >= 0; i--){
+          let phage = phages[i];
+          phage.x = wrap(phage.x + phage.vx * gameSpeedMultiplier, canvas.width);
+          phage.y = wrap(phage.y + phage.vy * gameSpeedMultiplier, canvas.height);
+          if(Date.now() - phage.created > 10000){
+            phage.fade -= 0.02 * gameSpeedMultiplier;
+            if(phage.fade <= 0){
+              addAnimation("explosion", phage.x, phage.y, 300);
+              phages.splice(i, 1);
+              continue;
+            }
+          }
+          for(let j = 0; j < cells.length; j++){
+            let cell = cells[j];
+            let dx = cell.x - phage.x;
+            let dy = cell.y - phage.y;
+            if(Math.sqrt(dx * dx + dy * dy) < cell.size){
+              if(cell.dna.immunity === "bacteriophage"){
+                phage.vx = -phage.vx;
+                phage.vy = -phage.vy;
+              } else {
+                cell.infectingPhageGene = phage.gene;
+                addAnimation("injection", phage.x, phage.y, 500, { tx: cell.x, ty: cell.y });
+                cell.infected = true;
+                cell.infectionStart = Date.now();
+                phages.splice(i, 1);
+              }
+              break;
+            }
+          }
+        }
+      }
+      function drawPhages(){
+        phages.forEach(phage => {
+          drawPhage(phage);
+          if(shiftDown){
+            ctx.save();
+            ctx.fillStyle = "#fff";
+            ctx.font = "8px Arial";
+            let aliveTime = Math.floor((Date.now() - phage.created) / 1000);
+            ctx.fillText(`Viron: ${aliveTime}s`, phage.x, phage.y - 10);
+            ctx.restore();
+          }
+          if(shiftDown && phage.id){
+            ctx.save();
+            ctx.fillStyle = "#000";
+            ctx.font = "8px Arial";
+            ctx.textAlign = "center";
+            ctx.fillText(phage.id, phage.x, phage.y);
+            ctx.restore();
+          }
+        });
+      }
+      function updateInfections(now){
+        cells.forEach((cell, index) => {
+          if(cell.infected && !cell.hasProducedPhages && now - cell.infectionStart > 2000){
+            let count = Math.floor(randomBetween(10, 20));
+            for(let i = 0; i < count; i++){
+              spawnPhage(cell.x, cell.y, cell.infectingPhageGene);
+            }
+            cell.hasProducedPhages = true;
+            explodeCell(cell, index);
+          }
+        });
+      }
+      function update(){
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let now = Date.now();
+        if(!paused){
+          updateHuntEnemies();
+          for(let i = cells.length - 1; i >= 0; i--){
+            let cell = cells[i];
+            if(cell.cellType !== "Photosynthesize"){
+              if(cell.energy <= 0 || (now - cell.birthTime) >= cell.maxAge){
+                cellDieWithInsides(cell, i);
+                continue;
+              }
+            }
+            if(cell.selfDestruct){
+              let elapsed = now - cell.selfDestructStart;
+              if(elapsed > 4000){
+                explodeCell(cell, i);
+                continue;
+              }
+              let shakeMagnitude = (elapsed / 4000);
+              cell.vx += randomBetween(-shakeMagnitude, shakeMagnitude) * gameSpeedMultiplier;
+              cell.vy += randomBetween(-shakeMagnitude, shakeMagnitude) * gameSpeedMultiplier;
+            } else if(cell.cellType === "Photosynthesize"){
+              cell.vx += randomBetween(-0.01, 0.01) * gameSpeedMultiplier;
+              cell.vy += randomBetween(-0.01, 0.01) * gameSpeedMultiplier;
+              cell.vx = clamp(cell.vx, -0.2 * cell.dna.speedGene, 0.2 * cell.dna.speedGene);
+              cell.vy = clamp(cell.vy, -0.2 * cell.dna.speedGene, 0.2 * cell.dna.speedGene);
+              cell.energy += 0.1 * gameSpeedMultiplier;
+            } else if(cell.cellType === "Hunt"){
+              cell.vx += randomBetween(-0.01, 0.01) * gameSpeedMultiplier;
+              cell.vy += randomBetween(-0.01, 0.01) * gameSpeedMultiplier;
+            }
+            if(!draggingObj || draggingType !== "cell" || draggingObj.id !== cell.id){
+              cell.x = wrap(cell.x + cell.vx * gameSpeedMultiplier, canvas.width);
+              cell.y = wrap(cell.y + cell.vy * gameSpeedMultiplier, canvas.height);
+            }
+            if(cell.cellType !== "Photosynthesize"){
+              cell.energy -= 0.02 * cell.dna.metabolism * (cell.size / 20) * gameSpeedMultiplier;
+            }
+            cell.maxEnergy = calculateMaxEnergy(cell);
+            if(cell.energy > cell.maxEnergy) cell.energy = cell.maxEnergy;
+            if(cell.organelles){
+              cell.organelles.forEach(org => {
+                org.offsetX += org.vx * gameSpeedMultiplier;
+                org.offsetY += org.vy * gameSpeedMultiplier;
+                if(Math.sqrt(org.offsetX * org.offsetX + org.offsetY * org.offsetY) > cell.size * 0.7){
+                  org.vx = -org.vx;
+                  org.vy = -org.vy;
+                }
+              });
+            }
+            if(cell.cellType !== "Photosynthesize"){
+              for(let j = foods.length - 1; j >= 0; j--){
+                let food = foods[j];
+                let dx = food.x - cell.x;
+                let dy = food.y - cell.y;
+                if(Math.sqrt(dx * dx + dy * dy) < cell.size + food.amount + 5){
+                  cell.energy += food.amount * 5 * cell.dna.growthRate;
+                  if(Math.random() < 0.2){ cell.size += 0.5; }
+                  addAnimation("eating", cell.x, cell.y, 300);
+                  foods.splice(j, 1);
+                  cell.lastFed = now;
+                }
+              }
+            }
+            if(shiftDown){
+              let info = "";
+              for(let key in cell.dna){
+                info += key.charAt(0).toUpperCase() + key.slice(1) + ": " + cell.dna[key] + "\n";
+              }
+              info += "Energy: " + Math.floor(cell.energy) + "\n" + cell.itemID;
+              cell.extendedInfo = info;
+            } else {
+              cell.extendedInfo = cell.cellType;
+            }
+            drawCell(cell);
+          }
+          updateFoods();
+          foods.forEach(f => { drawFood(f); });
+          updatePhages(16 * gameSpeedMultiplier);
+          drawPhages();
+          updateChromosomes(16 * gameSpeedMultiplier);
+          updateDevelopingCells(16 * gameSpeedMultiplier);
+          drawChromosomes();
+          drawDevelopingCells();
+          updateAnimations(16 * gameSpeedMultiplier);
+          for(let i = chromosomes.length - 1; i >= 0; i--){
+            let chr = chromosomes[i];
+            for(let j = 0; j < cells.length; j++){
+              let cell = cells[j];
+              let dx = cell.x - chr.x;
+              let dy = cell.y - chr.y;
+              if(Math.sqrt(dx * dx + dy * dy) < cell.size){
+                cell.energy += 10;
+                chromosomes.splice(i, 1);
+                break;
+              }
+            }
+          }
+          updateInfections(now);
+          updateHuntEnemies();
+        }
+        if(paused){
+          pauseOverlay.style.opacity = "1";
+          pauseOverlay.textContent = "Paused";
+        } else if(pauseMessage) {
+          pauseOverlay.style.opacity = "1";
+          pauseOverlay.textContent = pauseMessage;
+          pauseMessageTimer -= 16 * gameSpeedMultiplier;
+          if(pauseMessageTimer <= 0){
+            pauseMessage = "";
+            pauseOverlay.style.opacity = "0";
+          }
+        } else {
+          pauseOverlay.style.opacity = "1";
+        }
+        if(customMode && customPreview){
+          ctx.save();
+          ctx.globalAlpha = 0.3;
+          let size = parseFloat(document.getElementById('cellSize').value);
+          let color = document.getElementById('cellColor').value;
+          color = convertHexToRgbString(color);
+          ctx.fillStyle = color;
+          ctx.beginPath();
+          ctx.arc(customPreview.x, customPreview.y, size, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+        requestAnimationFrame(update);
+      }
+      canvas.addEventListener('mousemove', function(e){
+        let rect = canvas.getBoundingClientRect();
+        let mouseX = e.clientX - rect.left;
+        let mouseY = e.clientY - rect.top;
+        if(customMode || itemSpawnerMode) {
+          customPreview = { x: wrap(mouseX, canvas.width), y: wrap(mouseY, canvas.height) };
+        }
+        if(draggingObj){
+          draggingObj.x = wrap(mouseX + dragOffsetX, canvas.width);
+          draggingObj.y = wrap(mouseY + dragOffsetY, canvas.height);
+        }
+        let found = false;
+        for(let i = 0; i < cells.length; i++){
+          let cell = cells[i];
+          let dx = cell.x - mouseX;
+          let dy = cell.y - mouseY;
+          if(Math.sqrt(dx * dx + dy * dy) < cell.size){
+            hoverInfo.style.display = "block";
+            hoverInfo.style.left = (e.clientX + 10) + "px";
+            hoverInfo.style.top = (e.clientY + 10) + "px";
+            hoverInfo.innerText = cell.extendedInfo || cell.cellType;
+            found = true;
+            break;
+          }
+        }
+        if(!found && shiftDown){
+          for(let i = 0; i < phages.length; i++){
+            let phage = phages[i];
+            let dx = phage.x - mouseX;
+            let dy = phage.y - mouseY;
+            if(Math.sqrt(dx * dx + dy * dy) < phage.size + 5){
+              hoverInfo.style.display = "block";
+              hoverInfo.style.left = (e.clientX + 10) + "px";
+              hoverInfo.style.top = (e.clientY + 10) + "px";
+              let aliveTime = Math.floor((Date.now() - phage.created) / 1000);
+              hoverInfo.innerText = `Viron (Phage)\nID: ${phage.id}\nAlive: ${aliveTime}s`;
+              found = true;
+              break;
+            }
+          }
+        }
+        if(!found && shiftDown){
+          for(let i = 0; i < chromosomes.length; i++){
+            let chr = chromosomes[i];
+            let dx = chr.x - mouseX;
+            let dy = chr.y - mouseY;
+            if(Math.sqrt(dx * dx + dy * dy) < 15){
+              hoverInfo.style.display = "block";
+              hoverInfo.style.left = (e.clientX + 10) + "px";
+              hoverInfo.style.top = (e.clientY + 10) + "px";
+              let info = "";
+              for(let [k, v] of Object.entries(chr.traits)){
+                info += k.charAt(0).toUpperCase() + k.slice(1) + ": " + v + "\n";
+              }
+              hoverInfo.innerText = `Chromosome\nID: ${chr.id}\nTraits:\n${info}`;
+              found = true;
+              break;
+            }
+          }
+        }
+        if(!found && shiftDown){
+          for(let i = 0; i < developingCells.length; i++){
+            let dev = developingCells[i];
+            let dx = dev.x - mouseX;
+            let dy = dev.y - mouseY;
+            if(Math.sqrt(dx * dx + dy * dy) < dev.size){
+              hoverInfo.style.display = "block";
+              hoverInfo.style.left = (e.clientX + 10) + "px";
+              hoverInfo.style.top = (e.clientY + 10) + "px";
+              hoverInfo.innerText = `Developing Cell\nID: ${dev.id}\nDNA:\n${Object.entries(dev.dna).map(([k, v]) => k + ": " + v).join("\n")}`;
+              found = true;
+              break;
+            }
+          }
+        }
+        if(!found) { hoverInfo.style.display = "none"; }
+      });
+    };
+  </script>
+</body>
+</html>

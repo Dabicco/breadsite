@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rock Paper Scissors Simulation - The Breadsite</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    /* Global Styles */
+    body {
+      margin: 0;
+      font-family: 'Bitter', serif;
+      background-color: #1a1a1a;
+      color: #fff;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    /* Banner */
+    .game-banner {
+      background: linear-gradient(135deg, #2b2b2b, #444444);
+      padding: 40px 0;
+      text-align: center;
+      color: white;
+    }
+    .game-banner h1 {
+      font-size: 3rem;
+      margin-bottom: 10px;
+    }
+    .game-banner p {
+      font-size: 1.2rem;
+      color: #ccc;
+    }
+    /* Main Container & Card */
+    .game-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      padding: 40px;
+      background: linear-gradient(135deg, #1e1e1e, #2f2f2f);
+      flex-grow: 1;
+    }
+    .game-card {
+      background-color: #292929;
+      width: 80%;
+      max-width: 1000px;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      text-align: center;
+      position: relative;
+      padding: 20px;
+    }
+    /* iFrame Game Area */
+    .game-iframe {
+      width: 100%;
+      height: 600px;
+      border: 2px solid #333;
+      border-radius: 5px;
+      background-color: #000;
+      margin: 20px 0;
+    }
+    /* Fullscreen Button */
+    .game-button {
+      background: linear-gradient(135deg, #0066cc, #003366);
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 25px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+    .game-button:hover {
+      background-color: #004c99;
+      transform: scale(1.1);
+    }
+    /* Dark Bottom Bar */
+    .dark-background {
+      background-color: #141414;
+      padding: 20px 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .go-back-button {
+      background: linear-gradient(135deg, #333333, #555555);
+      color: white;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 30px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.3s;
+      width: 250px;
+    }
+    .go-back-button:hover {
+      background-color: #444444;
+      transform: scale(1.05);
+    }
+    /* Version Display */
+    #version {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      padding: 5px 10px;
+      font-size: 14px;
+      z-index: 500;
+    }
+  </style>
+</head>
+<body>
+  <!-- Banner -->
+  <div class="game-banner">
+    <h1>Rock Paper Scissors Simulation</h1>
+    <p>Experience the chaotic battle of rock, paper, and scissors!</p>
+  </div>
+
+  <!-- Main Container & Card -->
+  <div class="game-container">
+    <div class="game-card">
+      <!-- iFrame embedding the Simulation Game -->
+      <iframe id="simulationFrame" class="game-iframe" src="/breadsite/games/rockpaperscissors/assets/game.html" title="Simulation Game" allowfullscreen></iframe>
+      <!-- Fullscreen Button -->
+      <button class="game-button" onclick="goFullscreen()">Go Fullscreen</button>
+    </div>
+  </div>
+
+  <!-- Dark Bottom Bar -->
+  <div class="dark-background">
+    <button class="go-back-button" onclick="window.location.href='/breadsite/games'">Go back to Games</button>
+  </div>
+
+  <!-- Version Display -->
+  <div id="version">Version: 1.0.0a</div>
+
+  <script>
+    function goFullscreen() {
+      const frame = document.getElementById('simulationFrame');
+      if (frame.requestFullscreen) {
+        frame.requestFullscreen();
+      } else if (frame.mozRequestFullScreen) {
+        frame.mozRequestFullScreen();
+      } else if (frame.webkitRequestFullscreen) {
+        frame.webkitRequestFullscreen();
+      } else if (frame.msRequestFullscreen) {
+        frame.msRequestFullscreen();
+      } else {
+        alert("Fullscreen not supported in this browser or iFrame setup.");
+      }
+    }
+  </script>
+</body>
+</html>

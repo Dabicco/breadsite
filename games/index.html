@@ -1,194 +1,212 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Games - The Breadsite</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Bitter:wght@400;700&display=swap');
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Games - The Breadsite</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Bitter:wght@400;700&display=swap');
 
-        body {
-            margin: 0;
-            font-family: 'Bitter', serif;
-            color: #fff;
-            background-color: #1a1a1a;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
+    body {
+      margin: 0;
+      font-family: 'Bitter', serif;
+      color: #fff;
+      background-color: #1a1a1a;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
 
-        /* Banner */
-        .games-banner {
-            background: linear-gradient(135deg, #2b2b2b, #444444);
-            padding: 40px 0;
-            text-align: center;
-            color: white;
-        }
+    /* Banner */
+    .games-banner {
+      background: linear-gradient(135deg, #2b2b2b, #444444);
+      padding: 40px 0;
+      text-align: center;
+      color: white;
+    }
 
-        .games-banner h1 {
-            font-size: 3rem;
-            margin-bottom: 10px;
-        }
+    .games-banner h1 {
+      font-size: 3rem;
+      margin-bottom: 10px;
+    }
 
-        .games-banner p {
-            font-size: 1.2rem;
-            color: #ccc;
-        }
+    .games-banner p {
+      font-size: 1.2rem;
+      color: #ccc;
+    }
 
-        /* Main Content */
-        .games-container {
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            flex-wrap: wrap;
-            gap: 20px;
-            padding: 40px;
-            background: linear-gradient(135deg, #1e1e1e, #2f2f2f);
-            flex-grow: 1;
-        }
+    /* Main Content */
+    .games-container {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 40px;
+      background: linear-gradient(135deg, #1e1e1e, #2f2f2f);
+      flex-grow: 1;
+    }
 
-        /* Card Style */
-        .games-card {
-            background-color: #292929;
-            width: 250px;
-            height: 350px;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-            text-align: center;
-            transition: transform 0.3s ease, filter 0.3s ease;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-        }
+    /* Card Style */
+    .games-card {
+      background-color: #292929;
+      width: 250px;
+      height: 350px;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      transition: transform 0.3s ease, filter 0.3s ease;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
 
-        /* Darken effect for unselected cards */
-        .games-card:not(:hover) {
-            filter: brightness(0.85);
-        }
+    /* Darken effect for unselected cards */
+    .games-card:not(:hover) {
+      filter: brightness(0.85);
+    }
 
-        .games-card:hover {
-            transform: scale(1.05);
-            filter: brightness(1);
-        }
+    .games-card:hover {
+      transform: scale(1.05);
+      filter: brightness(1);
+    }
 
-        /* Banner Image */
-        .games-card-banner {
-            width: 100%;
-            height: 120px;
-            background-size: cover;
-            background-position: center;
-            border-bottom: 2px solid #fff;
-        }
+    /* Banner Image */
+    .games-card-banner {
+      width: 100%;
+      height: 120px;
+      background-size: cover;
+      background-position: center;
+      border-bottom: 2px solid #fff;
+    }
 
-        /* Card Content */
-        .games-card-content {
-            padding: 15px;
-            color: #fff;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
+    /* Card Content */
+    .games-card-content {
+      padding: 15px;
+      color: #fff;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
 
-        .games-card-content h3 {
-            margin: 10px 0;
-            font-size: 1.2rem;
-        }
+    .games-card-content h3 {
+      margin: 10px 0;
+      font-size: 1.2rem;
+    }
 
-        .games-card-content p {
-            font-size: 0.9rem;
-            color: #ccc;
-            flex-grow: 1;
-            overflow: hidden;
-            text-overflow: clip;
-            display: block;
-        }
+    .games-card-content p {
+      font-size: 0.9rem;
+      color: #ccc;
+      flex-grow: 1;
+      overflow: hidden;
+      text-overflow: clip;
+      display: block;
+    }
 
-        .play-button {
-            background: linear-gradient(135deg, #0066cc, #003366);
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 25px;
-            font-size: 1rem;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-            position: relative;
-            z-index: 10;
-        }
+    .play-button {
+      background: linear-gradient(135deg, #0066cc, #003366);
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 25px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      position: relative;
+      z-index: 10;
+    }
 
-        .play-button:hover {
-            background-color: #004c99;
-            transform: scale(1.1);
-        }
+    .play-button:hover {
+      background-color: #004c99;
+      transform: scale(1.1);
+    }
 
-        /* Dark Background for "Go back home" Button */
-        .dark-background {
-            background-color: #141414;
-            padding: 20px 0;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+    /* Dark Background for "Go back home" Button */
+    .dark-background {
+      background-color: #141414;
+      padding: 20px 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-        /* Bottom Button */
-        .go-home-button {
-            background: linear-gradient(135deg, #333333, #555555);
-            color: white;
-            padding: 15px 30px;
-            border: none;
-            border-radius: 30px;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-            width: 250px;
-        }
+    /* Bottom Button */
+    .go-home-button {
+      background: linear-gradient(135deg, #333333, #555555);
+      color: white;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 30px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      width: 250px;
+    }
 
-        .go-home-button:hover {
-            background-color: #444444;
-            transform: scale(1.05);
-        }
-    </style>
+    .go-home-button:hover {
+      background-color: #444444;
+      transform: scale(1.05);
+    }
+  </style>
 </head>
 <body>
+  <!-- Banner Section -->
+  <div class="games-banner">
+    <h1>Games</h1>
+    <p>HTML5 Fun at The Breadsite</p>
+  </div>
 
-    <!-- Banner Section -->
-    <div class="games-banner">
-        <h1>Games</h1>
-        <p>HTML5 Fun at The Breadsite</p>
+  <!-- Games Container -->
+  <div class="games-container">
+    <!-- Solar Explorer Card -->
+    <div class="games-card">
+      <div class="games-card-banner" style="background-image: url('/breadsite/assets/banner05.png');"></div>
+      <div class="games-card-content">
+        <h3>Solar Explorer</h3>
+        <p>Journey through the solar system in this brand new HTML5 game! Pan, zoom, and discover the wonders of space.</p>
+        <button class="play-button" onclick="window.location.href='/breadsite/games/solarexplorer'">Play Now</button>
+      </div>
     </div>
 
-    <!-- Games Container -->
-    <div class="games-container">
-        <!-- Solar Explorer Card -->
-        <div class="games-card">
-            <div class="games-card-banner" style="background-image: url('/breadsite/assets/banner05.png');"></div>
-            <div class="games-card-content">
-                <h3>Solar Explorer</h3>
-                <p>Journey through the solar system in this brand new HTML5 game! Pan, zoom, and discover the wonders of space.</p>
-                <button class="play-button" onclick="window.location.href='/breadsite/games/solarexplorer'">Play Now</button>
-            </div>
-        </div>
-
-        <!-- Sandbox Delta Card -->
-        <div class="games-card">
-            <div class="games-card-banner" style="background-image: url('/breadsite/assets/sandboxdelta-banner.png');"></div>
-            <div class="games-card-content">
-                <h3>Sandbox Delta</h3>
-                <p>Experience a dynamic sandbox simulation where elements interact, transform, and collide. Mix elements, experiment with reactions, and create your own world.</p>
-                <button class="play-button" onclick="window.location.href='/breadsite/games/sandboxdelta'">Play Now</button>
-            </div>
-        </div>
+    <!-- Sandbox Delta Card -->
+    <div class="games-card">
+      <div class="games-card-banner" style="background-image: url('/breadsite/assets/sandboxdelta-banner.png');"></div>
+      <div class="games-card-content">
+        <h3>Sandbox Delta</h3>
+        <p>Experience a dynamic sandbox simulation where elements interact, transform, and collide. Mix elements, experiment with reactions, and create your own world.</p>
+        <button class="play-button" onclick="window.location.href='/breadsite/games/sandboxdelta'">Play Now</button>
+      </div>
     </div>
 
-    <!-- Dark Background for "Go back home" Button -->
-    <div class="dark-background">
-        <button class="go-home-button" onclick="window.location.href='/breadsite/'">Go back home</button>
+    <!-- Cell Game Card -->
+    <div class="games-card">
+      <div class="games-card-banner" style="background-image: url('/breadsite/assets/cellgame-banner.png');"></div>
+      <div class="games-card-content">
+        <h3>Random Cell Game</h3>
+        <p>Dive into the microscopic world and create odd evolving cells in an interactive simulation. Watch them mutate, interact, and compete for survival!</p>
+        <button class="play-button" onclick="window.location.href='/breadsite/games/cellgame'">Play Now</button>
+      </div>
     </div>
 
+    <!-- Rock Paper Scissors Simulation Card -->
+    <div class="games-card">
+      <div class="games-card-banner" style="background-image: url('/breadsite/assets/rockpaperscissors-banner.png');"></div>
+      <div class="games-card-content">
+        <h3>Rock Paper Scissors Simulation</h3>
+        <p>Experience the chaotic battle between rock, paper, and scissors in this interactive simulation. Watch as strategies collide and the chaos unfolds!</p>
+        <button class="play-button" onclick="window.location.href='/breadsite/games/rockpaperscissors'">Play Now</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dark Background for "Go back home" Button -->
+  <div class="dark-background">
+    <button class="go-home-button" onclick="window.location.href='/breadsite/'">Go back home</button>
+  </div>
 </body>
 </html>
