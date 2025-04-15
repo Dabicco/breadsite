@@ -1,0 +1,64 @@
+/* Element color classes */
+.sand         { background-color: #f4a460; }
+.wall         { background-color: #666666; }
+.water        { background-color: #1e90ff; }
+.lava         { background-color: #ff4500; }
+.stone        { background-color: #808080; }
+.water-vapor  { background-color: #e0e0e0; }
+.cloud        { background-color: #ffffff; }
+.eraser       { background-color: pink; border: 2px solid #fff; }
+.copper       { background-color: #b87333; }
+.steel        { background-color: #aaaaaa; }
+.ice          { background-color: #cceeff; }
+.wood         { background-color: #3B220E; }
+.fire         { background-color: #ffcc00; }
+.smoke        { background-color: #666666; }
+.burning-wood { background-color: #5a3310; }
+.ash          { background-color: #444444; }
+.glass        { background-color: #c2e9fb; }
+.bomb         { background-color: #006400; border: 2px solid #000; }
+.dirt         { background-color: #7B5E42; }
+.wet-dirt     { background-color: #4d2e12; }
+.wheat-seeds  { background-color: #bca136; }
+.wheat        { background-color: #c2b280; }
+.flour        { background-color: #f5f5dc; }
+.dough        { background-color: #d2b48c; }
+.bread        { background-color: #f4c986; }
+.burning-organic { background-color: #6a3400; }
+.root         { background-color: #4a3a2f; }
+.spark        { background-color: #ffdd00; border: 1px solid #ffbb00; }
+.charged-copper { background-color: #ff8c00; }
+.charged-down-copper { background-color: #cc6600; }
+.oak-seeds       { background-color: #32CD32; }
+.oak-leaves      { background-color: #228B22; }
+.oak-baby-leaves { background-color: #66bb6a; }
+.dead-oak        { background-color: #777777; }
+.wet-sand        { background-color: #d2a679; }
+.grass           { background-color: #00aa00; }
+.dead-plant      { background-color: #555555; }
+.burning-leaves  { background-color: #a0522d; }
+.burning-root    { background-color: #ff4500; }
+.dead-root       { background-color: #555555; }
+.gas             { background-color: rgba(200,200,200,0.2); }
+.burning-gas     { background-color: #ff6666; opacity: 0.75; }
+
+/* Electrical elements */
+.cooler { background-color: #3399ff; }
+.heater { background-color: #ff3333; }
+.heat-separator          { background-color: #ffef96; }
+.charged-heat-separator  { background-color: #ffe033; }
+.charged-down-heat-separator { background-color: #ffd700; }
+.input            { background-color: #646464; }
+.charged-input    { background-color: #ffff77; }
+.output           { background-color: #3636ff; }
+.charged-output   { background-color: #8888ff; }
+.not-gate         { background-color: #a15050; }
+.and-gate         { background-color: #405050; }
+.blocker          { background-color: #856fa8; }
+.charged-blocker  { background-color: #9b50a3; }
+
+/* Special elements */
+.cloner { background-color: #cc00cc; }
+.coal         { background-color: #202020; }
+.coal-lump    { background-color: #303030; }
+.thermite     { background-color: #AA4444; } 

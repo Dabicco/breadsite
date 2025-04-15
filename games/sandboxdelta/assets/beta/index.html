@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sandbox Delta 0.4.9b</title>
+  <!-- CSS imports -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/elements.css">
+  <link rel="stylesheet" href="css/modals.css">
+</head>
+<body>
+  <div id="mainContainer">
+    <!-- The simulation grid -->
+    <div id="grid">
+      <div id="hoverOverlay"></div>
+    </div>
+    
+    <!-- Side panel -->
+    <div id="sidePanel">
+      <div id="sideContent">
+        <!-- Element list scroll area -->
+        <div id="elementScroll">
+          <div id="toolSearchContainer">
+            <input type="text" id="toolSearch" placeholder="Search elements...">
+          </div>
+          <div id="toolbar"></div>
+        </div>
+        <!-- Category menu -->
+        <div id="categoryMenu">
+          <button data-category="all" class="selectedCat">All</button>
+          <button data-category="liquids">Liquids</button>
+          <button data-category="powders">Powders</button>
+          <button data-category="solids">Solids</button>
+          <button data-category="gasses">Gasses</button>
+          <button data-category="explosives">Explosives</button>
+          <button data-category="life">Life</button>
+          <button data-category="cooking">Cooking</button>
+          <button data-category="electricity">Electricity Beta</button>
+          <button data-category="special">Special</button>
+        </div>
+      </div>
+      
+      <!-- HUD -->
+      <div id="hud">
+        <div id="hudTemp">Temp: -- °C</div>
+        <div id="hudElem">Element: --</div>
+        <div id="hudFPS">FPS: --</div>
+      </div>
+      
+      <!-- Controls -->
+      <div id="bottomControls">
+        <div id="speedContainer">
+          <label for="speed">Simulation Speed:</label>
+          <input type="range" id="speed" min="0" max="4" step="0.01" value="0.10"/>
+          <span id="speedValue">0.10</span>×
+        </div>
+        <button id="clearAllBtn">Clear All</button>
+      </div>
+      
+      <!-- Extra buttons -->
+      <div id="optionsButtonContainer">
+        <button id="optionsButton">Options</button>
+      </div>
+      <div id="saveLoadButtonContainer">
+        <button id="saveLoadButton">Save/Load</button>
+      </div>
+      <div id="modButtonContainer">
+        <button id="modButton">Mods (Beta)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal templates -->
+  <div id="modMenu" class="modal">
+    <div class="modal-content">
+      <span id="closeModMenu" class="close">&times;</span>
+      <h2>Mod Manager</h2>
+      <div id="modListContainer"></div>
+      <button id="addModButton">+ Add New Mod</button>
+    </div>
+  </div>
+
+  <div id="addModModal" class="modal">
+    <div class="modal-content">
+      <span id="closeAddModModal" class="close">&times;</span>
+      <h2>Add New Mod</h2>
+      <textarea id="newModCode" rows="10" placeholder="Paste your mod JS code here"></textarea>
+      <button id="saveNewModButton">Save Mod</button>
+    </div>
+  </div>
+
+  <div id="optionsModal" class="modal">
+    <div class="modal-content">
+      <span id="closeOptionsModal" class="close">&times;</span>
+      <h2>Options</h2>
+      <label for="stageSizeSelect">Stage Size:</label>
+      <select id="stageSizeSelect">
+        <option value="25">25x25x25</option>
+        <option value="50" selected>50x50x50</option>
+        <option value="75">75x75x75</option>
+        <option value="100">100x100x100</option>
+        <option value="125">125x125x125</option>
+      </select>
+      <button id="applyOptionsButton">Apply</button>
+    </div>
+  </div>
+
+  <div id="saveLoadModal" class="modal">
+    <div class="modal-content">
+      <span id="closeSaveLoadModal" class="close">&times;</span>
+      <h2>Save / Load</h2>
+      <div>
+        <h3>Save Current Game</h3>
+        <input type="text" id="saveTitle" placeholder="Save Title">
+        <input type="text" id="saveDescription" placeholder="Save Description">
+        <button id="saveGameButton">Save Game</button>
+      </div>
+      <hr>
+      <div>
+        <h3>Saved Games</h3>
+        <div id="savedGamesList"></div>
+      </div>
+      <hr>
+      <div>
+        <h3>Import Save File (.dbr)</h3>
+        <input type="file" id="importFileInput" accept=".dbr">
+        <button id="importSaveButton">Import Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Core JS imports -->
+  <script src="js/elements/base.js"></script>
+  <script src="js/elements/liquids.js"></script>
+  <script src="js/elements/solids.js"></script>
+  <script src="js/elements/gases.js"></script>
+  
+  <script src="js/simulation/physics.js"></script>
+  <script src="js/simulation/temperature.js"></script>
+  
+  <script src="js/ui/toolbar.js"></script>
+  <script src="js/ui/hud.js"></script>
+  <script src="js/ui/modals.js"></script>
+  
+  <script src="js/mods/mod-manager.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html> 
