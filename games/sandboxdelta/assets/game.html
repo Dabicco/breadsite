@@ -2,7 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Sandbox Delta 0.4.9b</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Sandbox Delta 0.5.0a</title>
+  <!-- Webapp metadata -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Sandbox Delta">
+  <meta name="application-name" content="Sandbox Delta">
+  <link rel="icon" type="image/x-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAJhSURBVFhH7ZY9aBRBGIbfvdwld7lL7hJz+YnJJcYYY0gMwUQsRFELCwutRBELGwutxFZtRBDBwkIQRBBE0MbGRrAQRLAQRBAsgoUWFhYWFhYWYp7vnNm9XdnLzwXkwBcedmdnZ9/vne+b2bvCcRxsZRXWvzet/G6HyWRSxONxEYvFRDQaFeFwWIRCIeHz+YTP6xVer1d4PB7hdruF2+USLpdLOJ1O4XA4hN1uFzabTVitVmGxWITZbBYmk0mYTCZhNBqFwWAQer1e6HQ6odVqhUajEWq1WqhUKqFUKoVCoRByuVzI5XIhk8mETCYTUqlUSCQSIRaLBUVRQBAEQZIkQZRlQRRFQRAEQa/XC1qtVmi1WqHRaIRarRYqlUoolUqhUCiEXC4XMplMSKVSIZFIhFgsFlKpVMhkMiGXy4VCodh8AHVdF4VCIWQymZBKpUIikQixWCykUqmQyWRCLpcLhUIh5HK5kMlkQiqVColEIsRisZBKpUIqlQqZTCbkcrlQKBRCLpcLmUwmpFKpkEgkQiwWC6lUKmQymZDL5UIhXwXweDwbD8AZcLvdwuVyCYfDIex2u7DZbMJqtQqLxSLMZrMwmUzCaDQKg8Eg9Hq90Ol0QqvVCo1GI9RqtVCpVEKpVAqFQiHkcrmQyWRCKpUKiUQixGKxoChKEIIgCJIkCaIsCqIoCgaDQWi1WqHRaIRarRYqlUoolUqhUCiEXC4XMplMSKVSIZFIhFgsFhRFEQRBECRJEkRZFERRFPR6vdBqtUKj0Qi1Wi1UKpVQKpVCoVAIuVwuZDKZkEqlQiKRCLFYLCiKIgiCIEiSJIiyKIiiKPwXAYQQfwBCxA1TnWK6GAAAAABJRU5ErkJggg==">
+  <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAJhSURBVFhH7ZY9aBRBGIbfvdwld7lL7hJz+YnJJcYYY0gMwUQsRFELCwutRBELGwutxFZtRBDBwkIQRBBE0MbGRrAQRLAQRBAsgoUWFhYWFhYWYp7vnNm9XdnLzwXkwBcedmdnZ9/vne+b2bvCcRxsZRXWvzet/G6HyWRSxONxEYvFRDQaFeFwWIRCIeHz+YTP6xVer1d4PB7hdruF2+USLpdLOJ1O4XA4hN1uFzabTVitVmGxWITZbBYmk0mYTCZhNBqFwWAQer1e6HQ6odVqhUajEWq1WqhUKqFUKoVCoRByuVzI5XIhk8mETCYTUqlUSCQSIRaLBUVRQBAEQZIkQZRlQRRFQRAEQa/XC1qtVmi1WqHRaIRarRYqlUoolUqhUCiEXC4XMplMSKVSIZFIhFgsFlKpVMhkMiGXy4VCodh8AHVdF4VCIWQymZBKpUIikQixWCykUqmQyWRCLpcLhUIh5HK5kMlkQiqVColEIsRisZBKpUIqlQqZTCbkcrlQKBRCLpcLmUwmpFKpkEgkQiwWC6lUKmQymZDL5UIhXwXweDwbD8AZcLvdwuVyCYfDIex2u7DZbMJqtQqLxSLMZrMwmUzCaDQKg8Eg9Hq90Ol0QqvVCo1GI9RqtVCpVEKpVAqFQiHkcrmQyWRCKpUKiUQixGKxoChKEIIgCJIkCaIsCqIoCgaDQWi1WqHRaIRarRYqlUoolUqhUCiEXC4XMplMSKVSIZFIhFgsFhRFEQRBECRJEkRZFERRFPR6vdBqtUKj0Qi1Wi1UKpVQKpVCoVAIuVwuZDKZkEqlQiKRCLFYLCiKIgiCIEiSJIiyKIiiKPwXAYQQfwBCxA1TnWK6GAAAAABJRU5ErkJggg==">
+
   <style>
     /* Basic layout: center the page content, side panel on the right */
     html, body {
@@ -40,11 +49,21 @@
       display: grid;
       grid-template-columns: repeat(50, 1fr);
       grid-template-rows: repeat(50, 1fr);
+      position: relative;
     }
     .cell {
-      width: 120%;
-      height: 120%;
+      width: 100%;
+      height: 100%;
       background-color: #000;
+      box-sizing: border-box;
+    }
+    /* Hover overlay for stroke highlighting */
+    #hoverOverlay {
+      position: absolute;
+      pointer-events: none;
+      border: 2px dashed yellow;
+      background-color: rgba(255, 255, 0, 0.2);
+      display: none;
       box-sizing: border-box;
     }
     /* Side panel: now wider */
@@ -214,6 +233,18 @@
     .dead-root       { background-color: #555555; }
     .gas             { background-color: rgba(200,200,200,0.2); }
     .burning-gas     { background-color: #ff6666; opacity: 0.75; }
+    .acid            { background-color: #90EE90; }
+    .acid-steam      { background-color: #98FB98; opacity: 0.7; }
+    .acid-cloud      { background-color: #98FB98; }
+    .slime           { background-color: #006400; }
+    /* New element classes */
+    .carbon-dioxide  { background-color: rgba(128,128,128,0.2); }
+    .oxygen          { background-color: rgba(200,230,255,0.2); }
+    .bird            { background-color: #B8860B; }
+    .meat            { background-color: #FF6B6B; }
+    .cooked-meat     { background-color: #8B4513; }
+    .cobblestone     { background-color: #808080; }
+    .oil             { background-color: #2F4F4F; }
     /* cooler & heater */
     .cooler { background-color: #3399ff; }
     .heater { background-color: #ff3333; }
@@ -234,6 +265,8 @@
     /* New elements: Coal & Coal Lump */
     .coal         { background-color: #202020; }
     .coal-lump    { background-color: #303030; }
+    /* New element: Thermite – tool styling */
+    .thermite     { background-color: #AA4444; }
     /* HUD area for temp, element info, and FPS */
     #hud {
       background: rgba(0,0,0,0.7);
@@ -284,19 +317,18 @@
       display: inline-block;
     }
     #clearAllBtn {
-      background-color: #333;
+      background-color: #444;
       border: 1px solid #888;
       border-radius: 3px;
       color: #fff;
       font-size: 14px;
-      padding: 6px 12px;
+      padding: 8px 12px;
       cursor: pointer;
     }
-    #clearAllBtn:hover { background-color: #444; }
+    #clearAllBtn:hover { background-color: #555; }
     /* Extra Sidebar Buttons */
     #optionsButtonContainer, #saveLoadButtonContainer, #modButtonContainer {
       text-align: center;
-      margin-top: 10px;
     }
     #optionsButton, #saveLoadButton, #modButton {
       background-color: #444;
@@ -405,12 +437,102 @@
     .modCard button:hover {
       background-color: #666;
     }
+    .acid          { background-color: #90EE90; }
+    .acid-steam    { background-color: #98FB98; opacity: 0.7; }
+    .acid-cloud    { background-color: #98FB98; }
+    .slime         { background-color: #006400; }
+    /* Tool styles */
+    .tool.heat { background: linear-gradient(45deg, #ff4500, #ffd700); }
+    .tool.cool { background: linear-gradient(45deg, #00bfff, #87ceeb); }
+    .tool.cook { background-color: #deb887; }
+    .tool.mix { background: repeating-linear-gradient(45deg, #444, #666 10px); }
+    .tool.move { background-color: #4169e1; }
+    .tool.sponge { background-color: #ffa07a; }
+    .tool.extinguish { background-color: #4682b4; }
+    /* Add to existing styles */
+    .options-section {
+      margin: 15px 0;
+      padding: 10px;
+      border: 1px solid #444;
+      border-radius: 3px;
+    }
+
+    .options-section.experimental {
+      background-color: #333;
+    }
+
+    .options-section h3 {
+      margin-top: 0;
+      color: #ffd700;
+    }
+
+    .options-button {
+      background-color: #444;
+      border: 1px solid #888;
+      border-radius: 3px;
+      color: #fff;
+      padding: 8px 12px;
+      cursor: pointer;
+      width: 100%;
+      margin: 5px 0;
+    }
+
+    .options-button:hover {
+      background-color: #555;
+    }
+
+    #popOutWindow {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #222;
+      padding: 10px;
+      border: 2px solid #444;
+      border-radius: 5px;
+      display: none;
+      z-index: 2000;
+    }
+
+    /* Mobile touch support */
+    @media (max-width: 768px) {
+      #mainContainer {
+        flex-direction: column;
+      }
+      #grid {
+        width: 100vw;
+        height: 100vw;
+        margin-right: 0;
+        margin-bottom: 20px;
+      }
+      #sidePanel {
+        width: 100%;
+        height: auto;
+      }
+      .tool {
+        width: 80px;
+        height: 60px;
+      }
+    }
+
+    /* Add dynamic lighting styles */
+    .cell.lit {
+      transition: background-color 0.1s ease;
+    }
+
+    .cell.glass.lit {
+      transition: background-color 0.2s ease;
+      mix-blend-mode: screen;
+    }
   </style>
 </head>
 <body>
   <div id="mainContainer">
     <!-- The simulation grid (will be rebuilt based on stage size) -->
-    <div id="grid"></div>
+    <div id="grid">
+      <!-- Hover overlay element -->
+      <div id="hoverOverlay"></div>
+    </div>
     <!-- Side panel -->
     <div id="sidePanel">
       <!-- Side content: two columns (element list and category menu) -->
@@ -423,6 +545,14 @@
           <div id="toolbar">
             <!-- Eraser is FIRST so it's always on top by default. -->
             <div class="tool eraser" data-tool="eraser" data-cat="solids" title="Eraser"><span>Eraser</span></div>
+            <!-- Tools -->
+            <div class="tool heat" data-tool="heat" data-cat="tools" title="Heat Tool"><span>Heat</span></div>
+            <div class="tool cool" data-tool="cool" data-cat="tools" title="Cool Tool"><span>Cool</span></div>
+            <div class="tool cook" data-tool="cook" data-cat="tools" title="Cook Tool"><span>Cook</span></div>
+            <div class="tool mix" data-tool="mix" data-cat="tools" title="Mix Tool"><span>Mix</span></div>
+            <div class="tool move" data-tool="move" data-cat="tools" title="Move Tool"><span>Move</span></div>
+            <div class="tool sponge" data-tool="sponge" data-cat="tools" title="Sponge Tool"><span>Sponge</span></div>
+            <div class="tool extinguish" data-tool="extinguish" data-cat="tools" title="Extinguish Tool"><span>Ext</span></div>
             <!-- Tools in desired order -->
             <div class="tool sand selected" data-tool="sand" data-cat="powders" title="Sand"><span>S</span></div>
             <div class="tool wall" data-tool="wall" data-cat="solids" title="Wall"><span>Wall</span></div>
@@ -465,11 +595,25 @@
             <!-- New elements: Coal and Coal Lump -->
             <div class="tool coal" data-tool="coal" data-cat="solids" title="Coal"><span>C</span></div>
             <div class="tool coal-lump" data-tool="coal-lump" data-cat="powders" title="Coal Lump"><span>CLu</span></div>
+            <!-- New element: Thermite -->
+            <div class="tool thermite" data-tool="thermite" data-cat="explosives,powders" title="Thermite"><span>Th</span></div>
+            <!-- New elements -->
+            <div class="tool acid" data-tool="acid" data-cat="liquids" title="Acid"><span>Acid</span></div>
+            <div class="tool slime" data-tool="slime" data-cat="liquids" title="Slime"><span>Slime</span></div>
+            <!-- Additional new elements -->
+            <div class="tool carbon-dioxide" data-tool="carbon-dioxide" data-cat="gasses" title="Carbon Dioxide"><span>CO2</span></div>
+            <div class="tool oxygen" data-tool="oxygen" data-cat="gasses" title="Oxygen"><span>O2</span></div>
+            <div class="tool bird" data-tool="bird" data-cat="life" title="Bird"><span>Bird</span></div>
+            <div class="tool meat" data-tool="meat" data-cat="cooking" title="Meat"><span>Meat</span></div>
+            <div class="tool cooked-meat" data-tool="cooked-meat" data-cat="cooking" title="Cooked Meat"><span>CMeat</span></div>
+            <div class="tool cobblestone" data-tool="cobblestone" data-cat="powders" title="Cobblestone"><span>Cbl</span></div>
+            <div class="tool oil" data-tool="oil" data-cat="liquids" title="Oil"><span>Oil</span></div>
           </div>
         </div>
         <!-- Category menu (independent scroll area on the right) -->
         <div id="categoryMenu">
           <button data-category="all" class="selectedCat">All</button>
+          <button data-category="tools">Tools</button>
           <button data-category="liquids">Liquids</button>
           <button data-category="powders">Powders</button>
           <button data-category="solids">Solids</button>
@@ -516,6 +660,15 @@
      ***************************************/
     // Stage size is dynamic; default is 50.
     let GRID_SIZE = 50;
+    // Tool constants
+    const TOOL_HEAT         = 100;
+    const TOOL_COOL         = 101;
+    const TOOL_COOK         = 102;
+    const TOOL_MIX          = 103;
+    const TOOL_MOVE         = 104;
+    const TOOL_SPONGE       = 105;
+    const TOOL_EXTINGUISH   = 106;
+
     const EMPTY             = 0;
     const ERASER            = 5;
     // Basic elements
@@ -586,6 +739,22 @@
     const COAL_LUMP         = 63;
     const BURNING_COAL      = 64;
     const BURNING_COAL_LUMP = 65;
+    // New element: Thermite – assign THERMITE and BURNING_THERMITE (ensure no conflict with mod Orange Juice)
+    const THERMITE          = 68;
+    const BURNING_THERMITE  = 69;
+    // New elements
+    const ACID              = 70;
+    const ACID_STEAM        = 71;
+    const ACID_CLOUD        = 72;
+    const SLIME             = 73;
+    // Additional new elements
+    const CARBON_DIOXIDE    = 74;
+    const OXYGEN            = 75;
+    const BIRD             = 76;
+    const MEAT             = 77;
+    const COOKED_MEAT      = 78;
+    const COBBLESTONE      = 79;
+    const OIL              = 80;
     // Simulation constants
     let speed               = 0.1;
     const simulationTimeStep= 0.1;
@@ -604,6 +773,7 @@
     const burningGasDuration= 2.0;
     const burnDurationCoal      = 10.0;
     const burnDurationCoalLump  = 5.0;
+    // Conduction rates
     const conductionRates = {
       [EMPTY]:0, [SAND]:0.2, [WALL]:0,
       [WATER]:0.9, [LAVA]:0.4, [STONE]:0.05,
@@ -612,7 +782,7 @@
       [FIRE]:1.0, [SMOKE]:0.3, [BURNING_WOOD]:0.3, [ASH]:0.01, [GLASS]:0.1,
       [BOMB]:0.05, [DIRT]:0.1, [WET_DIRT]:0.15, [WHEAT_SEEDS]:0.05, [WHEAT]:0.05,
       [FLOUR]:0.1, [DOUGH]:0.1, [BREAD]:0.05, [ROOT]:0.1, [BURNING_ORGANIC]:0.3,
-      [SPARK]:0.05, [CHARGED_COPPER]:0.05, [OAK_SEEDS]:0.05, [OAK_LEAVES]:0.05,
+      [SPARK]:0.1, [CHARGED_COPPER]:0.1, [OAK_SEEDS]:0.05, [OAK_LEAVES]:0.05,
       [OAK_BABY_LEAVES]:0.05, [DEAD_OAK]:0.05, [WET_SAND]:0.2, [GRASS]:0.1,
       [DEAD_PLANT]:0.05, [BURNING_LEAVES]:0.3, [BURNING_GAS]:0.1, [CHARGED_DOWN_COPPER]:0.05,
       [COOLER]:0.2, [HEATER]:0.2,
@@ -624,7 +794,10 @@
       [CHARGED_BLOCKER]:0.1,
       [CLONER]:0.2,
       [COAL]:0.5, [COAL_LUMP]:0.3,
-      [BURNING_COAL]:1.0, [BURNING_COAL_LUMP]:1.0
+      [BURNING_COAL]:1.0, [BURNING_COAL_LUMP]:1.0,
+      [THERMITE]:0.3, [BURNING_THERMITE]:0.5,
+      [ACID]:0.8, [ACID_STEAM]:0.6, [ACID_CLOUD]:0.3, [SLIME]:0.4,
+      [CARBON_DIOXIDE]:0.2, [OXYGEN]:0.2, [BIRD]:0.1, [MEAT]:0.1, [COOKED_MEAT]:0.1, [COBBLESTONE]:0.1, [OIL]:0.1
     };
     const heatCapacities = {
       [EMPTY]:1, [SAND]:1, [WALL]:1,
@@ -646,7 +819,10 @@
       [CHARGED_BLOCKER]:1,
       [CLONER]:1,
       [COAL]:1, [COAL_LUMP]:1,
-      [BURNING_COAL]:0.1, [BURNING_COAL_LUMP]:0.1
+      [BURNING_COAL]:0.1, [BURNING_COAL_LUMP]:0.1,
+      [THERMITE]:1, [BURNING_THERMITE]:1.5,
+      [ACID]:1, [ACID_STEAM]:0.5, [ACID_CLOUD]:0.5, [SLIME]:2,
+      [CARBON_DIOXIDE]:0.5, [OXYGEN]:0.5, [BIRD]:0.5, [MEAT]:0.5, [COOKED_MEAT]:0.5, [COBBLESTONE]:0.5, [OIL]:0.5
     };
     // Global arrays for grid state
     let grid = [], temp = [], moved = [];
@@ -663,15 +839,49 @@
     let grassStage = [];
     let burningGasTime = [];
     let chargedStateTime = [];
+    // Bird movement arrays
+    let birdDirections = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(1));
+    let birdTimers = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(0));
+    let birdYMovement = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(0));
 
-    // Game version updated to 0.4.9b
-    const currentGameVersion = "0.4.9b";
+    // New global variable: stroke thickness (in cells)
+    let strokeThickness = 1;
+
+    // Game version updated to 0.5.0a
+    const currentGameVersion = "0.5.0a";
+
+    // Add these right after the GRID_SIZE declaration and before any functions
+    // Global lighting system variables
+    window.isDynamicLightingEnabled = false;
+    window.lightLevels = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(0));
+    window.lightColors = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(null));
+    window.lightEmitters = {
+      [LAVA]: { intensity: 1.0, color: '#ff4500' },
+      [FIRE]: { intensity: 0.8, color: '#ffcc00' },
+      [BURNING_WOOD]: { intensity: 0.6, color: '#ff4500' },
+      [BURNING_ORGANIC]: { intensity: 0.6, color: '#ff4500' },
+      [BURNING_LEAVES]: { intensity: 0.6, color: '#ff4500' },
+      [BURNING_ROOT]: { intensity: 0.6, color: '#ff4500' },
+      [BURNING_COAL]: { intensity: 0.7, color: '#ff4500' },
+      [BURNING_COAL_LUMP]: { intensity: 0.7, color: '#ff4500' },
+      [BURNING_THERMITE]: { intensity: 1.0, color: '#ffc31f' },
+      [BURNING_GAS]: { intensity: 0.5, color: '#ff6666' },
+      [CHARGED_COPPER]: { intensity: 0.4, color: '#ff8c00' },
+      [CHARGED_DOWN_COPPER]: { intensity: 0.3, color: '#cc6600' },
+      [SPARK]: { intensity: 0.9, color: '#ffdd00' },
+      [CHARGED_HEAT_SEPARATOR]: { intensity: 0.4, color: '#ffe033' },
+      [CHARGED_DOWN_HEAT_SEPARATOR]: { intensity: 0.3, color: '#ffd700' },
+      [CHARGED_INPUT]: { intensity: 0.4, color: '#ffff77' },
+      [CHARGED_OUTPUT]: { intensity: 0.4, color: '#8888ff' },
+      [MOLTEN_SLAG]: { intensity: 0.8, color: '#ff4500' }
+    };
 
     // Function to initialize the grid based on GRID_SIZE.
     function initGrid(newSize) {
       GRID_SIZE = newSize;
       // Update grid DOM: set grid template columns/rows according to new size.
       gridContainer.innerHTML = "";
+      gridContainer.appendChild(hoverOverlay);
       gridContainer.style.gridTemplateColumns = `repeat(${GRID_SIZE}, 1fr)`;
       gridContainer.style.gridTemplateRows = `repeat(${GRID_SIZE}, 1fr)`;
       // Reset arrays.
@@ -706,6 +916,11 @@
       grassStage = [];
       burningGasTime = [];
       chargedStateTime = [];
+      // Initialize bird arrays
+      birdDirections = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(1));
+      birdTimers = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(0));
+      birdYMovement = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(0));
+
       cells.length = 0;
       for (let y = 0; y < GRID_SIZE; y++) {
         let row = [], trow = [], mrow = [];
@@ -794,11 +1009,16 @@
         }
         cells.push(rowOfCells);
       }
+      
+      // Reinitialize lighting arrays when grid size changes
+      window.lightLevels = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(0));
+      window.lightColors = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(null));
     }
     /***************************************
      * DOM
      ***************************************/
     const gridContainer = document.getElementById('grid');
+    const hoverOverlay = document.getElementById('hoverOverlay');
     const toolElements = document.getElementsByClassName('tool');
     const speedSlider = document.getElementById('speed');
     const speedValueDisplay = document.getElementById('speedValue');
@@ -857,6 +1077,26 @@
         case "cloner": currentTool = CLONER; break;
         case "coal": currentTool = COAL; break;
         case "coal-lump": currentTool = COAL_LUMP; break;
+        case "thermite": currentTool = THERMITE; break;
+        case "acid": currentTool = ACID; break;
+        case "slime": currentTool = SLIME; break;
+        case "heat": currentTool = TOOL_HEAT; break;
+        case "cool": currentTool = TOOL_COOL; break;
+        case "cook": currentTool = TOOL_COOK; break;
+        case "mix": currentTool = TOOL_MIX; break;
+        case "move": currentTool = TOOL_MOVE; break;
+        case "sponge": currentTool = TOOL_SPONGE; break;
+        case "extinguish": currentTool = TOOL_EXTINGUISH; break;
+        case "thermite": currentTool = THERMITE; break;
+        case "acid": currentTool = ACID; break;
+        case "slime": currentTool = SLIME; break;
+        case "carbon-dioxide": currentTool = CARBON_DIOXIDE; break;
+        case "oxygen": currentTool = OXYGEN; break;
+        case "bird": currentTool = BIRD; break;
+        case "meat": currentTool = MEAT; break;
+        case "cooked-meat": currentTool = COOKED_MEAT; break;
+        case "cobblestone": currentTool = COBBLESTONE; break;
+        case "oil": currentTool = OIL; break;
       }
     }
     Array.from(toolElements).forEach(el => { el.addEventListener('click', () => selectTool(el)); });
@@ -884,16 +1124,121 @@
       hudTemp.textContent = "Temp: -- °C";
       hudElem.textContent = "Element: --";
       hudFPS.textContent = "FPS: --";
+      hoverOverlay.style.display = "none";
     });
     gridContainer.addEventListener('mousemove', e => { const { x, y } = getMousePos(e); hoveredX = x; hoveredY = y; });
+    // Listen for scroll (wheel) events to adjust stroke thickness.
+    gridContainer.addEventListener('wheel', e => {
+      e.preventDefault();
+      if (e.deltaY < 0) {
+        strokeThickness = Math.min(strokeThickness + 1, 50);
+      } else {
+        strokeThickness = Math.max(strokeThickness - 1, 1);
+      }
+    });
     function getMousePos(e) {
-      const rect = gridContainer.getBoundingClientRect();
-      const cellSize = rect.width / GRID_SIZE;
+      // Use clientWidth to avoid scaling issues.
+      const cellSize = gridContainer.clientWidth / GRID_SIZE;
+      let rect = gridContainer.getBoundingClientRect();
       let px = Math.floor((e.clientX - rect.left) / cellSize);
       let py = Math.floor((e.clientY - rect.top) / cellSize);
       return { x: Math.max(0, Math.min(GRID_SIZE - 1, px)), y: Math.max(0, Math.min(GRID_SIZE - 1, py)) };
     }
-    function spamPlace() { if (hoveredX === null || hoveredY === null) return; if (isLeftMouseDown) { placeElementAt(hoveredX, hoveredY, currentTool); } else if (isRightMouseDown) { placeElementAt(hoveredX, hoveredY, ERASER); } }
+    // Modified spamPlace to place elements over a square area based on strokeThickness.
+    function spamPlace() { 
+      if (hoveredX === null || hoveredY === null) return; 
+      let half = Math.floor(strokeThickness / 2);
+      
+      // Handle special tools
+      if (currentTool >= 100 && currentTool <= 106) {
+        if (isLeftMouseDown) {
+          for (let dy = -half; dy <= strokeThickness - half - 1; dy++) {
+            for (let dx = -half; dx <= strokeThickness - half - 1; dx++) {
+              let x = hoveredX + dx, y = hoveredY + dy;
+              if (x < 0 || x >= GRID_SIZE || y < 0 || y >= GRID_SIZE) continue;
+              
+              switch(currentTool) {
+                case 100: // TOOL_HEAT
+                  if (temp[y][x] !== null) temp[y][x] = Math.min(temp[y][x] + 50, 3000);
+                  break;
+                case 101: // TOOL_COOL
+                  if (temp[y][x] !== null) temp[y][x] = Math.max(temp[y][x] - 50, -271);
+                  break;
+                case 102: // TOOL_COOK
+                  if (grid[y][x] === DOUGH) {
+                    grid[y][x] = BREAD;
+                    temp[y][x] = 30;
+                  }
+                  break;
+                case 103: // TOOL_MIX
+                  if (Math.random() < 0.5) {
+                    let dirs = [[1,0], [-1,0], [0,1], [0,-1]];
+                    let dir = dirs[Math.floor(Math.random() * dirs.length)];
+                    let nx = x + dir[0], ny = y + dir[1];
+                    if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {
+                      let tmpElem = grid[y][x];
+                      let tmpTemp = temp[y][x];
+                      grid[y][x] = grid[ny][nx];
+                      temp[y][x] = temp[ny][nx];
+                      grid[ny][nx] = tmpElem;
+                      temp[ny][nx] = tmpTemp;
+                    }
+                  }
+                  break;
+                case 105: // TOOL_SPONGE
+                  if ([BURNING_WOOD, BURNING_ORGANIC, BURNING_LEAVES, ASH, FIRE].includes(grid[y][x])) {
+                    eraseCell(x, y);
+                  }
+                  break;
+                case 106: // TOOL_EXTINGUISH
+                  if (grid[y][x] === FIRE) {
+                    eraseCell(x, y);
+                  } else if (grid[y][x] === BURNING_WOOD) {
+                    grid[y][x] = WOOD;
+                    temp[y][x] = 20;
+                  } else if (grid[y][x] === BURNING_ORGANIC) {
+                    eraseCell(x, y);
+                  } else if (grid[y][x] === BURNING_LEAVES) {
+                    grid[y][x] = OAK_LEAVES;
+                    temp[y][x] = 20;
+                  }
+                  break;
+              }
+            }
+          }
+        }
+        return;
+      }
+      
+      // Regular element placement
+      for (let dy = -half; dy <= strokeThickness - half - 1; dy++) {
+        for (let dx = -half; dx <= strokeThickness - half - 1; dx++) {
+          let x = hoveredX + dx, y = hoveredY + dy;
+          if (x < 0 || x >= GRID_SIZE || y < 0 || y >= GRID_SIZE) continue;
+          if (isLeftMouseDown) {
+            placeElementAt(x, y, currentTool);
+          } else if (isRightMouseDown) {
+            placeElementAt(x, y, ERASER);
+          }
+        }
+      }
+    }
+    // Update the hover overlay that shows the stroke area.
+    function updateHoverOverlay() {
+      if (hoveredX === null || hoveredY === null) {
+        hoverOverlay.style.display = "none";
+        return;
+      }
+      const cellSize = gridContainer.clientWidth / GRID_SIZE;
+      let half = Math.floor(strokeThickness / 2);
+      let startX = (hoveredX - half) * cellSize;
+      let startY = (hoveredY - half) * cellSize;
+      hoverOverlay.style.display = "block";
+      hoverOverlay.style.left = startX + "px";
+      hoverOverlay.style.top = startY + "px";
+      hoverOverlay.style.width = (strokeThickness * cellSize) + "px";
+      hoverOverlay.style.height = (strokeThickness * cellSize) + "px";
+    }
     /***************************************
      * PLACEMENT & ERASURE
      ***************************************/
@@ -916,6 +1261,8 @@
         case WOOD: temp[y][x] = 20; burningWoodTime[y][x] = 0; break;
         case FIRE: temp[y][x] = fireTemperature; fireLife[y][x] = 0; break;
         case SMOKE: temp[y][x] = 80; smokeLife[y][x] = 0; smokeMaxLife[y][x] = 1 + 2 * Math.random(); break;
+        case BURNING_WOOD: temp[y][x] = 20; break;
+        case BURNING_ORGANIC: temp[y][x] = fireTemperature; break;
         case ASH: temp[y][x] = 20; break;
         case GLASS: temp[y][x] = 300; break;
         case BOMB: temp[y][x] = 20; break;
@@ -949,6 +1296,19 @@
         case CLONER: temp[y][x] = 20; break;
         case COAL: temp[y][x] = 20; break;
         case COAL_LUMP: temp[y][x] = 20; break;
+        case THERMITE: temp[y][x] = 20; break;
+        case BURNING_THERMITE: temp[y][x] = 3200; break;
+        case ACID: temp[y][x] = 20; break;
+        case SLIME: temp[y][x] = 20; break;
+        case ACID_STEAM: temp[y][x] = 120; break;
+        case ACID_CLOUD: temp[y][x] = 50; break;
+        case CARBON_DIOXIDE: temp[y][x] = 20; break;
+        case OXYGEN: temp[y][x] = 20; break;
+        case BIRD: temp[y][x] = 20; break;
+        case MEAT: temp[y][x] = 20; break;
+        case COOKED_MEAT: temp[y][x] = 20; break;
+        case COBBLESTONE: temp[y][x] = 20; break;
+        case OIL: temp[y][x] = 20; break;
       }
     }
     function eraseCell(x, y) {
@@ -992,6 +1352,8 @@
       cell.style.opacity = "";
       cell.style.backgroundColor = "";
       const e = grid[y][x];
+      
+      // Handle base element rendering
       switch (e) {
         case SAND: cell.classList.add('sand'); break;
         case WALL: cell.classList.add('wall'); break;
@@ -1000,7 +1362,7 @@
         case STONE: cell.classList.add('stone'); break;
         case WATER_VAPOR: cell.classList.add('water-vapor'); break;
         case CLOUD: cell.classList.add('cloud'); break;
-        case BASALT:
+        case BASALT: cell.classList.add('stone'); break;
         case OBSIDIAN: cell.classList.add('stone'); break;
         case MOLTEN_SLAG: cell.classList.add('lava'); break;
         case COPPER: cell.classList.add('copper'); break;
@@ -1060,9 +1422,48 @@
         case CLONER: cell.classList.add('cloner'); break;
         case COAL: cell.classList.add('coal'); break;
         case COAL_LUMP: cell.classList.add('coal-lump'); break;
-        case BURNING_COAL: cell.style.backgroundColor = "#aa0000"; break;
-        case BURNING_COAL_LUMP: cell.style.backgroundColor = "#990000"; break;
+        case THERMITE: cell.classList.add('thermite'); break;
+        case BURNING_THERMITE: cell.style.backgroundColor = "#ffc31f"; break;
+        case ACID: cell.classList.add('acid'); break;
+        case SLIME: cell.classList.add('slime'); break;
+        case ACID_STEAM: cell.classList.add('acid-steam'); break;
+        case ACID_CLOUD: cell.classList.add('acid-cloud'); break;
+        // New elements
+        case CARBON_DIOXIDE: cell.classList.add('carbon-dioxide'); break;
+        case OXYGEN: cell.classList.add('oxygen'); break;
+        case BIRD: cell.classList.add('bird'); break;
+        case MEAT: cell.classList.add('meat'); break;
+        case COOKED_MEAT: cell.classList.add('cooked-meat'); break;
+        case COBBLESTONE: cell.classList.add('cobblestone'); break;
+        case OIL: cell.classList.add('oil'); break;
         default: break;
+      }
+      
+      // Handle dynamic lighting
+      if (window.isDynamicLightingEnabled && window.lightLevels && window.lightLevels[y] && window.lightLevels[y][x] > 0) {
+        cell.classList.add('lit');
+        
+        if (e === GLASS) {
+          // Glass reflects nearby light with a slight tint
+          const color = window.lightColors[y][x];
+          const intensity = window.lightLevels[y][x];
+          cell.style.backgroundColor = color;
+          cell.style.opacity = intensity * 0.3;
+        } else if (e === EMPTY) {
+          // Empty cells show light more prominently
+          const color = window.lightColors[y][x];
+          cell.style.backgroundColor = color;
+          cell.style.opacity = window.lightLevels[y][x] * 0.2;
+        } else {
+          // Other cells get a slight glow effect
+          const lightColor = window.lightColors[y][x];
+          if (lightColor) {
+            cell.style.boxShadow = `0 0 ${window.lightLevels[y][x] * 10}px ${lightColor}`;
+          }
+        }
+      } else {
+        cell.classList.remove('lit');
+        cell.style.boxShadow = '';
       }
     }
     function renderGrid(){
@@ -1144,10 +1545,22 @@
         case CLONER: return "Cloner";
         case COAL: return "Coal";
         case COAL_LUMP: return "Coal Lump";
-        case BURNING_COAL: return "Burning Coal";
-        case BURNING_COAL_LUMP: return "Burning Coal Lump";
+        case THERMITE: return "Thermite";
+        case BURNING_THERMITE: return "Molten Thermite";
+        case ACID: return "Acid";
+        case SLIME: return "Slime";
+        case ACID_STEAM: return "Acid Steam";
+        case ACID_CLOUD: return "Acid Cloud";
+        // New elements
+        case CARBON_DIOXIDE: return "Carbon Dioxide";
+        case OXYGEN: return "Oxygen";
+        case BIRD: return "Bird";
+        case MEAT: return "Meat";
+        case COOKED_MEAT: return "Cooked Meat";
+        case COBBLESTONE: return "Cobblestone";
+        case OIL: return "Oil";
+        default: return "Unknown";
       }
-      return "Unknown";
     }
     function resetMoved(){
       for (let y = 0; y < GRID_SIZE; y++){
@@ -1162,19 +1575,49 @@
     let stepAccumulator = 0;
     let lastTime = performance.now();
     let frames = 0, fps = 0;
-    function gameLoop(){
+    let lastFrameTime = performance.now();
+    let fixedTimeStep = 1000 / 60; // Base simulation on 60fps
+
+    function gameLoop(timestamp) {
       frames++;
       const now = performance.now();
-      if(now - lastTime >= 1000){
+      
+      // FPS calculation
+      if(now - lastTime >= 1000) {
         fps = frames;
         frames = 0;
         lastTime = now;
       }
       hudFPS.textContent = `FPS: ${fps}`;
+      
+      // DabyFPS handling
+      if (targetFps > 0) {
+        const frameTime = timestamp - lastFrameTime;
+        const targetFrameTime = 1000 / targetFps;
+        
+        if (frameTime < targetFrameTime) {
+          requestAnimationFrame(gameLoop);
+          return;
+        }
+        lastFrameTime = timestamp;
+      }
+      
       spamPlace();
-      if(speed > 0){
-        stepAccumulator += speed;
-        while(stepAccumulator >= 1){
+      if(speed > 0) {
+        // Calculate how much time has passed since last frame
+        const deltaTime = timestamp - lastFrameTime;
+        
+        if (targetFps > 0) {
+          // When DabyFPS is on, we use fixed time steps
+          const timeScale = speed * (deltaTime / fixedTimeStep);
+          stepAccumulator += timeScale;
+        } else {
+          // Original behavior when DabyFPS is off
+          const simulationSteps = speed;
+          stepAccumulator += simulationSteps;
+        }
+
+        while(stepAccumulator >= 1) {
           resetMoved();
           performSimulationStep();
           updateTemperature();
@@ -1183,11 +1626,12 @@
           stepAccumulator -= 1;
         }
       }
+      
       updateHUD();
       renderGrid();
+      updateHoverOverlay();
       requestAnimationFrame(gameLoop);
     }
-    requestAnimationFrame(gameLoop);
     /***************************************
      * SIMULATION STEP
      ***************************************/
@@ -1205,72 +1649,104 @@
           if(moved[y][x]) continue;
           let e = grid[y][x];
           if(e === WALL) continue;
-          if(e === SPARK){
-            sparkLife[y][x] += simulationTimeStep;
-            if(sparkLife[y][x] >= sparkLifetime){
-              eraseCell(x, y);
-              continue;
-            }
-            let neighbors = [[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]];
-            for(let [dx, dy] of neighbors){
-              let nx = x + dx, ny = y + dy;
-              if(nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE){
-                if(grid[ny][nx] === BOMB){
-                  explodeBomb(nx, ny);
-                }
-                if(grid[ny][nx] === COPPER && temp[ny][nx] < 300){
-                  grid[ny][nx] = CHARGED_COPPER;
-                  temp[ny][nx] = Math.min(temp[ny][nx] + 50, 1200);
-                  chargedStateTime[ny][nx] = 0;
+
+          switch(e) {
+            case SPARK:
+              sparkLife[y][x] += simulationTimeStep;
+              if(sparkLife[y][x] >= sparkLifetime){
+                eraseCell(x, y);
+                continue;
+              }
+              let neighbors = [[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]];
+              for(let [dx, dy] of neighbors){
+                let nx = x + dx, ny = y + dy;
+                if(nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE){
+                  if(grid[ny][nx] === BOMB){
+                    explodeBomb(nx, ny);
+                  }
+                  if(grid[ny][nx] === COPPER && temp[ny][nx] < 300){
+                    grid[ny][nx] = CHARGED_COPPER;
+                    temp[ny][nx] = Math.min(temp[ny][nx] + 50, 1200);
+                    chargedStateTime[ny][nx] = 0;
+                  }
                 }
               }
-            }
-            continue;
-          }
-          if(e === SAND || e === ASH || e === BOMB || e === DIRT || e === WET_DIRT || e === WHEAT_SEEDS || e === FLOUR || e === DEAD_PLANT || e === GRASS || e === COAL_LUMP){
-            moveLikePowder(x, y, temp[y][x], e);
-            continue;
-          }
-          if(e === WET_SAND){
-            moveWET_SAND(x, y, temp[y][x], e);
-            continue;
-          }
-          if(e === DOUGH || e === BREAD){
-            moveDoughBread(x, y, temp[y][x], e);
-            continue;
-          }
-          if(e === WATER){
-            moveLikeLiquid(x, y, temp[y][x], WATER);
-            continue;
-          }
-          if(e === LAVA){
-            if(Math.random() < 0.5) continue;
-            moveLikeLiquid(x, y, temp[y][x], LAVA);
-            continue;
-          }
-          if(e === WATER_VAPOR){
-            vaporLife[y][x] += simulationTimeStep;
-            moveVaporUp(x, y, temp[y][x]);
-            continue;
-          }
-          if(e === CLOUD){
-            cloudLife[y][x] += simulationTimeStep;
-            moveCloud(x, y, temp[y][x]);
-            continue;
-          }
-          if(e === FIRE){
-            fireLife[y][x] += simulationTimeStep;
-            moveFire(x, y, temp[y][x]);
-            continue;
-          }
-          if(e === SMOKE){
-            smokeLife[y][x] += simulationTimeStep;
-            moveSmoke(x, y, temp[y][x]);
-            continue;
-          }
-          if(e === GAS || e === BURNING_GAS){
-            moveGasElement(x, y, temp[y][x], e);
-            continue;
+              break;
+
+            case SAND:
+            case ASH:
+            case THERMITE:
+            case BOMB:
+            case DIRT:
+            case WET_DIRT:
+            case WHEAT_SEEDS:
+            case FLOUR:
+            case DEAD_PLANT:
+            case GRASS:
+            case COAL_LUMP:
+            case COBBLESTONE:
+              moveLikePowder(x, y, temp[y][x], e);
+              break;
+
+            case WATER:
+              moveLikeLiquid(x, y, temp[y][x], WATER);
+              break;
+
+            case OIL:
+              moveOil(x, y, temp[y][x]);
+              break;
+
+            case LAVA:
+            case MOLTEN_SLAG:
+              if(Math.random() < 0.5) continue;
+              moveLikeLiquid(x, y, temp[y][x], LAVA);
+              break;
+
+            case WATER_VAPOR:
+              vaporLife[y][x] += simulationTimeStep;
+              moveVaporUp(x, y, temp[y][x]);
+              break;
+
+            case CLOUD:
+              cloudLife[y][x] += simulationTimeStep;
+              moveCloud(x, y, temp[y][x]);
+              break;
+
+            case FIRE:
+              fireLife[y][x] += simulationTimeStep;
+              moveFire(x, y, temp[y][x]);
+              break;
+
+            case SMOKE:
+              smokeLife[y][x] += simulationTimeStep;
+              moveSmoke(x, y, temp[y][x]);
+              break;
+
+            case GAS:
+            case BURNING_GAS:
+            case CARBON_DIOXIDE:
+            case OXYGEN:
+              moveGasElement(x, y, temp[y][x], e);
+              break;
+
+            case ACID:
+              moveAcid(x, y, temp[y][x]);
+              break;
+
+            case SLIME:
+              moveSlime(x, y, temp[y][x]);
+              break;
+
+            case BIRD:
+              moveBird(x, y, temp[y][x]);
+              break;
+
+            case MEAT:
+            case COOKED_MEAT:
+              if (y+1 < GRID_SIZE && grid[y+1][x] === EMPTY && !moved[y+1][x]) {
+                moveCell(x, y, x, y+1, temp[y][x], e);
+              }
+              break;
           }
         }
       }
@@ -1436,7 +1912,7 @@
         for(let dir of dirs){
           let nx = x + dir, ny = y;
           if(grid[ny][nx] === EMPTY && !moved[ny][nx]){
-            moveCell(x, y, nx, ny, oldT, elem);
+            moveCell(x, y, nx, y, oldT, elem);
             return;
           }
         }
@@ -1699,6 +2175,140 @@
       handleElectricalElements();
       handleCoolerHeater();
       handleCloners();
+      transformThermite();
+      transformGrass();
+      
+      // Handle new elements
+      for(let y = 0; y < GRID_SIZE; y++){
+        for(let x = 0; x < GRID_SIZE; x++){
+          let e = grid[y][x];
+          
+          // Handle meat cooking
+          if(e === MEAT && temp[y][x] >= doughBakeTemp){
+            grid[y][x] = COOKED_MEAT;
+            temp[y][x] = 30;
+          }
+          
+          // Handle bird cooking
+          if(e === BIRD && temp[y][x] >= doughBakeTemp){
+            grid[y][x] = COOKED_MEAT;
+            temp[y][x] = 30;
+          }
+          
+          // Handle cobblestone melting
+          if(e === COBBLESTONE && temp[y][x] >= 800){
+            grid[y][x] = MOLTEN_SLAG;
+            temp[y][x] = 1200;
+          }
+          
+          // Handle oil ignition
+          if(e === OIL){
+            let shouldIgnite = false;
+            if(temp[y][x] >= 200) shouldIgnite = true;
+            
+            let neighbors = [[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]];
+            for(let [dx, dy] of neighbors){
+              let nx = x + dx, ny = y + dy;
+              if(nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE){
+                let ne = grid[ny][nx];
+                if(ne === FIRE || ne === BURNING_WOOD || ne === BURNING_ORGANIC || 
+                   ne === BURNING_LEAVES || ne === BURNING_COAL || ne === BURNING_COAL_LUMP ||
+                   ne === BURNING_GAS){  // Added burning gas check
+                  shouldIgnite = true;
+                  break;
+                }
+              }
+            }
+            
+            if(shouldIgnite){
+              grid[y][x] = BURNING_GAS;
+              temp[y][x] = fireTemperature;
+              burningGasTime[y][x] = 0;
+            }
+          }
+          
+          // Handle Carbon Dioxide transformation
+          if(e === CARBON_DIOXIDE){
+            let neighbors = [[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]];
+            for(let [dx, dy] of neighbors){
+              let nx = x + dx, ny = y + dy;
+              if(nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE){
+                let ne = grid[ny][nx];
+                if(ne === WHEAT || ne === GRASS || ne === OAK_LEAVES || 
+                   ne === OAK_BABY_LEAVES || ne === WHEAT_SEEDS){
+                  grid[y][x] = OXYGEN;
+                  temp[y][x] = 20;
+                  break;
+                }
+              }
+            }
+          }
+          
+          // Handle Oxygen reactions
+          if(e === OXYGEN){
+            let shouldIgnite = false;
+            let neighbors = [[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]];
+            
+            // Check for burning elements
+            for(let [dx, dy] of neighbors){
+              let nx = x + dx, ny = y + dy;
+              if(nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE){
+                let ne = grid[ny][nx];
+                if(ne === FIRE || ne === BURNING_WOOD || ne === BURNING_ORGANIC || 
+                   ne === BURNING_LEAVES || ne === BURNING_COAL || ne === BURNING_COAL_LUMP ||
+                   ne === BURNING_GAS){  // Added burning gas check
+                  shouldIgnite = true;
+                  break;
+                }
+                // Check for birds (convert to CO2)
+                if(ne === BIRD){
+                  grid[y][x] = CARBON_DIOXIDE;
+                  temp[y][x] = 20;
+                  break;
+                }
+              }
+            }
+            
+            if(shouldIgnite){
+              grid[y][x] = FIRE;
+              temp[y][x] = 500;
+              fireLife[y][x] = 0;
+            }
+          }
+        }
+      }
+    }
+    // New transformation for Thermite:
+    function transformThermite(){
+      for(let y = 0; y < GRID_SIZE; y++){
+        for(let x = 0; x < GRID_SIZE; x++){
+          if(grid[y][x] === THERMITE){
+            let ignite = false;
+            if(temp[y][x] >= 600) ignite = true;
+            let neighbors = [[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]];
+            for(let [dx,dy] of neighbors){
+              let nx = x + dx, ny = y + dy;
+              if(nx>=0 && nx<GRID_SIZE && ny>=0 && ny<GRID_SIZE){
+                let adj = grid[ny][nx];
+                if(adj === SPARK || adj === FIRE || adj === BURNING_THERMITE){
+                  ignite = true;
+                  break;
+                }
+              }
+            }
+            if(ignite){
+              grid[y][x] = BURNING_THERMITE;
+              temp[y][x] = 3000;
+            }
+          }
+          else if(grid[y][x] === BURNING_THERMITE){
+            if(temp[y][x] < 1000){
+              grid[y][x] = LAVA;
+              temp[y][x] = 1200;
+            }
+          }
+        }
+      }
     }
     function igniteFlammable(x, y){
       if(x < 0 || x >= GRID_SIZE || y < 0 || y >= GRID_SIZE) return;
@@ -2727,6 +3337,40 @@
       }
     }
     /*******************************************
+     * New Transformation: Thermite
+     *******************************************/
+    function transformThermite(){
+      for(let y = 0; y < GRID_SIZE; y++){
+        for(let x = 0; x < GRID_SIZE; x++){
+          if(grid[y][x] === THERMITE){
+            let ignite = false;
+            if(temp[y][x] >= 600) ignite = true;
+            let nb = [[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]];
+            for(let [dx,dy] of nb){
+              let nx = x+dx, ny = y+dy;
+              if(nx>=0 && nx<GRID_SIZE && ny>=0 && ny<GRID_SIZE){
+                let adj = grid[ny][nx];
+                if(adj === SPARK || adj === FIRE || adj === BURNING_THERMITE){
+                  ignite = true;
+                  break;
+                }
+              }
+            }
+            if(ignite){
+              grid[y][x] = BURNING_THERMITE;
+              temp[y][x] = 3000;
+            }
+          }
+          else if(grid[y][x] === BURNING_THERMITE){
+            if(temp[y][x] < 1000){
+              grid[y][x] = LAVA;
+              temp[y][x] = 1200;
+            }
+          }
+        }
+      }
+    }
+    /*******************************************
      * CATEGORY / SEARCH FILTERING
      *******************************************/
     categoryButtons.forEach(btn => {
@@ -2740,15 +3384,621 @@
     toolSearch.addEventListener('input', filterTools);
     function filterTools(){
       const searchVal = toolSearch.value.trim().toLowerCase();
+      
       Array.from(toolElements).forEach(tool => {
         const toolName = tool.getAttribute('data-tool') || '';
         const cats = (tool.getAttribute('data-cat') || '').toLowerCase().split(',');
-        let inCat = activeCategory === 'all' || cats.includes(activeCategory);
+        
+        // Tools only show in tools tab
+        let inCat = (activeCategory === 'all' && !cats.includes('tools')) || cats.includes(activeCategory);
         let inSearch = !searchVal || toolName.toLowerCase().includes(searchVal);
+        
         tool.style.display = (inCat && inSearch) ? 'flex' : 'none';
       });
     }
     filterTools();
+
+    // Add acid and slime movement functions
+    function moveAcid(x, y, oldT) {
+      if (y+1 < GRID_SIZE && [EMPTY, WATER_VAPOR, CLOUD].includes(grid[y+1][x]) && !moved[y+1][x]) {
+        moveCell(x, y, x, y+1, oldT, ACID);
+      } else {
+        let dirs = [];
+        if (x > 0 && grid[y][x-1] === EMPTY && !moved[y][x-1]) dirs.push(-1);
+        if (x < GRID_SIZE-1 && grid[y][x+1] === EMPTY && !moved[y][x+1]) dirs.push(1);
+        shuffle(dirs);
+        for (let dir of dirs) {
+          let nx = x + dir;
+          if (grid[y][nx] === EMPTY && !moved[y][nx]) {
+            moveCell(x, y, nx, y, oldT, ACID);
+            return;
+          }
+        }
+        
+        // Destroy adjacent non-cloner elements with updated behavior
+        let neighbors = [[1,0],[-1,0],[0,1],[0,-1]];
+        for (let [dx, dy] of neighbors) {
+          let nx = x + dx, ny = y + dy;
+          if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {
+            if (grid[ny][nx] !== EMPTY && grid[ny][nx] !== ACID && 
+                grid[ny][nx] !== CLONER && grid[ny][nx] !== ACID_STEAM && 
+                grid[ny][nx] !== ACID_CLOUD) {
+              if (Math.random() < 0.1) {
+                eraseCell(nx, ny);
+                // 1/4 chance to delete itself when deleting another element
+                if (Math.random() < 0.25) {
+                  eraseCell(x, y);
+                  return;
+                }
+              }
+            }
+          }
+        }
+        
+        // Evaporation
+        if (temp[y][x] >= 100 && Math.random() < 0.1) {
+          grid[y][x] = ACID_STEAM;
+          temp[y][x] = 120;
+        }
+      }
+    }
+
+    function moveSlime(x, y, oldT) {
+      if (Math.random() < 0.1) { // Very slow movement
+        if (y+1 < GRID_SIZE && grid[y+1][x] === EMPTY && !moved[y+1][x]) {
+          moveCell(x, y, x, y+1, oldT, SLIME);
+        } else {
+          let dirs = [];
+          if (x > 0 && grid[y][x-1] === EMPTY && !moved[y][x-1]) dirs.push(-1);
+          if (x < GRID_SIZE-1 && grid[y][x+1] === EMPTY && !moved[y][x+1]) dirs.push(1);
+          shuffle(dirs);
+          for (let dir of dirs) {
+            let nx = x + dir;
+            if (grid[y][nx] === EMPTY && !moved[y][nx]) {
+              moveCell(x, y, nx, y, oldT, SLIME);
+              return;
+            }
+          }
+        }
+      }
+    }
+
+    // Add to conductionRates
+    conductionRates[ACID] = 0.8;
+    conductionRates[ACID_STEAM] = 0.6;
+    conductionRates[ACID_CLOUD] = 0.3;
+    conductionRates[SLIME] = 0.4;
+
+    // Add to heatCapacities
+    heatCapacities[ACID] = 1;
+    heatCapacities[ACID_STEAM] = 0.5;
+    heatCapacities[ACID_CLOUD] = 0.5;
+    heatCapacities[SLIME] = 2;
+
+    function transformGrass() {
+      for (let y = 0; y < GRID_SIZE; y++) {
+        for (let x = 0; x < GRID_SIZE; x++) {
+          if (grid[y][x] === GRASS) {
+            // Check temperature
+            if (temp[y][x] >= 200) {
+              grid[y][x] = BURNING_ORGANIC;
+              temp[y][x] = fireTemperature;
+              burningWoodTime[y][x] = 0;
+            }
+            // Check for nearby fire
+            let neighbors = [[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]];
+            for (let [dx, dy] of neighbors) {
+              let nx = x + dx, ny = y + dy;
+              if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {
+                if (grid[ny][nx] === FIRE || grid[ny][nx] === BURNING_ORGANIC) {
+                  grid[y][x] = BURNING_ORGANIC;
+                  temp[y][x] = fireTemperature;
+                  burningWoodTime[y][x] = 0;
+                  break;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // Initialize debug elements after DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      const debugTab = document.querySelector('button[data-category="debug"]');
+      if (debugTab) debugTab.style.display = 'none';
+      
+      const debugElements = document.querySelectorAll('.tool[data-cat*="debug"]');
+      debugElements.forEach(elem => {
+        elem.style.display = 'none';
+      });
+
+      // Add downloadOfflineBtn event listener here
+      const downloadOfflineBtn = document.getElementById('downloadOfflineBtn');
+      if (downloadOfflineBtn) {
+        downloadOfflineBtn.addEventListener('click', function() {
+          const htmlContent = document.documentElement.outerHTML;
+          const blob = new Blob([htmlContent], { type: 'text/html' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'sandbox_game.html';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        });
+      }
+    });
+
+    // Add to global variables
+    let targetFps = 0;
+    let popOutWindow = null;
+
+    // Add event handlers
+    document.getElementById('downloadOfflineBtn').addEventListener('click', function() {
+      const htmlContent = document.documentElement.outerHTML;
+      const blob = new Blob([htmlContent], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'sandbox_game.html';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+
+    document.getElementById('dabyFps').addEventListener('change', function(e) {
+      targetFps = parseInt(e.target.value);
+    });
+
+    document.getElementById('popOutMode').addEventListener('change', function(e) {
+      if (parseInt(e.target.value) === 1) {
+        if (!popOutWindow || popOutWindow.closed) {
+          popOutWindow = window.open('', 'GameWindow', 'width=800,height=600');
+          const popOutDoc = popOutWindow.document;
+          
+          // Create pop-out window content
+          popOutDoc.write(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+              <style>
+                body { margin: 0; background: #222; overflow: hidden; }
+                #popOutGrid { width: 100%; height: 100%; }
+              </style>
+            </head>
+            <body>
+              <div id="popOutGrid"></div>
+            </body>
+            </html>
+          `);
+          
+          // Move grid to pop-out window
+          const originalGrid = document.getElementById('grid');
+          popOutDoc.getElementById('popOutGrid').appendChild(originalGrid);
+          
+          // Handle window resize
+          popOutWindow.addEventListener('resize', function() {
+            const size = Math.min(popOutWindow.innerWidth, popOutWindow.innerHeight) - 20;
+            originalGrid.style.width = size + 'px';
+            originalGrid.style.height = size + 'px';
+          });
+          
+          // Handle window close
+          popOutWindow.addEventListener('unload', function() {
+            if (!popOutWindow.closed) {
+              document.getElementById('mainContainer').insertBefore(originalGrid, document.getElementById('sidePanel'));
+              originalGrid.style.width = '500px';
+              originalGrid.style.height = '500px';
+              document.getElementById('popOutMode').value = "0";
+            }
+          });
+        }
+      } else {
+        if (popOutWindow && !popOutWindow.closed) {
+          popOutWindow.close();
+        }
+      }
+    });
+
+    function moveBird(x, y, oldT) {
+      if (moved[y][x]) return;
+      
+      birdTimers[y][x] += simulationTimeStep;
+      
+      // Change direction randomly
+      if (birdTimers[y][x] >= 1.0) {
+        if (Math.random() < 0.2) {
+          birdDirections[y][x] *= -1;
+        }
+        if (Math.random() < 0.1) {
+          birdYMovement[y][x] = Math.floor(Math.random() * 3) - 1; // -1, 0, or 1
+        } else {
+          birdYMovement[y][x] = 0;
+        }
+        birdTimers[y][x] = 0;
+      }
+
+      // Try to move in current direction
+      let nx = x + birdDirections[y][x];
+      let ny = y + birdYMovement[y][x];
+
+      // Check boundaries and wrap around if needed
+      if (nx < 0) nx = GRID_SIZE - 1;
+      if (nx >= GRID_SIZE) nx = 0;
+      if (ny < 0 || ny >= GRID_SIZE) {
+        ny = y;
+        birdYMovement[y][x] = 0;
+      }
+
+      // Check for oak leaves to eat
+      let foundLeaves = false;
+      for (let dy = -1; dy <= 1; dy++) {
+        for (let dx = -1; dx <= 1; dx++) {
+          let checkX = x + dx, checkY = y + dy;
+          if (checkX >= 0 && checkX < GRID_SIZE && checkY >= 0 && checkY < GRID_SIZE) {
+            if (grid[checkY][checkX] === OAK_LEAVES || grid[checkY][checkX] === OAK_BABY_LEAVES) {
+              eraseCell(checkX, checkY);
+              foundLeaves = true;
+            }
+          }
+        }
+      }
+
+      // Move if possible
+      if (grid[ny][nx] === EMPTY && !moved[ny][nx]) {
+        moveCell(x, y, nx, ny, oldT, BIRD);
+        birdDirections[ny][nx] = birdDirections[y][x];
+        birdTimers[ny][nx] = birdTimers[y][x];
+        birdYMovement[ny][nx] = birdYMovement[y][x];
+      }
+    }
+
+    function moveOil(x, y, oldT) {
+      if (moved[y][x]) return;
+      
+      if (y+1 < GRID_SIZE && grid[y+1][x] === EMPTY && !moved[y+1][x]) {
+        moveCell(x, y, x, y+1, oldT, OIL);
+      } else if (y+1 < GRID_SIZE && grid[y+1][x] === WATER && !moved[y+1][x]) {
+        // Oil floats on water
+        let tempWater = temp[y+1][x];
+        grid[y+1][x] = OIL;
+        temp[y+1][x] = oldT;
+        grid[y][x] = WATER;
+        temp[y][x] = tempWater;
+        moved[y+1][x] = true;
+      } else {
+        let dirs = [];
+        if (x > 0 && grid[y][x-1] === EMPTY && !moved[y][x-1]) dirs.push(-1);
+        if (x < GRID_SIZE-1 && grid[y][x+1] === EMPTY && !moved[y][x+1]) dirs.push(1);
+        shuffle(dirs);
+        for (let dir of dirs) {
+          let nx = x + dir;
+          if (grid[y][nx] === EMPTY && !moved[y][nx]) {
+            moveCell(x, y, nx, y, oldT, OIL);
+            return;
+          }
+        }
+      }
+    }
+
+    gridContainer.addEventListener('mousedown', onMouseDown);
+    gridContainer.addEventListener('mouseup', onMouseUp);
+    gridContainer.addEventListener('contextmenu', e => e.preventDefault());
+    gridContainer.addEventListener('auxclick', e => {
+      if (e.button === 1) { // Middle click
+        e.preventDefault();
+        const { x, y } = getMousePos(e);
+        const element = grid[y][x];
+        if (element === EMPTY) return;
+
+        // Find the tool element for this element
+        const tools = Array.from(toolElements);
+        for (const tool of tools) {
+          if (getToolElementId(tool.getAttribute('data-tool')) === element) {
+            // Select the tool
+            selectTool(tool);
+            
+            // Find its category
+            const category = tool.getAttribute('data-cat');
+            if (category) {
+              // Select the category
+              const categoryButtons = document.querySelectorAll('#categoryMenu button');
+              categoryButtons.forEach(btn => {
+                if (btn.getAttribute('data-category') === category) {
+                  btn.click();
+                  
+                  // Wait for DOM update then scroll tool into view
+                  setTimeout(() => {
+                    tool.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  }, 100);
+                }
+              });
+            }
+            break;
+          }
+        }
+      }
+    });
+
+    // Helper function to get element ID from tool name
+    function getToolElementId(toolName) {
+      switch(toolName) {
+        case "eraser": return ERASER;
+        case "sand": return SAND;
+        case "wall": return WALL;
+        case "water": return WATER;
+        case "lava": return LAVA;
+        case "stone": return STONE;
+        case "water-vapor": return WATER_VAPOR;
+        case "copper": return COPPER;
+        case "steel": return STEEL;
+        case "ice": return ICE;
+        case "wood": return WOOD;
+        case "fire": return FIRE;
+        case "smoke": return SMOKE;
+        case "ash": return ASH;
+        case "glass": return GLASS;
+        case "bomb": return BOMB;
+        case "dirt": return DIRT;
+        case "wet-dirt": return WET_DIRT;
+        case "wheat-seeds": return WHEAT_SEEDS;
+        case "flour": return FLOUR;
+        case "dough": return DOUGH;
+        case "bread": return BREAD;
+        case "plant-root": return ROOT;
+        case "spark": return SPARK;
+        case "oak-seeds": return OAK_SEEDS;
+        case "grass": return GRASS;
+        case "gas": return GAS;
+        case "cooler": return COOLER;
+        case "heater": return HEATER;
+        case "heat-separator": return HEAT_SEPARATOR;
+        case "input": return INPUT;
+        case "output": return OUTPUT;
+        case "not-gate": return NOT_GATE;
+        case "and-gate": return AND_GATE;
+        case "blocker": return BLOCKER;
+        case "cloner": return CLONER;
+        case "coal": return COAL;
+        case "coal-lump": return COAL_LUMP;
+        case "thermite": return THERMITE;
+        case "acid": return ACID;
+        case "slime": return SLIME;
+        case "carbon-dioxide": return CARBON_DIOXIDE;
+        case "oxygen": return OXYGEN;
+        case "bird": return BIRD;
+        case "meat": return MEAT;
+        case "cooked-meat": return COOKED_MEAT;
+        case "cobblestone": return COBBLESTONE;
+        case "oil": return OIL;
+        case "example-element": return EXAMPLE_ELEMENT;
+        default: return null;
+      }
+    }
+
+    // Add touch support
+    let lastTouchX = null;
+    let lastTouchY = null;
+
+    gridContainer.addEventListener('touchstart', function(e) {
+      e.preventDefault();
+      const touch = e.touches[0];
+      const { x, y } = getMousePos(touch);
+      lastTouchX = x;
+      lastTouchY = y;
+      isLeftMouseDown = true;
+      spamPlace();
+    });
+
+    gridContainer.addEventListener('touchmove', function(e) {
+      e.preventDefault();
+      const touch = e.touches[0];
+      const { x, y } = getMousePos(touch);
+      if (x !== lastTouchX || y !== lastTouchY) {
+        hoveredX = x;
+        hoveredY = y;
+        lastTouchX = x;
+        lastTouchY = y;
+        spamPlace();
+      }
+    });
+
+    gridContainer.addEventListener('touchend', function(e) {
+      e.preventDefault();
+      isLeftMouseDown = false;
+      hoveredX = null;
+      hoveredY = null;
+      lastTouchX = null;
+      lastTouchY = null;
+      hudTemp.textContent = "Temp: -- °C";
+      hudElem.textContent = "Element: --";
+      hudFPS.textContent = "FPS: --";
+      hoverOverlay.style.display = "none";
+    });
+
+    // Update getMousePos to support touch events
+    function getMousePos(e) {
+      const cellSize = gridContainer.clientWidth / GRID_SIZE;
+      let rect = gridContainer.getBoundingClientRect();
+      let clientX = e.clientX || e.touches[0].clientX;
+      let clientY = e.clientY || e.touches[0].clientY;
+      let px = Math.floor((clientX - rect.left) / cellSize);
+      let py = Math.floor((clientY - rect.top) / cellSize);
+      return { x: Math.max(0, Math.min(GRID_SIZE - 1, px)), y: Math.max(0, Math.min(GRID_SIZE - 1, py)) };
+    }
+
+    // Initialize dynamic lighting system
+    window.isDynamicLightingEnabled = false;
+    window.lightLevels = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(0));
+    window.lightColors = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(null));
+
+    // Add light-emitting properties for elements
+    window.lightEmitters = {
+      [LAVA]: { intensity: 1.0, color: '#ff4500' },
+      [FIRE]: { intensity: 0.8, color: '#ffcc00' },
+      [BURNING_WOOD]: { intensity: 0.6, color: '#ff4500' },
+      [BURNING_ORGANIC]: { intensity: 0.6, color: '#ff4500' },
+      [BURNING_LEAVES]: { intensity: 0.6, color: '#ff4500' },
+      [BURNING_ROOT]: { intensity: 0.6, color: '#ff4500' },
+      [BURNING_COAL]: { intensity: 0.7, color: '#ff4500' },
+      [BURNING_COAL_LUMP]: { intensity: 0.7, color: '#ff4500' },
+      [BURNING_THERMITE]: { intensity: 1.0, color: '#ffc31f' },
+      [BURNING_GAS]: { intensity: 0.5, color: '#ff6666' },
+      [CHARGED_COPPER]: { intensity: 0.4, color: '#ff8c00' },
+      [CHARGED_DOWN_COPPER]: { intensity: 0.3, color: '#cc6600' },
+      [SPARK]: { intensity: 0.9, color: '#ffdd00' },
+      [CHARGED_HEAT_SEPARATOR]: { intensity: 0.4, color: '#ffe033' },
+      [CHARGED_DOWN_HEAT_SEPARATOR]: { intensity: 0.3, color: '#ffd700' },
+      [CHARGED_INPUT]: { intensity: 0.4, color: '#ffff77' },
+      [CHARGED_OUTPUT]: { intensity: 0.4, color: '#8888ff' },
+      [MOLTEN_SLAG]: { intensity: 0.8, color: '#ff4500' }
+    };
+
+    // Add lighting calculation function
+    function calculateLighting() {
+      if (!window.isDynamicLightingEnabled) return;
+      
+      // Reset light levels
+      for (let y = 0; y < GRID_SIZE; y++) {
+        for (let x = 0; x < GRID_SIZE; x++) {
+          window.lightLevels[y][x] = 0;
+          window.lightColors[y][x] = null;
+        }
+      }
+
+      // Calculate light emission
+      for (let y = 0; y < GRID_SIZE; y++) {
+        for (let x = 0; x < GRID_SIZE; x++) {
+          const element = grid[y][x];
+          const emitter = window.lightEmitters[element];
+          
+          if (emitter) {
+            // Spread light in a radius
+            const radius = Math.floor(emitter.intensity * 5);
+            for (let dy = -radius; dy <= radius; dy++) {
+              for (let dx = -radius; dx <= radius; dx++) {
+                const nx = x + dx;
+                const ny = y + dy;
+                if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {
+                  const distance = Math.sqrt(dx * dx + dy * dy);
+                  if (distance <= radius) {
+                    const intensity = (1 - distance / radius) * emitter.intensity;
+                    window.lightLevels[ny][nx] = Math.max(window.lightLevels[ny][nx], intensity);
+                    if (!window.lightColors[ny][nx]) window.lightColors[ny][nx] = emitter.color;
+                    else {
+                      // Mix colors based on intensity
+                      const currentColor = window.lightColors[ny][nx];
+                      const r1 = parseInt(currentColor.slice(1, 3), 16);
+                      const g1 = parseInt(currentColor.slice(3, 5), 16);
+                      const b1 = parseInt(currentColor.slice(5, 7), 16);
+                      const r2 = parseInt(emitter.color.slice(1, 3), 16);
+                      const g2 = parseInt(emitter.color.slice(3, 5), 16);
+                      const b2 = parseInt(emitter.color.slice(5, 7), 16);
+                      const mix = intensity / (window.lightLevels[ny][nx] + intensity);
+                      const r = Math.round(r1 * (1 - mix) + r2 * mix);
+                      const g = Math.round(g1 * (1 - mix) + g2 * mix);
+                      const b = Math.round(b1 * (1 - mix) + b2 * mix);
+                      window.lightColors[ny][nx] = `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // Modify renderCell to include lighting
+    const originalRenderCell = window.renderCell;
+    window.renderCell = function(x, y) {
+      originalRenderCell(x, y);
+      const cell = cells[y][x];
+      
+      if (window.isDynamicLightingEnabled && window.lightLevels[y][x] > 0) {
+        cell.classList.add('lit');
+        const element = grid[y][x];
+        
+        if (element === GLASS) {
+          // Glass reflects nearby light with a slight tint
+          const color = window.lightColors[y][x];
+          const intensity = window.lightLevels[y][x];
+          cell.style.backgroundColor = color;
+          cell.style.opacity = intensity * 0.3;
+        } else if (element === EMPTY) {
+          // Empty cells show light more prominently
+          const color = window.lightColors[y][x];
+          cell.style.backgroundColor = color;
+          cell.style.opacity = window.lightLevels[y][x] * 0.2;
+        } else {
+          // Other cells get a slight glow effect
+          const lightColor = window.lightColors[y][x];
+          if (lightColor) {
+            cell.style.boxShadow = `0 0 ${window.lightLevels[y][x] * 10}px ${lightColor}`;
+          }
+        }
+      } else {
+        cell.classList.remove('lit');
+        cell.style.boxShadow = '';
+      }
+    };
+
+    // Add lighting calculation to game loop
+    const originalGameLoop = window.gameLoop;
+    window.gameLoop = function(timestamp) {
+      if (window.isDynamicLightingEnabled) {
+        calculateLighting();
+      }
+      originalGameLoop(timestamp);
+    };
+
+    // Initialize dynamic lighting toggle
+    function initializeDynamicLighting() {
+      const dynamicLightingSelect = document.getElementById('dynamicLighting');
+      if (dynamicLightingSelect) {
+        dynamicLightingSelect.addEventListener('change', function(e) {
+          window.isDynamicLightingEnabled = parseInt(e.target.value) === 1;
+          alert('Dynamic Lighting ' + (window.isDynamicLightingEnabled ? 'Enabled' : 'Disabled')); // Immediate feedback
+          
+          if (!window.isDynamicLightingEnabled) {
+            // Clear all lighting effects
+            for (let y = 0; y < GRID_SIZE; y++) {
+              for (let x = 0; x < GRID_SIZE; x++) {
+                const cell = cells[y][x];
+                cell.classList.remove('lit');
+                cell.style.boxShadow = '';
+                if (grid[y][x] === EMPTY) {
+                  cell.style.backgroundColor = '';
+                  cell.style.opacity = '';
+                }
+              }
+            }
+          }
+        });
+      }
+    }
+
+    // Call initialization when document is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializeDynamicLighting);
+    } else {
+      initializeDynamicLighting();
+    }
+
+    // Add to applyOptionsButton click handler
+    document.getElementById('applyOptionsButton').addEventListener('click', function() {
+      const newSize = parseInt(document.getElementById('stageSizeSelect').value);
+      if (newSize !== GRID_SIZE) {
+        initGrid(newSize);
+        // Only reinitialize lighting arrays if size changed
+        window.lightLevels = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(0));
+        window.lightColors = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(null));
+      }
+      optionsModal.style.display = 'none';
+    });
   </script>
 
   <!-- Mod Manager Modal -->
@@ -2778,14 +4028,49 @@
     <div class="modal-content">
       <span id="closeOptionsModal" class="close">&times;</span>
       <h2>Options</h2>
-      <label for="stageSizeSelect">Stage Size:</label>
-      <select id="stageSizeSelect">
-        <option value="25">25x25x25</option>
-        <option value="50" selected>50x50x50</option>
-        <option value="75">75x75x75</option>
-        <option value="100">100x100x100</option>
-        <option value="125">125x125x125</option>
-      </select>
+      <div class="options-section">
+        <label for="stageSizeSelect">Stage Size:</label>
+        <select id="stageSizeSelect">
+          <option value="25">25x25x25</option>
+          <option value="50" selected>50x50x50</option>
+          <option value="75">75x75x75</option>
+          <option value="100">100x100x100</option>
+          <option value="125">125x125x125</option>
+        </select>
+      </div>
+      <div class="options-section">
+        <button id="downloadOfflineBtn" class="options-button">Download Offline Version</button>
+      </div>
+      <div class="options-section experimental">
+        <h3>Experimental Features</h3>
+        <div>
+          <label for="dabyFps">[BETA] DabyFPS (Stabilize Game Speed):</label>
+          <select id="dabyFps">
+            <option value="0">Off</option>
+            <option value="30">30fps</option>
+            <option value="60">60fps</option>
+            <option value="120">120fps</option>
+            <option value="180">180fps</option>
+          </select>
+        </div>
+        <div>
+          <label for="popOutMode">[BETA] Pop-Out Mode:</label>
+          <select id="popOutMode">
+            <option value="0">Off</option>
+            <option value="1">On</option>
+          </select>
+        </div>
+        <div>
+          <label for="dynamicLighting">[ALPHA] Dynamic Lighting:</label>
+          <select id="dynamicLighting" onchange="toggleDynamicLighting(this.value)">
+            <option value="0">Off</option>
+            <option value="1">On</option>
+          </select>
+        </div>
+        <div>
+          <button id="generateTerrainBtn" class="options-button" onclick="generateTerrain()">[BETA] Generate Terrain</button>
+        </div>
+      </div>
       <button id="applyOptionsButton">Apply</button>
     </div>
   </div>
@@ -2836,218 +4121,183 @@
     }
     // Add the default mod (Orange Juice mod) to the modsList.
     const orangeJuiceModCode = `(function(){
-  // ----------------------------------------------------------------------
-  // FORCE MOD IDENTIFICATION
-  // ----------------------------------------------------------------------
-  window.forcedModInfo = {
-    id: 'orangeJuiceMod',
-    title: 'Orange Juice (Acid) Mod',
-    description: 'Adds a distinct orange acid element called Orange Juice that moves like a liquid and corrodes adjacent cells, while protecting Clone cells.',
-    gameVersion: '0.4.9a'
-  };
+      // ----------------------------------------------------------------------
+      // FORCE MOD IDENTIFICATION
+      // ----------------------------------------------------------------------
+      window.forcedModInfo = {
+        id: 'exampleElementMod',
+        title: 'Example Element Mod',
+        description: 'Adds a simple example element that deletes anything it touches. Great for learning how to make mods!',
+        gameVersion: '0.5.0a'
+      };
 
-  // ----------------------------------------------------------------------
-  // DEFINE THE NEW ELEMENT CONSTANT
-  // ----------------------------------------------------------------------
-  if (typeof window.ORANGE_JUICE === 'undefined') {
-    window.ORANGE_JUICE = 67;
-  }
+      // ----------------------------------------------------------------------
+      // DEFINE THE NEW ELEMENT CONSTANT
+      // ----------------------------------------------------------------------
+      if (typeof window.EXAMPLE_ELEMENT === 'undefined') {
+        window.EXAMPLE_ELEMENT = 67;
+      }
 
-  // ----------------------------------------------------------------------
-  // INJECT CSS TO STYLE THE MOD'S TOOL AND CELLS
-  // ----------------------------------------------------------------------
-  var style = document.createElement('style');
-  style.innerHTML = \`
-    .tool.orange-juice { background-color: orange !important; }
-    .orange-juice { background-color: orange !important; }
-  \`;
-  document.head.appendChild(style);
-
-  // ----------------------------------------------------------------------
-  // SAVE ORIGINAL FUNCTIONS FOR TERMINATION
-  // ----------------------------------------------------------------------
-  if (!window.orangeJuiceModOriginals) {
-    window.orangeJuiceModOriginals = {
-      selectTool: selectTool,
-      placeElementAt: placeElementAt,
-      moveLikeLiquid: moveLikeLiquid,
-      getElementName: getElementName,
-      renderCell: renderCell,
-      performSimulationStep: performSimulationStep
-    };
-  }
-
-  // ----------------------------------------------------------------------
-  // CREATE THE MOD TOOL BUTTON
-  // ----------------------------------------------------------------------
-  var ojTool = document.createElement('div');
-  ojTool.className = 'tool orange-juice';
-  ojTool.setAttribute('data-tool', 'orange-juice');
-  ojTool.setAttribute('data-cat', 'liquids');
-  ojTool.title = 'Orange Juice (Acid)';
-  var span = document.createElement('span');
-  span.textContent = 'OJ';
-  ojTool.appendChild(span);
-  toolbar.appendChild(ojTool);
-  ojTool.addEventListener('click', function(){
-    selectTool(ojTool);
-  });
-
-  // ----------------------------------------------------------------------
-  // PATCH THE selectTool FUNCTION
-  // ----------------------------------------------------------------------
-  selectTool = function(el) {
-    var toolName = el.getAttribute('data-tool');
-    if (toolName === 'orange-juice') {
-      currentTool = ORANGE_JUICE;
-      Array.from(toolElements).forEach(function(t){ t.classList.remove('selected'); });
-      el.classList.add('selected');
-    } else {
-      window.orangeJuiceModOriginals.selectTool(el);
-    }
-  };
-
-  // ----------------------------------------------------------------------
-  // PATCH THE placeElementAt FUNCTION
-  // ----------------------------------------------------------------------
-  placeElementAt = function(x, y, tool) {
-    if (tool === ORANGE_JUICE) {
-      eraseCell(x, y);
-      grid[y][x] = ORANGE_JUICE;
-      temp[y][x] = 20;
-    } else {
-      window.orangeJuiceModOriginals.placeElementAt(x, y, tool);
-    }
-  };
-
-  // ----------------------------------------------------------------------
-  // DEFINE A CUSTOM MOVEMENT FUNCTION FOR ORANGE_JUICE
-  // ----------------------------------------------------------------------
-  function moveOrangeJuice(x, y, oldT) {
-    if (y+1 < GRID_SIZE && [EMPTY, WATER_VAPOR, CLOUD].includes(grid[y+1][x]) && !moved[y+1][x]) {
-      let below = grid[y+1][x];
-      if (below === CLOUD) {
-        grid[y+1][x] = ORANGE_JUICE;
-        temp[y+1][x] = oldT;
-        grid[y][x] = CLOUD;
-        temp[y][x] = 50;
-        cloudLife[y][x] = 0;
-        moved[y+1][x] = true;
-        return;
-      } else if (below === WATER_VAPOR) {
-        if (y > 0 && grid[y-1][x] === EMPTY && !moved[y-1][x]) {
-          grid[y-1][x] = WATER_VAPOR;
-          temp[y-1][x] = temp[y+1][x];
-          moved[y-1][x] = true;
+      // ----------------------------------------------------------------------
+      // INJECT CSS TO STYLE THE MOD'S TOOL AND CELLS
+      // ----------------------------------------------------------------------
+      var style = document.createElement('style');
+      style.innerHTML = \`
+        .tool.example-element { 
+          background: linear-gradient(45deg, #ff00ff, #00ffff) !important;
+          border: 2px solid white !important;
         }
-        moveCell(x, y, x, y+1, oldT, ORANGE_JUICE);
-      } else {
-        moveCell(x, y, x, y+1, oldT, ORANGE_JUICE);
-      }
-    } else {
-      let dirs = [];
-      if (x > 0 && grid[y][x-1] === EMPTY && !moved[y][x-1]) dirs.push(-1);
-      if (x < GRID_SIZE-1 && grid[y][x+1] === EMPTY && !moved[y][x+1]) dirs.push(1);
-      shuffle(dirs);
-      if (dirs.length > 0) {
-        moveCell(x, y, x + dirs[0], y, oldT, ORANGE_JUICE);
-        return;
-      }
-      let diag = [];
-      if (x > 0 && y+1 < GRID_SIZE && grid[y+1][x-1] === EMPTY && !moved[y+1][x-1]) diag.push(-1);
-      if (x < GRID_SIZE-1 && y+1 < GRID_SIZE && grid[y+1][x+1] === EMPTY && !moved[y+1][x+1]) diag.push(1);
-      shuffle(diag);
-      if (diag.length > 0) {
-        moveCell(x, y, x + diag[0], y+1, oldT, ORANGE_JUICE);
-        return;
-      }
-    }
-  }
+        .example-element { 
+          background: linear-gradient(45deg, #ff00ff, #00ffff) !important;
+          border: 2px solid white !important;
+        }
+      \`;
+      document.head.appendChild(style);
 
-  // ----------------------------------------------------------------------
-  // PATCH THE moveLikeLiquid FUNCTION
-  // ----------------------------------------------------------------------
-  moveLikeLiquid = function(x, y, oldT, elem) {
-    if (elem === ORANGE_JUICE) {
-      moveOrangeJuice(x, y, oldT);
-      var directions = [[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]];
-      directions.forEach(function(dir) {
-        var nx = x + dir[0], ny = y + dir[1];
-        if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {
-          if (grid[ny][nx] !== EMPTY &&
-              grid[ny][nx] !== ORANGE_JUICE &&
-              grid[ny][nx] !== WATER &&
-              grid[ny][nx] !== CLONER) {
-            eraseCell(nx, ny);
+      // ----------------------------------------------------------------------
+      // SAVE ORIGINAL FUNCTIONS FOR TERMINATION
+      // ----------------------------------------------------------------------
+      if (!window.exampleElementModOriginals) {
+        window.exampleElementModOriginals = {
+          selectTool: selectTool,
+          placeElementAt: placeElementAt,
+          getElementName: getElementName,
+          renderCell: renderCell,
+          performSimulationStep: performSimulationStep
+        };
+      }
+
+      // ----------------------------------------------------------------------
+      // CREATE THE MOD TOOL BUTTON
+      // ----------------------------------------------------------------------
+      var exampleTool = document.createElement('div');
+      exampleTool.className = 'tool example-element';
+      exampleTool.setAttribute('data-tool', 'example-element');
+      exampleTool.setAttribute('data-cat', 'special');
+      exampleTool.title = 'Example Element';
+      var span = document.createElement('span');
+      span.textContent = 'EX';
+      exampleTool.appendChild(span);
+      toolbar.appendChild(exampleTool);
+      exampleTool.addEventListener('click', function(){
+        selectTool(exampleTool);
+      });
+
+      // ----------------------------------------------------------------------
+      // PATCH THE selectTool FUNCTION
+      // ----------------------------------------------------------------------
+      selectTool = function(el) {
+        var toolName = el.getAttribute('data-tool');
+        if (toolName === 'example-element') {
+          currentTool = EXAMPLE_ELEMENT;
+          Array.from(toolElements).forEach(function(t){ t.classList.remove('selected'); });
+          el.classList.add('selected');
+        } else {
+          window.exampleElementModOriginals.selectTool(el);
+        }
+      };
+
+      // ----------------------------------------------------------------------
+      // PATCH THE placeElementAt FUNCTION
+      // ----------------------------------------------------------------------
+      placeElementAt = function(x, y, tool) {
+        if (tool === EXAMPLE_ELEMENT) {
+          eraseCell(x, y);
+          grid[y][x] = EXAMPLE_ELEMENT;
+          temp[y][x] = 20;
+        } else {
+          window.exampleElementModOriginals.placeElementAt(x, y, tool);
+        }
+      };
+
+      // ----------------------------------------------------------------------
+      // PATCH getElementName TO SHOW EXAMPLE ELEMENT
+      // ----------------------------------------------------------------------
+      getElementName = function(e) {
+        if (e === EXAMPLE_ELEMENT) return "Example Element";
+        return window.exampleElementModOriginals.getElementName(e);
+      };
+
+      // ----------------------------------------------------------------------
+      // PATCH renderCell TO RENDER EXAMPLE ELEMENT CELLS
+      // ----------------------------------------------------------------------
+      renderCell = function(x, y) {
+        const cell = cells[y][x];
+        cell.className = 'cell';
+        cell.style.opacity = "";
+        cell.style.backgroundColor = "";
+        var e = grid[y][x];
+        if (e === EXAMPLE_ELEMENT) {
+          cell.classList.add('example-element');
+        } else {
+          window.exampleElementModOriginals.renderCell(x, y);
+        }
+      };
+
+      // ----------------------------------------------------------------------
+      // PATCH performSimulationStep TO PROCESS EXAMPLE ELEMENT CELLS
+      // ----------------------------------------------------------------------
+      var origPerformSimStep = window.exampleElementModOriginals.performSimulationStep;
+      performSimulationStep = function() {
+        // Process Example Element behavior
+        for (let y = 0; y < GRID_SIZE; y++) {
+          for (let x = 0; x < GRID_SIZE; x++) {
+            if (grid[y][x] === EXAMPLE_ELEMENT && !moved[y][x]) {
+              // Delete adjacent cells
+              let neighbors = [[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]];
+              for (let [dx, dy] of neighbors) {
+                let nx = x + dx, ny = y + dy;
+                if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {
+                  if (grid[ny][nx] !== EMPTY && grid[ny][nx] !== EXAMPLE_ELEMENT) {
+                    eraseCell(nx, ny);
+                  }
+                }
+              }
+              
+              // Move randomly
+              let possibleMoves = [];
+              for (let [dx, dy] of neighbors) {
+                let nx = x + dx, ny = y + dy;
+                if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {
+                  if (grid[ny][nx] === EMPTY) {
+                    possibleMoves.push([nx, ny]);
+                  }
+                }
+              }
+              
+              if (possibleMoves.length > 0) {
+                let [nx, ny] = possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
+                moveCell(x, y, nx, ny, temp[y][x], EXAMPLE_ELEMENT);
+              }
+            }
           }
         }
-      });
-    } else {
-      window.orangeJuiceModOriginals.moveLikeLiquid(x, y, oldT, elem);
-    }
-  };
+        origPerformSimStep();
+      };
+    })();`;
 
-  // ----------------------------------------------------------------------
-  // PATCH getElementName TO SHOW ORANGE JUICE
-  // ----------------------------------------------------------------------
-  getElementName = function(e) {
-    if (e === ORANGE_JUICE) return "Orange Juice";
-    return window.orangeJuiceModOriginals.getElementName(e);
-  };
-
-  // ----------------------------------------------------------------------
-  // PATCH renderCell TO RENDER ORANGE JUICE CELLS
-  // ----------------------------------------------------------------------
-  renderCell = function(x, y) {
-    const cell = cells[y][x];
-    cell.className = 'cell';
-    cell.style.opacity = "";
-    cell.style.backgroundColor = "";
-    var e = grid[y][x];
-    if (e === ORANGE_JUICE) {
-      cell.classList.add('orange-juice');
-      cell.style.backgroundColor = "orange";
-    } else {
-      window.orangeJuiceModOriginals.renderCell(x, y);
-    }
-  };
-
-  // ----------------------------------------------------------------------
-  // PATCH performSimulationStep TO PROCESS ORANGE JUICE CELLS
-  // ----------------------------------------------------------------------
-  var origPerformSimStep = window.orangeJuiceModOriginals.performSimulationStep;
-  performSimulationStep = function() {
-    for (let y = 0; y < GRID_SIZE; y++){
-      for (let x = 0; x < GRID_SIZE; x++){
-        if (!moved[y][x] && grid[y][x] === ORANGE_JUICE) {
-          moveLikeLiquid(x, y, temp[y][x], ORANGE_JUICE);
-        }
-      }
-    }
-    origPerformSimStep();
-  };
-})();`;
     const orangeJuiceTerminateCode = `(function(){
-  if(window.orangeJuiceModOriginals) {
-    selectTool = window.orangeJuiceModOriginals.selectTool;
-    placeElementAt = window.orangeJuiceModOriginals.placeElementAt;
-    moveLikeLiquid = window.orangeJuiceModOriginals.moveLikeLiquid;
-    getElementName = window.orangeJuiceModOriginals.getElementName;
-    renderCell = window.orangeJuiceModOriginals.renderCell;
-    performSimulationStep = window.orangeJuiceModOriginals.performSimulationStep;
-  }
-})();`;
+      if(window.exampleElementModOriginals) {
+        selectTool = window.exampleElementModOriginals.selectTool;
+        placeElementAt = window.exampleElementModOriginals.placeElementAt;
+        getElementName = window.exampleElementModOriginals.getElementName;
+        renderCell = window.exampleElementModOriginals.renderCell;
+        performSimulationStep = window.exampleElementModOriginals.performSimulationStep;
+      }
+    })();`;
+
     modsList.push({
-      id: 'orangeJuiceMod',
-      title: 'Orange Juice (Acid) Mod',
-      description: 'Adds a distinct orange acid element called Orange Juice that moves like a liquid and corrodes adjacent cells, while protecting Clone cells.',
-      gameVersion: '0.4.9a',
+      id: 'exampleElementMod',
+      title: 'Example Element Mod',
+      description: 'Adds a simple example element that deletes anything it touches. Great for learning how to make mods!',
+      gameVersion: '0.5.0a',
       code: orangeJuiceModCode,
       terminateCode: orangeJuiceTerminateCode,
       enabled: false
     });
     function isModCompatible(mod) {
-      return (mod.gameVersion === currentGameVersion) || (mod.gameVersion === "0.4.9a");
+      // Only allow mods from exact version match
+      return mod.gameVersion === currentGameVersion;
     }
     function updateModListUI() {
       const container = document.getElementById('modListContainer');
@@ -3158,8 +4408,13 @@
     const closeOptionsModal = document.getElementById('closeOptionsModal');
     optionsButton.addEventListener('click', function() {
       optionsModal.style.display = 'block';
+      // Initialize dynamic lighting select with current state
+      const dynamicLightingSelect = document.getElementById('dynamicLighting');
+      if (dynamicLightingSelect) {
+        dynamicLightingSelect.value = window.isDynamicLightingEnabled ? '1' : '0';
+      }
     });
-        closeOptionsModal.addEventListener('click', function() {
+    closeOptionsModal.addEventListener('click', function() {
       optionsModal.style.display = 'none';
     });
     window.addEventListener('click', function(event) {
@@ -3230,44 +4485,43 @@
         loadBtn.textContent = "Load";
         loadBtn.addEventListener('click', () => {
           const data = localStorage.getItem(item.key);
-if (data) {
-  const save = JSON.parse(data);
-  GRID_SIZE = save.GRID_SIZE;
-  initGrid(GRID_SIZE); // Create the grid DOM elements first.
-  // Then restore the saved state into your global variables:
-  grid = save.grid;
-  temp = save.temp;
-  vaporLife = save.vaporLife;
-  cloudLife = save.cloudLife;
-  fireLife = save.fireLife;
-  smokeLife = save.smokeLife;
-  burningWoodTime = save.burningWoodTime;
-  wheatHeight = save.wheatHeight;
-  wheatMaxHeight = save.wheatMaxHeight;
-  seedGrowthTime = save.seedGrowthTime;
-  rootLife = save.rootLife;
-  sparkLife = save.sparkLife;
-  sparkTimer = save.sparkTimer;
-  smokeMaxLife = save.smokeMaxLife;
-  cloudMaxLife = save.cloudMaxLife;
-  branchLevel = save.branchLevel;
-  branchLen = save.branchLen;
-  branchMaxArr = save.branchMaxArr;
-  branchSubCount = save.branchSubCount;
-  branchDirX = save.branchDirX;
-  branchDirY = save.branchDirY;
-  oakTreeGrowthTime = save.oakTreeGrowthTime;
-  oakTreeHeight = save.oakTreeHeight;
-  oakTreeMaxHeight = save.oakTreeMaxHeight;
-  oakTreeRootTimer = save.oakTreeRootTimer;
-  oakTreeRootDepth = save.oakTreeRootDepth;
-  oakTreeRootMax = save.oakTreeRootMax;
-  grassStage = save.grassStage;
-  burningGasTime = save.burningGasTime;
-  chargedStateTime = save.chargedStateTime;
-  renderGrid(); // Update the canvas with the loaded state.
-}
-
+          if (data) {
+            const save = JSON.parse(data);
+            GRID_SIZE = save.GRID_SIZE;
+            initGrid(GRID_SIZE); // Create the grid DOM elements first.
+            // Then restore the saved state into your global variables:
+            grid = save.grid;
+            temp = save.temp;
+            vaporLife = save.vaporLife;
+            cloudLife = save.cloudLife;
+            fireLife = save.fireLife;
+            smokeLife = save.smokeLife;
+            burningWoodTime = save.burningWoodTime;
+            wheatHeight = save.wheatHeight;
+            wheatMaxHeight = save.wheatMaxHeight;
+            seedGrowthTime = save.seedGrowthTime;
+            rootLife = save.rootLife;
+            sparkLife = save.sparkLife;
+            sparkTimer = save.sparkTimer;
+            smokeMaxLife = save.smokeMaxLife;
+            cloudMaxLife = save.cloudMaxLife;
+            branchLevel = save.branchLevel;
+            branchLen = save.branchLen;
+            branchMaxArr = save.branchMaxArr;
+            branchSubCount = save.branchSubCount;
+            branchDirX = save.branchDirX;
+            branchDirY = save.branchDirY;
+            oakTreeGrowthTime = save.oakTreeGrowthTime;
+            oakTreeHeight = save.oakTreeHeight;
+            oakTreeMaxHeight = save.oakTreeMaxHeight;
+            oakTreeRootTimer = save.oakTreeRootTimer;
+            oakTreeRootDepth = save.oakTreeRootDepth;
+            oakTreeRootMax = save.oakTreeRootMax;
+            grassStage = save.grassStage;
+            burningGasTime = save.burningGasTime;
+            chargedStateTime = save.chargedStateTime;
+            renderGrid(); // Update the canvas with the loaded state.
+          }
         });
         const deleteBtn = document.createElement('button');
         deleteBtn.textContent = "Delete";
@@ -3321,17 +4575,296 @@ if (data) {
       reader.readAsText(file);
     });
   </script>
+
+  <!-- Initialize all event handlers after DOM is loaded -->
   <script>
-      function scaleGame() {
-  const container = document.getElementById('mainContainer');
-  // Calculate a scale factor based on the window's inner width relative to 1200px.
-  const scaleFactor = window.innerWidth / 1200;
-  // Use the calculated scale factor even if it's greater than 1.
-  container.style.transform = `scale(${scaleFactor})`;
-  container.style.transformOrigin = 'top center';
-}
-window.addEventListener('load', scaleGame);
-window.addEventListener('resize', scaleGame);
+    document.addEventListener('DOMContentLoaded', function() {
+      // Debug elements
+      const debugTab = document.querySelector('button[data-category="debug"]');
+      if (debugTab) debugTab.style.display = 'none';
+      
+      const debugElements = document.querySelectorAll('.tool[data-cat*="debug"]');
+      debugElements.forEach(elem => {
+        elem.style.display = 'none';
+      });
+
+
+      // DabyFPS handler
+      const dabyFpsSelect = document.getElementById('dabyFps');
+      if (dabyFpsSelect) {
+        dabyFpsSelect.addEventListener('change', function(e) {
+          targetFps = parseInt(e.target.value);
+        });
+      }
+
+      // Pop out mode handler
+      const popOutModeSelect = document.getElementById('popOutMode');
+      if (popOutModeSelect) {
+        popOutModeSelect.addEventListener('change', function(e) {
+          if (parseInt(e.target.value) === 1) {
+            if (!popOutWindow || popOutWindow.closed) {
+              popOutWindow = window.open('', 'GameWindow', 'width=800,height=600');
+              const popOutDoc = popOutWindow.document;
+              
+              // Create pop-out window content
+              popOutDoc.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                  <style>
+                    body { margin: 0; background: #222; overflow: hidden; }
+                    #popOutGrid { width: 100%; height: 100%; }
+                  </style>
+                </head>
+                <body>
+                  <div id="popOutGrid"></div>
+                </body>
+                </html>
+              `);
+              
+              // Move grid to pop-out window
+              const originalGrid = document.getElementById('grid');
+              popOutDoc.getElementById('popOutGrid').appendChild(originalGrid);
+              
+              // Handle window resize
+              popOutWindow.addEventListener('resize', function() {
+                const size = Math.min(popOutWindow.innerWidth, popOutWindow.innerHeight) - 20;
+                originalGrid.style.width = size + 'px';
+                originalGrid.style.height = size + 'px';
+              });
+              
+              // Handle window close
+              popOutWindow.addEventListener('unload', function() {
+                if (!popOutWindow.closed) {
+                  document.getElementById('mainContainer').insertBefore(originalGrid, document.getElementById('sidePanel'));
+                  originalGrid.style.width = '500px';
+                  originalGrid.style.height = '500px';
+                  document.getElementById('popOutMode').value = "0";
+                }
+              });
+            }
+          } else {
+            if (popOutWindow && !popOutWindow.closed) {
+              popOutWindow.close();
+            }
+          }
+        });
+      }
+    });
+
+    // Start the game loop
+    requestAnimationFrame(gameLoop);
+  </script>
+
+  <script>
+    // Terrain Generation - moved to global scope
+    window.generateTerrain = function() {
+      // Clear the grid first
+      for (let y = 0; y < GRID_SIZE; y++) {
+        for (let x = 0; x < GRID_SIZE; x++) {
+          eraseCell(x, y);
+        }
+      }
+
+      // Generate surface level (about 30% down from top)
+      const surfaceLevel = Math.floor(GRID_SIZE * 0.3);
+      
+      // Generate perlin noise for surface variation
+      const surfaceNoise = [];
+      for (let x = 0; x < GRID_SIZE; x++) {
+        surfaceNoise[x] = Math.sin(x * 0.1) * 3 + Math.random() * 2;
+      }
+
+      // Generate caves using a simple cellular automata approach
+      let caves = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(false));
+      
+      // Initialize random cave seeds (increased frequency)
+      for (let y = surfaceLevel + 5; y < GRID_SIZE; y++) {
+        for (let x = 0; x < GRID_SIZE; x++) {
+          if (Math.random() < 0.2) { // Increased from 0.1 to 0.2
+            caves[y][x] = true;
+          }
+        }
+      }
+
+      // Smooth caves
+      for (let i = 0; i < 3; i++) {
+        const newCaves = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(false));
+        for (let y = 0; y < GRID_SIZE; y++) {
+          for (let x = 0; x < GRID_SIZE; x++) {
+            let neighbors = 0;
+            for (let dy = -1; dy <= 1; dy++) {
+              for (let dx = -1; dx <= 1; dx++) {
+                if (dx === 0 && dy === 0) continue;
+                const nx = x + dx, ny = y + dy;
+                if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {
+                  if (caves[ny][nx]) neighbors++;
+                }
+              }
+            }
+            newCaves[y][x] = neighbors >= 4 || (caves[y][x] && neighbors >= 3);
+          }
+        }
+        caves = newCaves;
+      }
+
+      // Generate terrain
+      for (let x = 0; x < GRID_SIZE; x++) {
+        const localSurface = Math.floor(surfaceLevel + surfaceNoise[x]);
+        
+        // Generate seeds and plants first
+        if (Math.random() < 0.15) {
+          grid[localSurface][x] = OAK_SEEDS;
+          temp[localSurface][x] = 20;
+        } else if (Math.random() < 0.15) {
+          grid[localSurface][x] = WHEAT_SEEDS;
+          temp[localSurface][x] = 20;
+        }
+        
+        // Generate grass layer
+        grid[localSurface + 1][x] = GRASS;
+        temp[localSurface + 1][x] = 20;
+        
+        // Add atmospheric gasses
+        if (Math.random() < 0.1 && localSurface > 0) {
+          grid[localSurface - 1][x] = Math.random() < 0.5 ? CARBON_DIOXIDE : OXYGEN;
+          temp[localSurface - 1][x] = 20;
+        }
+        
+        // Generate dirt and occasional cobblestone layer
+        for (let y = localSurface + 2; y < localSurface + 7; y++) {
+          if (y >= GRID_SIZE) continue;
+          if (!caves[y][x]) {
+            if (Math.random() < 0.1) {
+              grid[y][x] = COBBLESTONE;
+            } else {
+              grid[y][x] = DIRT;
+            }
+            temp[y][x] = 20;
+          }
+        }
+        
+        // Generate stone layer with ores
+        for (let y = localSurface + 7; y < GRID_SIZE; y++) {
+          if (!caves[y][x]) {
+            if (Math.random() < 0.05) { // Ore generation
+              const depth = y / GRID_SIZE; // 0 to 1, deeper = higher
+              if (depth > 0.8 && Math.random() < 0.3) { // Deep ores
+                grid[y][x] = STEEL;
+              } else if (depth > 0.6 && Math.random() < 0.3) { // Mid-deep ores
+                grid[y][x] = COPPER;
+              } else if (Math.random() < 0.4) { // Common ore
+                grid[y][x] = COAL;
+              } else {
+                grid[y][x] = STONE;
+              }
+            } else {
+              grid[y][x] = STONE;
+            }
+            temp[y][x] = 20;
+          }
+        }
+      }
+
+      // Add water/lava to caves
+      for (let y = surfaceLevel + 5; y < GRID_SIZE; y++) {
+        for (let x = 0; x < GRID_SIZE; x++) {
+          if (caves[y][x] && Math.random() < 0.02) { // Increased from 0.01 to 0.02
+            const isLava = y > GRID_SIZE * 0.7 && Math.random() < 0.3;
+            let fillQueue = [[x, y]];
+            let filled = new Set();
+            let fillCount = 0;
+            const maxFill = 50;
+
+            while (fillQueue.length > 0 && fillCount < maxFill) {
+              const [cx, cy] = fillQueue.shift();
+              const key = `${cx},${cy}`;
+              if (filled.has(key)) continue;
+              
+              if (caves[cy][cx] && grid[cy][cx] === EMPTY) {
+                grid[cy][cx] = isLava ? LAVA : WATER;
+                temp[cy][cx] = isLava ? 1200 : 20;
+                filled.add(key);
+                fillCount++;
+
+                [[0,1],[0,-1],[1,0],[-1,0]].forEach(([dx,dy]) => {
+                  const nx = cx + dx, ny = cy + dy;
+                  if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {
+                    fillQueue.push([nx, ny]);
+                  }
+                });
+              }
+            }
+          }
+        }
+      }
+
+      // Add oil deposits near bottom
+      for (let y = Math.floor(GRID_SIZE * 0.8); y < GRID_SIZE; y++) {
+        for (let x = 0; x < GRID_SIZE; x++) {
+          if (caves[y][x] && Math.random() < 0.03) {
+            let fillQueue = [[x, y]];
+            let filled = new Set();
+            let fillCount = 0;
+            const maxFill = 30; // Smaller oil deposits
+
+            while (fillQueue.length > 0 && fillCount < maxFill) {
+              const [cx, cy] = fillQueue.shift();
+              const key = `${cx},${cy}`;
+              if (filled.has(key)) continue;
+              
+              if (caves[cy][cx] && grid[cy][cx] === EMPTY) {
+                grid[cy][cx] = OIL;
+                temp[cy][cx] = 20;
+                filled.add(key);
+                fillCount++;
+
+                [[0,1],[0,-1],[1,0],[-1,0]].forEach(([dx,dy]) => {
+                  const nx = cx + dx, ny = cy + dy;
+                  if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {
+                    fillQueue.push([nx, ny]);
+                  }
+                });
+              }
+            }
+          }
+        }
+      }
+
+      // Add random birds near surface
+      for (let y = 0; y < surfaceLevel; y++) {
+        for (let x = 0; x < GRID_SIZE; x++) {
+          if (grid[y][x] === EMPTY && Math.random() < 0.01) {
+            grid[y][x] = BIRD;
+            temp[y][x] = 20;
+          }
+        }
+      }
+    };
+  </script>
+
+  <script>
+    // ... existing code ...
+
+    // Add dynamic lighting toggle function
+    function toggleDynamicLighting(value) {
+      window.isDynamicLightingEnabled = (value === '1');
+      
+      if (!window.isDynamicLightingEnabled) {
+        // Clear all lighting effects
+        for (let y = 0; y < GRID_SIZE; y++) {
+          for (let x = 0; x < GRID_SIZE; x++) {
+            const cell = cells[y][x];
+            cell.classList.remove('lit');
+            cell.style.boxShadow = '';
+            if (grid[y][x] === EMPTY) {
+              cell.style.backgroundColor = '';
+              cell.style.opacity = '';
+            }
+          }
+        }
+      }
+    }
   </script>
 </body>
 </html>
