@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dabiccan Translator & Rulebook</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+  body { font-family: 'Roboto', sans-serif; background: linear-gradient(135deg, #fefcea, #f1da36); margin:0; padding:0; color:#333; }
+  header { background:#b58900; color:white; padding:20px; text-align:center; }
+  h1 { margin:0; font-size:2.5rem; }
+  h2 { color:#b58900; margin-top:1.5rem; }
+  main { max-width:900px; margin:20px auto; background: rgba(255,255,255,0.95); padding:30px; border-radius:20px; box-shadow:0 8px 20px rgba(0,0,0,0.15);}
+  code { background:#eee; padding:2px 6px; border-radius:4px; font-family: monospace; }
+  textarea { width:100%; height:80px; margin:10px 0; padding:10px; font-size:1rem; border-radius:10px; border:2px solid #b58900; resize:none; }
+  button { padding:12px 20px; margin:5px 0; background:#b58900; color:white; border:none; border-radius:10px; font-size:1rem; cursor:pointer; transition:all 0.3s ease; }
+  button:hover { background:#cb9100; transform:scale(1.05); }
+  .translator { margin-top:30px; text-align:center; }
+  ul, ol { padding-left:20px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Dabiccan Rulebook & Translator</h1>
+</header>
+<main>
+<h2>Dabiccan Rules</h2>
+<ul>
+  <li>Consonants: swap in pairs left-to-right. Odd stays.</li>
+  <li>Vowels: swap in pairs left-to-right. Odd stays.</li>
+  <li>Italian endings: first letter determines ending:
+    <ul>
+      <li>a–f → -a</li>
+      <li>g–l → -e</li>
+      <li>m–r → -i</li>
+      <li>s–z → -o</li>
+      <li>Single-letter words → -o</li>
+    </ul>
+  </li>
+  <li>Word order English; optional Italian articles/prepositions: the→il/la, and→e, my→mio/mia</li>
+</ul>
+
+<div class="translator">
+<h2>Dabiccan Translator</h2>
+<textarea id="inputText" placeholder="Enter English or Dabiccan here..."></textarea>
+<br>
+<button onclick="encodeDabiccan()">Encode → Dabiccan</button>
+<button onclick="decodeDabiccan()">Decode → English</button>
+<textarea id="outputText" placeholder="Translation appears here..." readonly></textarea>
+</div>
+
+<script>
+function isVowel(c){return'aeiouAEIOU'.includes(c);}
+function swapPairs(arr){let a=[...arr];for(let i=0;i+1<a.length;i+=2){[a[i],a[i+1]]=[a[i+1],a[i]];}return a;}
+function swapConsonants(word){let letters=word.split(''),cons=[],pos=[];letters.forEach((c,i)=>{if(!isVowel(c)) {cons.push(c); pos.push(i);}}); cons=swapPairs(cons); pos.forEach((p,i)=>{letters[p]=cons[i];}); return letters.join('');}
+function swapVowels(word){let letters=word.split(''),vow=[],pos=[];letters.forEach((c,i)=>{if(isVowel(c)){vow.push(c); pos.push(i);}}); vow=swapPairs(vow); pos.forEach((p,i)=>{letters[p]=vow[i];}); return letters.join('');}
+function forcedEnding(word){let f=word[0].toLowerCase();if(word.length===1)return word+'o';if(f>='a'&&f<='f')return word+'a';if(f>='g'&&f<='l')return word+'e';if(f>='m'&&f<='r')return word+'i';if(f>='s'&&f<='z')return word+'o';return word+'a';}
+function reversePairs(arr){let a=[...arr];for(let i=0;i+1<a.length;i+=2){[a[i],a[i+1]]=[a[i+1],a[i]];}return a;}
+function reverseConsonants(word){let letters=word.split(''),cons=[],pos=[];letters.forEach((c,i)=>{if(!isVowel(c)) {cons.push(c); pos.push(i);}}); cons=reversePairs(cons); pos.forEach((p,i)=>{letters[p]=cons[i];}); return letters.join('');}
+function reverseVowels(word){let letters=word.split(''),vow=[],pos=[];letters.forEach((c,i)=>{if(isVowel(c)){vow.push(c); pos.push(i);}}); vow=reversePairs(vow); pos.forEach((p,i)=>{letters[p]=vow[i];}); return letters.join('');}
+
+function encodeDabiccan(){
+  let input=document.getElementById('inputText').value;
+  let words=input.split(/\s+/);
+  let encoded=words.map(w=>{if(w.length<=1)return forcedEnding(w); let x=swapConsonants(w);x=swapVowels(x);x=forcedEnding(x);return x;});
+  document.getElementById('outputText').value=encoded.join(' ');
+}
+
+function decodeDabiccan(){
+  let input=document.getElementById('inputText').value;
+  let words=input.split(/\s+/);
+  let decoded=words.map(w=>{
+    if(w.length<=1)return w;
+    if(isVowel(w[w.length-1])) w=w.slice(0,-1); // remove Italian ending
+    w=reverseVowels(w);
+    w=reverseConsonants(w);
+    return w;
+  });
+  document.getElementById('outputText').value=decoded.join(' ');
+}
+</script>
+</body>
+</html>
