@@ -5,60 +5,149 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dabiccan Rulebook & Translator</title>
 <style>
-    body { font-family: Arial, sans-serif; line-height: 1.6; margin: 20px; background: #fdf6e3; color: #333; }
-    h1, h2 { color: #b58900; }
-    code { background: #eee; padding: 2px 4px; border-radius: 4px; }
-    textarea { width: 100%; height: 80px; margin: 5px 0; }
-    button { padding: 10px 15px; margin: 5px 0; background: #b58900; color: white; border: none; border-radius: 4px; cursor: pointer; }
-    button:hover { background: #cb9100; }
-    .translator { margin-top: 20px; }
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+  body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #fefcea, #f1da36);
+    margin: 0;
+    padding: 0;
+    color: #333;
+  }
+
+  header {
+    background: #b58900;
+    color: white;
+    padding: 20px;
+    text-align: center;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 2.5rem;
+  }
+
+  h2 {
+    color: #b58900;
+    margin-top: 1.5rem;
+  }
+
+  main {
+    max-width: 900px;
+    margin: 20px auto;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  }
+
+  code {
+    background: #eee;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: monospace;
+  }
+
+  textarea {
+    width: 100%;
+    height: 80px;
+    margin: 10px 0;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 10px;
+    border: 2px solid #b58900;
+    resize: none;
+  }
+
+  button {
+    padding: 12px 20px;
+    margin: 5px 0;
+    background: #b58900;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  button:hover {
+    background: #cb9100;
+    transform: scale(1.05);
+  }
+
+  .translator {
+    margin-top: 30px;
+    text-align: center;
+  }
+
+  ul {
+    padding-left: 20px;
+  }
+
+  ol {
+    padding-left: 20px;
+  }
 </style>
 </head>
 <body>
-<h1>Dabiccan Rulebook</h1>
-
+<header>
+  <h1>Dabiccan Rulebook & Translator</h1>
+</header>
+<main>
 <h2>1. Word Order</h2>
-<p>Keep English word order (Subject → Verb → Object). Adjectives come after nouns.</p>
-<p>Optional Italian-style articles/prepositions: <code>the → il/la</code>, <code>and → e</code>, <code>my → mio/mia</code>.</p>
+<p>Keep English word order (Subject → Verb → Object). Adjectives come <strong>after nouns</strong>.</p>
+<p>Optional Italian-style replacements:</p>
+<ul>
+  <li>the → il / la</li>
+  <li>and → e</li>
+  <li>my → mio / mia</li>
+</ul>
 
 <h2>2. Consonant Swap</h2>
-<p>Swap consonants in pairs, left to right. If odd, leave the last consonant in place.</p>
-<p>Examples: <code>cat → tca</code>, <code>dog → gdo</code>, <code>friend → rfiedn</code></p>
+<p>Swap consonants in pairs, left to right. Odd number → last consonant stays.</p>
+<p>Example: <code>cat → tca</code>, <code>dog → gdo</code></p>
 
 <h2>3. Vowel Swap</h2>
-<p>Swap vowels in pairs, left to right. If odd, leave the last vowel in place.</p>
-<p>Examples: <code>friend → freidn</code>, <code>bread → bared</code></p>
+<p>Swap vowels in pairs, left to right. Odd number → last vowel stays.</p>
+<p>Example: <code>friend → freidn</code>, <code>bread → bared</code></p>
 
-<h2>4. Italian-style Endings (Optional)</h2>
-<p>Add a vowel ending for style: <code>-o, -a, -i, -e</code>. Examples: <code>cat → tcao</code>, <code>dog → gdoa</code>, <code>friend → rfiedni</code></p>
+<h2>4. Italian-style Ending (Forced)</h2>
+<p>Endings are based on <strong>first letter of the word</strong>:</p>
+<ul>
+  <li>a–f → <code>-a</code></li>
+  <li>g–l → <code>-e</code></li>
+  <li>m–r → <code>-i</code></li>
+  <li>s–z → <code>-o</code></li>
+  <li>Single-letter words → <code>-o</code></li>
+</ul>
 
 <h2>5. Step-by-Step Encoding</h2>
 <ol>
-    <li>Take the English word.</li>
-    <li>Swap consonants in pairs.</li>
-    <li>Swap vowels in pairs.</li>
-    <li>Add Italian-style ending if desired.</li>
-    <li>Keep word order English.</li>
-    <li>Replace articles/prepositions optionally with Italian words.</li>
+  <li>Take the English word.</li>
+  <li>Swap consonants in pairs.</li>
+  <li>Swap vowels in pairs.</li>
+  <li>Add forced Italian ending based on first letter.</li>
+  <li>Keep word order English.</li>
+  <li>Replace articles/prepositions optionally with Italian words.</li>
 </ol>
 
 <h2>6. Examples</h2>
 <ul>
-    <li>cat → tcao</li>
-    <li>dog → gdoa</li>
-    <li>bread → baredo</li>
-    <li>friend → rfiedni</li>
-    <li>The cat and dog eat bread → Il tcao e gdoa eato baredo</li>
-    <li>I love my friend → I lovo mio rfiedni</li>
+  <li>cat → tcao</li>
+  <li>dog → gdoa</li>
+  <li>bread → baredo</li>
+  <li>friend → rfiedni</li>
+  <li>The cat and dog eat bread → Il tcao e gdoa eato baredo</li>
+  <li>I love my friend → I lovo mio rfiedni</li>
 </ul>
 
 <div class="translator">
-    <h2>Dabiccan Translator</h2>
-    <textarea id="inputText" placeholder="Enter English or Dabiccan here..."></textarea>
-    <br>
-    <button onclick="translateToDabiccan()">Translate to Dabiccan</button>
-    <button onclick="translateToEnglish()">Translate to English (rough decode)</button>
-    <textarea id="outputText" placeholder="Translation appears here..." readonly></textarea>
+  <h2>Dabiccan Translator</h2>
+  <textarea id="inputText" placeholder="Enter English here..."></textarea>
+  <br>
+  <button onclick="translateToDabiccan()">Translate to Dabiccan</button>
+  <textarea id="outputText" placeholder="Translation appears here..." readonly></textarea>
 </div>
 
 <script>
@@ -67,65 +156,48 @@ function isVowel(char) {
 }
 
 function swapConsonants(word) {
-    let consonants = [];
-    let consonantPositions = [];
     let letters = word.split('');
-    letters.forEach((c, i) => {
-        if (!isVowel(c)) { consonants.push(c); consonantPositions.push(i); }
-    });
-    for (let i = 0; i + 1 < consonants.length; i += 2) {
-        [consonants[i], consonants[i+1]] = [consonants[i+1], consonants[i]];
-    }
-    consonantPositions.forEach((pos, i) => { letters[pos] = consonants[i]; });
+    let consonants = [];
+    let positions = [];
+    letters.forEach((c,i)=>{ if(!isVowel(c)) { consonants.push(c); positions.push(i); } });
+    for(let i=0;i+1<consonants.length;i+=2){ [consonants[i],consonants[i+1]]=[consonants[i+1],consonants[i]]; }
+    positions.forEach((pos,i)=>{ letters[pos]=consonants[i]; });
     return letters.join('');
 }
 
 function swapVowels(word) {
-    let vowels = [];
-    let vowelPositions = [];
     let letters = word.split('');
-    letters.forEach((c, i) => {
-        if (isVowel(c)) { vowels.push(c); vowelPositions.push(i); }
-    });
-    for (let i = 0; i + 1 < vowels.length; i += 2) {
-        [vowels[i], vowels[i+1]] = [vowels[i+1], vowels[i]];
-    }
-    vowelPositions.forEach((pos, i) => { letters[pos] = vowels[i]; });
+    let vowels = [];
+    let positions = [];
+    letters.forEach((c,i)=>{ if(isVowel(c)) { vowels.push(c); positions.push(i); } });
+    for(let i=0;i+1<vowels.length;i+=2){ [vowels[i],vowels[i+1]]=[vowels[i+1],vowels[i]]; }
+    positions.forEach((pos,i)=>{ letters[pos]=vowels[i]; });
     return letters.join('');
 }
 
-function addItalianEnding(word) {
-    let vowels = ['o','a','i','e'];
-    return word + vowels[Math.floor(Math.random() * vowels.length)];
+function forcedItalianEnding(word) {
+    let first = word[0].toLowerCase();
+    if(word.length === 1) return word + 'o';
+    if(first >= 'a' && first <= 'f') return word + 'a';
+    if(first >= 'g' && first <= 'l') return word + 'e';
+    if(first >= 'm' && first <= 'r') return word + 'i';
+    if(first >= 's' && first <= 'z') return word + 'o';
+    return word + 'a';
 }
 
-function translateWordToDabiccan(word) {
-    if (word.length <= 1) return word;
-    let swappedConsonants = swapConsonants(word);
-    let swappedVowels = swapVowels(swappedConsonants);
-    let finalWord = addItalianEnding(swappedVowels);
-    return finalWord;
+function translateWord(word) {
+    if(word.length<=1) return forcedItalianEnding(word);
+    let w = swapConsonants(word);
+    w = swapVowels(w);
+    w = forcedItalianEnding(w);
+    return w;
 }
 
 function translateToDabiccan() {
     let input = document.getElementById('inputText').value;
     let words = input.split(/\s+/);
-    let translatedWords = words.map(w => translateWordToDabiccan(w));
-    document.getElementById('outputText').value = translatedWords.join(' ');
-}
-
-// Rough English decode: remove last letter if vowel ending, no swap reversal yet
-function roughDecodeWord(word) {
-    if (word.length <= 1) return word;
-    if (isVowel(word[word.length-1])) word = word.slice(0, -1);
-    return word;
-}
-
-function translateToEnglish() {
-    let input = document.getElementById('inputText').value;
-    let words = input.split(/\s+/);
-    let translatedWords = words.map(w => roughDecodeWord(w));
-    document.getElementById('outputText').value = translatedWords.join(' ');
+    let translated = words.map(translateWord);
+    document.getElementById('outputText').value = translated.join(' ');
 }
 </script>
 </body>
