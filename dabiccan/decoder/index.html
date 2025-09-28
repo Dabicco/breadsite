@@ -6,7 +6,7 @@
 <title>Dabiccan Translator & Rulebook</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
-  body { font-family: 'Roboto', sans-serif; background: linear-gradient(135deg, #fefcea, #f1da36); margin:0; padding:0; color:#333; }
+  body { font-family: 'Roboto', sans-serif; background: linear-gradient(135deg,#fefcea,#f1da36); margin:0; padding:0; color:#333;}
   header { background:#b58900; color:white; padding:20px; text-align:center; }
   h1 { margin:0; font-size:2.5rem; }
   h2 { color:#b58900; margin-top:1.5rem; }
@@ -28,7 +28,7 @@
 <ul>
   <li>Consonants: swap in pairs left-to-right. Odd stays.</li>
   <li>Vowels: swap in pairs left-to-right. Odd stays.</li>
-  <li>Italian endings: first letter determines ending:
+  <li>Italian endings (forced) based on first letter:
     <ul>
       <li>a–f → -a</li>
       <li>g–l → -e</li>
@@ -38,6 +38,8 @@
     </ul>
   </li>
   <li>Word order English; optional Italian articles/prepositions: the→il/la, and→e, my→mio/mia</li>
+  <li>Capital letters always appear at the <strong>first letter of the word</strong> in Dabiccan.</li>
+  <li>Punctuation inside words (.,!?) is moved to the <strong>end</strong> of the Dabiccan word.</li>
 </ul>
 
 <div class="translator">
@@ -52,17 +54,41 @@
 <script>
 function isVowel(c){return'aeiouAEIOU'.includes(c);}
 function swapPairs(arr){let a=[...arr];for(let i=0;i+1<a.length;i+=2){[a[i],a[i+1]]=[a[i+1],a[i]];}return a;}
-function swapConsonants(word){let letters=word.split(''),cons=[],pos=[];letters.forEach((c,i)=>{if(!isVowel(c)) {cons.push(c); pos.push(i);}}); cons=swapPairs(cons); pos.forEach((p,i)=>{letters[p]=cons[i];}); return letters.join('');}
+function swapConsonants(word){let letters=word.split(''),cons=[],pos=[];letters.forEach((c,i)=>{if(!isVowel(c)&&/[a-zA-Z]/.test(c)){cons.push(c); pos.push(i);}}); cons=swapPairs(cons); pos.forEach((p,i)=>{letters[p]=cons[i];}); return letters.join('');}
 function swapVowels(word){let letters=word.split(''),vow=[],pos=[];letters.forEach((c,i)=>{if(isVowel(c)){vow.push(c); pos.push(i);}}); vow=swapPairs(vow); pos.forEach((p,i)=>{letters[p]=vow[i];}); return letters.join('');}
 function forcedEnding(word){let f=word[0].toLowerCase();if(word.length===1)return word+'o';if(f>='a'&&f<='f')return word+'a';if(f>='g'&&f<='l')return word+'e';if(f>='m'&&f<='r')return word+'i';if(f>='s'&&f<='z')return word+'o';return word+'a';}
 function reversePairs(arr){let a=[...arr];for(let i=0;i+1<a.length;i+=2){[a[i],a[i+1]]=[a[i+1],a[i]];}return a;}
-function reverseConsonants(word){let letters=word.split(''),cons=[],pos=[];letters.forEach((c,i)=>{if(!isVowel(c)) {cons.push(c); pos.push(i);}}); cons=reversePairs(cons); pos.forEach((p,i)=>{letters[p]=cons[i];}); return letters.join('');}
+function reverseConsonants(word){let letters=word.split(''),cons=[],pos=[];letters.forEach((c,i)=>{if(!isVowel(c)&&/[a-zA-Z]/.test(c)){cons.push(c); pos.push(i);}}); cons=reversePairs(cons); pos.forEach((p,i)=>{letters[p]=cons[i];}); return letters.join('');}
 function reverseVowels(word){let letters=word.split(''),vow=[],pos=[];letters.forEach((c,i)=>{if(isVowel(c)){vow.push(c); pos.push(i);}}); vow=reversePairs(vow); pos.forEach((p,i)=>{letters[p]=vow[i];}); return letters.join('');}
+
+// move capital to first and punctuation to end
+function adjustWord(word){
+  if(!word) return word;
+  let caps=''; let punct='';
+  for(let i=0;i<word.length;i++){
+    let c=word[i];
+    if(c>='A'&&c<='Z'){caps+=c.toLowerCase();}
+    if(/[.,!?]/.test(c)){punct+=c;}
+  }
+  let clean=word.replace(/[A-Z.,!?]/g,'');
+  if(caps) clean=caps.charAt(0).toUpperCase() + clean.slice(1);
+  return clean+punct;
+}
 
 function encodeDabiccan(){
   let input=document.getElementById('inputText').value;
   let words=input.split(/\s+/);
-  let encoded=words.map(w=>{if(w.length<=1)return forcedEnding(w); let x=swapConsonants(w);x=swapVowels(x);x=forcedEnding(x);return x;});
+  let encoded=words.map(w=>{
+    if(!w) return '';
+    let punc=''; let first=w[0].toUpperCase();
+    let core=w.replace(/[^a-zA-Z]/g,'');
+    let x=core.length<=1?core:swapConsonants(core);
+    x=swapVowels(x);
+    x=forcedEnding(x);
+    x=first===w[0]?x.charAt(0).toUpperCase()+x.slice(1):x;
+    let end=w.match(/[.,!?]+$/); if(end)x+=end.join('');
+    return x;
+  });
   document.getElementById('outputText').value=encoded.join(' ');
 }
 
@@ -70,11 +96,12 @@ function decodeDabiccan(){
   let input=document.getElementById('inputText').value;
   let words=input.split(/\s+/);
   let decoded=words.map(w=>{
-    if(w.length<=1)return w;
-    if(isVowel(w[w.length-1])) w=w.slice(0,-1); // remove Italian ending
+    if(!w) return '';
+    let endMatch=w.match(/[.,!?]+$/); let punc=endMatch?endMatch.join(''):'';
+    if(isVowel(w[w.length-1])) w=w.slice(0,-1);
     w=reverseVowels(w);
     w=reverseConsonants(w);
-    return w;
+    return w+punc;
   });
   document.getElementById('outputText').value=decoded.join(' ');
 }
