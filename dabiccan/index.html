@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dabiccan Rulebook & Translator</title>
+<title>Dabiccan Language Rulebook</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
@@ -18,7 +18,7 @@
   header {
     background: #b58900;
     color: white;
-    padding: 20px;
+    padding: 25px;
     text-align: center;
   }
 
@@ -29,16 +29,21 @@
 
   h2 {
     color: #b58900;
-    margin-top: 1.5rem;
+    margin-top: 2rem;
   }
 
   main {
-    max-width: 900px;
+    max-width: 1000px;
     margin: 20px auto;
-    background: rgba(255, 255, 255, 0.9);
-    padding: 30px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 40px;
     border-radius: 20px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  ul, ol {
+    padding-left: 20px;
+    margin-bottom: 1rem;
   }
 
   code {
@@ -48,157 +53,129 @@
     font-family: monospace;
   }
 
-  textarea {
-    width: 100%;
-    height: 80px;
-    margin: 10px 0;
-    padding: 10px;
-    font-size: 1rem;
-    border-radius: 10px;
-    border: 2px solid #b58900;
-    resize: none;
+  section {
+    margin-bottom: 2rem;
   }
 
-  button {
-    padding: 12px 20px;
-    margin: 5px 0;
-    background: #b58900;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
+  a {
+    color: #b58900;
+    text-decoration: none;
   }
 
-  button:hover {
-    background: #cb9100;
-    transform: scale(1.05);
-  }
-
-  .translator {
-    margin-top: 30px;
-    text-align: center;
-  }
-
-  ul {
-    padding-left: 20px;
-  }
-
-  ol {
-    padding-left: 20px;
+  a:hover {
+    text-decoration: underline;
   }
 </style>
 </head>
 <body>
 <header>
-  <h1>Dabiccan Rulebook & Translator</h1>
+  <h1>Dabiccan Language Rulebook</h1>
 </header>
+
 <main>
+<section>
+<h2>Introduction</h2>
+<p>Dabiccan is a constructed language based on English with deterministic letter swaps, vowel manipulations, and Italian-style endings. It is designed to be <strong>decodable by anyone who knows English</strong> and the fundamental rules described here.</p>
+</section>
+
+<section>
 <h2>1. Word Order</h2>
-<p>Keep English word order (Subject → Verb → Object). Adjectives come <strong>after nouns</strong>.</p>
-<p>Optional Italian-style replacements:</p>
 <ul>
-  <li>the → il / la</li>
-  <li>and → e</li>
-  <li>my → mio / mia</li>
+  <li>Keep English word order: Subject → Verb → Object.</li>
+  <li>Adjectives follow nouns.</li>
+  <li>Optional Italian replacements:
+    <ul>
+      <li>the → il / la</li>
+      <li>and → e</li>
+      <li>my → mio / mia</li>
+    </ul>
+  </li>
 </ul>
+</section>
 
+<section>
 <h2>2. Consonant Swap</h2>
-<p>Swap consonants in pairs, left to right. Odd number → last consonant stays.</p>
-<p>Example: <code>cat → tca</code>, <code>dog → gdo</code></p>
-
-<h2>3. Vowel Swap</h2>
-<p>Swap vowels in pairs, left to right. Odd number → last vowel stays.</p>
-<p>Example: <code>friend → freidn</code>, <code>bread → bared</code></p>
-
-<h2>4. Italian-style Ending (Forced)</h2>
-<p>Endings are based on <strong>first letter of the word</strong>:</p>
 <ul>
-  <li>a–f → <code>-a</code></li>
-  <li>g–l → <code>-e</code></li>
-  <li>m–r → <code>-i</code></li>
-  <li>s–z → <code>-o</code></li>
-  <li>Single-letter words → <code>-o</code></li>
+  <li>Swap consonants in pairs, left-to-right.</li>
+  <li>If there is an odd number, the last consonant stays in place.</li>
+  <li>Only alphabetic consonants are swapped.</li>
+  <li>Example: <code>cat → tcao</code>, <code>dog → gdoa</code></li>
 </ul>
+</section>
 
-<h2>5. Step-by-Step Encoding</h2>
+<section>
+<h2>3. Vowel Swap</h2>
+<ul>
+  <li>Swap vowels in pairs, left-to-right.</li>
+  <li>If there is an odd number, the last vowel stays in place.</li>
+  <li>Example: <code>friend → rfiedni</code>, <code>bread → baredo</code></li>
+</ul>
+</section>
+
+<section>
+<h2>4. Italian-style Endings</h2>
+<ul>
+  <li>Forced ending based on the <strong>first letter</strong> of the word:
+    <ul>
+      <li>a–f → -a</li>
+      <li>g–l → -e</li>
+      <li>m–r → -i</li>
+      <li>s–z → -o</li>
+      <li>Single-letter words → -o</li>
+    </ul>
+  </li>
+  <li>Capital letters always appear at the <strong>first letter</strong> of the Dabiccan word.</li>
+  <li>Punctuation (.,!?) inside words is moved to the <strong>end</strong> of the word.</li>
+</ul>
+</section>
+
+<section>
+<h2>5. Encoding Steps</h2>
 <ol>
   <li>Take the English word.</li>
   <li>Swap consonants in pairs.</li>
   <li>Swap vowels in pairs.</li>
-  <li>Add forced Italian ending based on first letter.</li>
-  <li>Keep word order English.</li>
-  <li>Replace articles/prepositions optionally with Italian words.</li>
+  <li>Add the forced Italian ending.</li>
+  <li>Adjust capitalization and punctuation.</li>
 </ol>
+</section>
 
-<h2>6. Examples</h2>
+<section>
+<h2>6. Decoding Steps</h2>
+<ol>
+  <li>Remove the Italian ending (last vowel added).</li>
+  <li>Reverse vowel swaps in pairs.</li>
+  <li>Reverse consonant swaps in pairs.</li>
+  <li>Move the capital letter back to its original position if needed.</li>
+  <li>Reposition punctuation if it was moved.</li>
+</ol>
+</section>
+
+<section>
+<h2>7. Examples</h2>
 <ul>
-  <li>cat → tcao</li>
-  <li>dog → gdoa</li>
-  <li>bread → baredo</li>
-  <li>friend → rfiedni</li>
-  <li>The cat and dog eat bread → Il tcao e gdoa eato baredo</li>
-  <li>I love my friend → I lovo mio rfiedni</li>
+  <li>English → Dabiccan:</li>
+  <ul>
+    <li><code>hi bro → Hia Rboa</code></li>
+    <li><code>The cat and dog eat bread → Il Tcao e Gdoa eato Baredo</code></li>
+    <li><code>I hope you enjoy yourself → I Hpoe You Eonjy Yrouselfi</code></li>
+  </ul>
 </ul>
+</section>
 
-<div class="translator">
-  <h2>Dabiccan Translator</h2>
-  <textarea id="inputText" placeholder="Enter English here..."></textarea>
-  <br>
-  <button onclick="translateToDabiccan()">Translate to Dabiccan</button>
-  <textarea id="outputText" placeholder="Translation appears here..." readonly></textarea>
-</div>
+<section>
+<h2>8. Notes</h2>
+<ul>
+  <li>Dabiccan is deterministic: the same English word always produces the same Dabiccan word.</li>
+  <li>It is designed to be reversible, making translation back to English possible.</li>
+  <li>Capitalization and punctuation adjustments improve readability and maintain grammatical structure.</li>
+</ul>
+</section>
 
-<script>
-function isVowel(char) {
-    return 'aeiouAEIOU'.includes(char);
-}
-
-function swapConsonants(word) {
-    let letters = word.split('');
-    let consonants = [];
-    let positions = [];
-    letters.forEach((c,i)=>{ if(!isVowel(c)) { consonants.push(c); positions.push(i); } });
-    for(let i=0;i+1<consonants.length;i+=2){ [consonants[i],consonants[i+1]]=[consonants[i+1],consonants[i]]; }
-    positions.forEach((pos,i)=>{ letters[pos]=consonants[i]; });
-    return letters.join('');
-}
-
-function swapVowels(word) {
-    let letters = word.split('');
-    let vowels = [];
-    let positions = [];
-    letters.forEach((c,i)=>{ if(isVowel(c)) { vowels.push(c); positions.push(i); } });
-    for(let i=0;i+1<vowels.length;i+=2){ [vowels[i],vowels[i+1]]=[vowels[i+1],vowels[i]]; }
-    positions.forEach((pos,i)=>{ letters[pos]=vowels[i]; });
-    return letters.join('');
-}
-
-function forcedItalianEnding(word) {
-    let first = word[0].toLowerCase();
-    if(word.length === 1) return word + 'o';
-    if(first >= 'a' && first <= 'f') return word + 'a';
-    if(first >= 'g' && first <= 'l') return word + 'e';
-    if(first >= 'm' && first <= 'r') return word + 'i';
-    if(first >= 's' && first <= 'z') return word + 'o';
-    return word + 'a';
-}
-
-function translateWord(word) {
-    if(word.length<=1) return forcedItalianEnding(word);
-    let w = swapConsonants(word);
-    w = swapVowels(w);
-    w = forcedItalianEnding(w);
-    return w;
-}
-
-function translateToDabiccan() {
-    let input = document.getElementById('inputText').value;
-    let words = input.split(/\s+/);
-    let translated = words.map(translateWord);
-    document.getElementById('outputText').value = translated.join(' ');
-}
-</script>
+<section>
+<h2>9. Resources</h2>
+<p>Use the <a href="/dabiccan/decoder/index.html">Dabiccan Translator</a> to encode and decode text directly.</p>
+</section>
+</main>
 </body>
 </html>
