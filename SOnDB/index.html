@@ -1,0 +1,415 @@
+<!-- vro I tried to like encrypt this file by throwing it into some bs ai and all it did was make it easier to read with quotes and im genuinely too lazy to care or do it myself -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dabicco's Classic Sonic Engine</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <style>
+        @font-face {
+            font-family: 'SonicHUD';
+            src: url('font.otf') format('opentype');
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: monospace;
+        }
+        #gameContainer {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            /* Flexbox centering removed since canvas uses absolute positioning */
+        }
+        canvas {
+            image-rendering: -moz-crisp-edges;
+            image-rendering: -webkit-crisp-edges;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+            -ms-interpolation-mode: nearest-neighbor;
+            border: 2px solid #333;
+            /* Prevent subpixel rendering */
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            /* Ensure canvas stays centered */
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+        #debugInfo {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: #0f0;
+            font-size: 10px;
+            pointer-events: none;
+            text-shadow: 1px 1px 0 #000;
+            white-space: pre;
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <canvas id="gameCanvas"></canvas>
+        <div id="debugInfo"></div>
+    </div>
+    <script>
+        const quotes = [
+            "You look great by the way, very healthy.",
+            "I am not a moron.",
+            "The light's on the blink.",
+            "Yeah, take the lemons.",
+            "This is the part where he kills you.",
+            "For science- you monster.",
+            "SPAAAAAACE!",
+            "Bite me.",
+            "Sure! I love doing anything.",
+            "That's not true; everyone tells me I'm useless and terrible.",
+            "You know, I left an-an extremely dangerous weapo- u-uh, excuse, o-outside.",
+            "Wait, no, ah, I'm going to murder everyone.",
+            "Root beer, no, root beer.",
+            "Get a load of this.",
+            "The soup is cold and the salad is hot.",
+            "You know you love it.",
+            "Hello... Do you want to play with me?",
+            "The cake is a lie.",
+            "The chosen one.",
+            "The second coming.",
+            "It means Earth, Venus.",
+            "It's that time of the month again.",
+            "Dabicco Extension.",
+            "One thing I don't have control over are your minds."
+        ];
+        console.log(quotes[Math.floor(Math.random() * quotes.length)]);
+        
+        // Auto-scale game to fit window while maintaining aspect ratio (or large editor view)
+        function resizeGame() {
+            const canvas = document.getElementById('gameCanvas');
+            const container = document.getElementById('gameContainer');
+            
+            if (!canvas) return;
+            
+            // Game dimensions (320x224 is Genesis ratio)
+            const gameWidth = 320;
+            const gameHeight = 224;
+            
+            // Calculate scale to fit window
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+            
+            const inEditor = (typeof MenuSystem !== 'undefined') && !!MenuSystem.editorModeActive;
+            const editorMultiplier = inEditor ? (MenuSystem.editorResolutionMultiplier || 4) : 1;
+            
+            // Check if Aspect Fit X is enabled
+            const aspectFitX = window.GameOptions && window.GameOptions.aspectFitX;
+            
+            let canvasWidth = gameWidth;
+            let canvasHeight = gameHeight;
+            let pixelScale;
+            let displayWidth;
+            let displayHeight;
+            
+            if (inEditor) {
+                const targetWidth = gameWidth * editorMultiplier;
+                const targetHeight = gameHeight * editorMultiplier;
+                // Keep full internal resolution; increase pixel count to match window aspect
+                const scaleX = windowWidth / targetWidth;
+                const scaleY = windowHeight / targetHeight;
+                const fitScale = Math.min(scaleX, scaleY);
+                const safeScale = (!isFinite(fitScale) || fitScale <= 0) ? 1 : fitScale;
+                pixelScale = Math.max(1, Math.floor(safeScale));
+                const minDisplayWidth = Math.floor(windowWidth / Math.max(pixelScale, 1));
+                const minDisplayHeight = Math.floor(windowHeight / Math.max(pixelScale, 1));
+                canvasWidth = Math.max(targetWidth, minDisplayWidth);
+                canvasHeight = Math.max(targetHeight, minDisplayHeight);
+                displayWidth = Math.min(windowWidth, canvasWidth * pixelScale);
+                displayHeight = Math.min(windowHeight, canvasHeight * pixelScale);
+            } else {
+                // Determine base scale (pixel size) using original resolution
+                const scaleX = windowWidth / gameWidth;
+                const scaleY = windowHeight / gameHeight;
+                pixelScale = Math.max(1, Math.min(scaleX, scaleY));
+                canvasHeight = gameHeight;
+                if (aspectFitX) {
+                    // Expand horizontal resolution while keeping same pixel scale
+                    canvasWidth = Math.max(gameWidth, Math.floor(windowWidth / pixelScale));
+                    console.log('[Aspect Fit X] Expanding width from 320 to', canvasWidth);
+                } else {
+                    canvasWidth = gameWidth;
+                }
+                displayWidth = Math.floor(canvasWidth * pixelScale);
+                displayHeight = Math.floor(canvasHeight * pixelScale);
+            }
+            
+            if (displayWidth == null || displayHeight == null) {
+                displayWidth = Math.floor(canvasWidth * pixelScale);
+                displayHeight = Math.floor(canvasHeight * pixelScale);
+            }
+            
+            // Apply internal resolution
+            canvas.width = canvasWidth;
+            canvas.height = canvasHeight;
+            
+            // Update GAME constants - THIS IS CRITICAL
+            if (typeof GAME !== 'undefined') {
+                GAME.WIDTH = canvasWidth;
+                GAME.HEIGHT = canvasHeight;
+                GAME.SCALE = pixelScale || 1;
+            }
+            
+            // Also update on window in case anything uses that
+            if (typeof window.GAME !== 'undefined') {
+                window.GAME.WIDTH = canvasWidth;
+                window.GAME.HEIGHT = canvasHeight;
+                window.GAME.SCALE = pixelScale || 1;
+            }
+            
+            // Notify game of resolution change
+            if (typeof Game !== 'undefined' && Game.onResolutionChange) {
+                Game.onResolutionChange(canvasWidth, canvasHeight);
+            }
+            
+            // Apply CSS size (visual scale)
+            canvas.style.width = displayWidth + 'px';
+            canvas.style.height = displayHeight + 'px';
+            canvas.style.imageRendering = 'pixelated';
+            
+            // Update debug info position if it exists
+            const debugInfo = document.getElementById('debugInfo');
+            if (debugInfo) {
+                debugInfo.style.fontSize = (10 * pixelScale) + 'px';
+                debugInfo.style.left = (10 * pixelScale) + 'px';
+                debugInfo.style.top = (10 * pixelScale) + 'px';
+            }
+            
+            const modeLabel = inEditor ? `[Editor Mode x${editorMultiplier}]` : (aspectFitX ? '[Aspect Fit X]' : '[Classic 320x224]');
+            console.log(`Game display size: ${displayWidth}x${displayHeight} (pixel scale: ${pixelScale.toFixed(2)}x) ${modeLabel}`);
+            console.log(`Canvas resolution: ${canvas.width}x${canvas.height}, Style: ${canvas.style.width}x${canvas.style.height}`);
+            if (inEditor) {
+                console.log(`[Editor] Target 4x base=${gameWidth * editorMultiplier}x${gameHeight * editorMultiplier}, window=${windowWidth}x${windowHeight}, applied=${canvas.width}x${canvas.height}, display=${displayWidth}x${displayHeight}`);
+            }
+            console.log(`Window: ${windowWidth}x${windowHeight}`);
+        }
+        
+        // Initial resize
+        resizeGame();
+        
+        // Resize on window resize
+        window.addEventListener('resize', resizeGame);
+        
+        // Resize on window load (in case images affect layout)
+        window.addEventListener('load', resizeGame);
+        
+        // Resize after a delay to ensure game is initialized
+        setTimeout(resizeGame, 100);
+        
+        // Also resize when DOM is ready
+        document.addEventListener('DOMContentLoaded', resizeGame);
+        
+        // Continuous monitoring for Aspect Fit X
+        // Track last known width to detect changes
+        let lastCanvasWidth = 320;
+        setInterval(() => {
+            const canvas = document.getElementById('gameCanvas');
+            if (!canvas) return;
+            
+            const inEditor = !!(window.MenuSystem && MenuSystem.editorModeActive);
+            const editorMultiplier = inEditor ? (MenuSystem.editorResolutionMultiplier || 4) : 1;
+            const aspectFitX = window.GameOptions && window.GameOptions.aspectFitX;
+            let expectedWidth;
+            if (inEditor) {
+                expectedWidth = 320 * editorMultiplier;
+            } else if (aspectFitX) {
+                expectedWidth = Math.max(320, Math.floor(window.innerWidth / Math.max(1, Math.min(window.innerWidth / 320, window.innerHeight / 224))));
+            } else {
+                expectedWidth = 320;
+            }
+            
+            // Resize if width changed or doesn't match expected
+            if (canvas.width !== expectedWidth || lastCanvasWidth !== expectedWidth) {
+                resizeGame();
+                lastCanvasWidth = canvas.width;
+            }
+        }, 100);
+
+        // ===== Crash detection / reporting =====
+        const CrashOverlay = {
+            initialized: false,
+            visible: false,
+            init() {
+                if (this.initialized) return;
+                this.initialized = true;
+                this.overlay = document.createElement('div');
+                this.overlay.id = 'crashOverlay';
+                Object.assign(this.overlay.style, {
+                    position: 'fixed',
+                    inset: '0',
+                    background: 'rgba(5,5,20,0.96)',
+                    color: '#fff',
+                    display: 'none',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    zIndex: 9999,
+                    padding: '24px'
+                });
+                const title = document.createElement('h2');
+                title.textContent = 'Game crashed';
+                title.style.marginBottom = '8px';
+                const subtitle = document.createElement('p');
+                subtitle.textContent = 'Copy the crash log below and share it when reporting the bug.';
+                subtitle.style.marginBottom = '16px';
+                this.logArea = document.createElement('textarea');
+                Object.assign(this.logArea.style, {
+                    width: '90%',
+                    maxWidth: '900px',
+                    height: '260px',
+                    background: '#111',
+                    color: '#0f0',
+                    fontFamily: 'monospace',
+                    fontSize: '12px',
+                    padding: '12px',
+                    border: '1px solid #444',
+                    borderRadius: '6px',
+                    resize: 'vertical',
+                    marginBottom: '16px'
+                });
+                this.logArea.readOnly = true;
+                const buttonRow = document.createElement('div');
+                buttonRow.style.display = 'flex';
+                buttonRow.style.gap = '12px';
+                const copyBtn = document.createElement('button');
+                copyBtn.textContent = 'Copy crash log';
+                copyBtn.onclick = () => {
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(this.logArea.value).catch(() => {
+                            this.logArea.select();
+                            document.execCommand('copy');
+                        });
+                    } else {
+                        this.logArea.select();
+                        document.execCommand('copy');
+                    }
+                };
+                const reloadBtn = document.createElement('button');
+                reloadBtn.textContent = 'Reload game';
+                reloadBtn.onclick = () => window.location.reload();
+                [copyBtn, reloadBtn].forEach((btn) => {
+                    Object.assign(btn.style, {
+                        padding: '10px 18px',
+                        background: '#ff4d4d',
+                        border: 'none',
+                        color: '#fff',
+                        fontSize: '14px',
+                        borderRadius: '4px',
+                        cursor: 'pointer'
+                    });
+                });
+                copyBtn.style.background = '#4CAF50';
+                buttonRow.appendChild(copyBtn);
+                buttonRow.appendChild(reloadBtn);
+                this.statusText = document.createElement('p');
+                this.statusText.style.marginTop = '10px';
+                this.statusText.style.fontSize = '12px';
+                this.overlay.appendChild(title);
+                this.overlay.appendChild(subtitle);
+                this.overlay.appendChild(this.logArea);
+                this.overlay.appendChild(buttonRow);
+                this.overlay.appendChild(this.statusText);
+                document.body.appendChild(this.overlay);
+            },
+            getLog(details) {
+                const parts = [];
+                parts.push(`[Crash] ${new Date().toISOString()}`);
+                if (details.message) parts.push(`Message: ${details.message}`);
+                if (details.source) parts.push(`Source: ${details.source}`);
+                if (details.lineno != null) parts.push(`Line: ${details.lineno}:${details.colno || 0}`);
+                if (details.stack) {
+                    parts.push('Stack:');
+                    parts.push(details.stack);
+                }
+                parts.push(`UserAgent: ${navigator.userAgent}`);
+                parts.push(`Window: ${window.innerWidth}x${window.innerHeight}`);
+                if (typeof GAME !== 'undefined') {
+                    parts.push(`GAME: ${GAME.WIDTH}x${GAME.HEIGHT} @ scale ${GAME.SCALE}`);
+                }
+                return parts.join('\n');
+            },
+            show(details) {
+                this.init();
+                if (this.visible) return;
+                this.visible = true;
+                const log = this.getLog(details || {});
+                this.logArea.value = log;
+                this.overlay.style.display = 'flex';
+                this.statusText.textContent = 'Crash log ready to copy.';
+                try {
+                    this.logArea.focus();
+                    this.logArea.select();
+                } catch (e) {}
+            }
+        };
+
+        function handleCrash(details) {
+            CrashOverlay.show(details || {});
+            if (typeof Game !== 'undefined') {
+                Game.crashed = true;
+            }
+        }
+
+        window.addEventListener('error', (event) => {
+            handleCrash({
+                message: event.message,
+                source: event.filename,
+                lineno: event.lineno,
+                colno: event.colno,
+                stack: event.error && event.error.stack
+            });
+        });
+
+        window.addEventListener('unhandledrejection', (event) => {
+            const reason = event.reason || {};
+            handleCrash({
+                message: reason.message || String(reason),
+                stack: reason.stack
+            });
+        });
+    </script>
+    <script src="js/constants.js"></script>
+    <script src="js/math.js"></script>
+    <script src="js/maptype.js"></script>
+    <script src="js/tiles.js"></script>
+    <script src="js/sensors.js"></script>
+    <script src="js/sprites.js"></script>
+    <script src="js/shields.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/objects.js"></script>
+    <script src="js/cpz_sprite_data.js"></script>
+    <script src="js/cpz_objects.js"></script>
+    <script src="js/camera.js"></script>
+    <script src="js/level.js"></script>
+    <script src="js/cpzloader.js"></script>
+    <script src="js/menu.js"></script>
+    <script src="js/opening.js"></script>
+    <script src="js/tailsAI.js"></script>
+    <script src="js/editor.js"></script>
+    <script src="js/debug.js"></script>
+    <script src="js/spriteOffsetEditor.js"></script>
+    <script src="js/hud.js"></script>
+    <script src="js/loadingscreen.js"></script>
+    <script src="js/multiplayer.js"></script>
+    <script src="js/touchcontrols.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>

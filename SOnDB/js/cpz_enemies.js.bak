@@ -1,0 +1,654 @@
+// Dabicco's Classic Sonic Engine - CPZ Enemies (Sonic 2 RSDK)
+
+// CPZ Enemy Sprite Sheet loader
+const CPZEnemySprites = {
+    sheets: {},
+    loaded: false,
+    
+    load: function() {
+        const files = {
+            'cpz_objects': 'assets/enemies/cpz_Objects.png',
+            'cpz_objects2': 'assets/enemies/cpz_Objects2.png',
+            'cpz_objects3': 'assets/enemies/cpz_Objects3.png'
+        };
+        
+        let loadCount = 0;
+        const total = Object.keys(files).length;
+        
+        for (const [name, path] of Object.entries(files)) {
+            const img = new Image();
+            img.onload = () => {
+                this.sheets[name] = img;
+                loadCount++;
+                if (loadCount === total) {
+                    this.loaded = true;
+                    console.log('CPZ enemy sprites loaded');
+                }
+            };
+            img.onerror = () => {
+                console.warn(`Failed to load CPZ sprite: ${name}`);
+                loadCount++;
+                if (loadCount === total) this.loaded = true;
+            };
+            img.src = path;
+        }
+    },
+    
+    drawRegion: function(ctx, sheetName, sx, sy, sw, sh, dx, dy, flipX) {
+        const sheet = this.sheets[sheetName];
+        if (!sheet) return;
+        
+        if (flipX) {
+            ctx.save();
+            ctx.scale(-1, 1);
+            ctx.drawImage(sheet, sx, sy, sw, sh, -dx - sw, dy, sw, sh);
+            ctx.restore();
+        } else {
+            ctx.drawImage(sheet, sx, sy, sw, sh, dx, dy, sw, sh);
+        }
+    }
+};
+
+// Initialize CPZ enemy sprites
+CPZEnemySprites.load();
+
+// ============================================================
+// Spiny (Floor) - Walks along floor, shoots spikes when player is near
+// RSDK type 56, subtype determines behavior variant
+// ============================================================
+class Spiny extends GameObject {
+    constructor(x, y, subtype) {
+        super(x, y, OBJECT_TYPES.SPINY);
+        this.isEnemy = true;
+        this.widthRadius = 12;
+        this.heightRadius = 14;
+        this.direction = -1;
+        this.speed = 0.5;
+        this.subtype = subtype || 0;
+        this.shootTimer = 0;
+        this.shootCooldown = 120;
+        this.animFrame = 0;
+        this.animTimer = 0;
+    }
+    
+    update(player) {
+        if (this.destroyed) {
+            this.explosionTimer++;
+            if (this.explosionTimer > 30) this.active = false;
+            return;
+        }
+        
+        // Walk along floor
+        this.x += this.direction * this.speed;
+        
+        // Animation
+        this.animTimer++;
+        if (this.animTimer >= 8) {
+            this.animTimer = 0;
+            this.animFrame = (this.animFrame + 1) % 4;
+        }
+        
+        // Check for walls
+        const wallDir = this.direction > 0 ? 'right' : 'left';
+        const wallResult = SensorSystem.castSensor(
+            this.x + this.direction * this.widthRadius, this.y, wallDir, 'wall'
+        );
+        if (wallResult.found && wallResult.distance < 4) {
+            this.direction *= -1;
+        }
+        
+        // Check for edges
+        const edgeResult = SensorSystem.castSensor(
+            this.x + this.direction * this.widthRadius, this.y + this.heightRadius + 4, 'down', 'floor'
+        );
+        if (!edgeResult.found || edgeResult.distance > 16) {
+            this.direction *= -1;
+        }
+        
+        // Stay on ground
+        const floorResult = SensorSystem.castSensor(this.x, this.y + this.heightRadius, 'down', 'floor');
+        if (floorResult.found && Math.abs(floorResult.distance) < 8) {
+            this.y += floorResult.distance;
+        }
+        
+        // Shoot spikes when player is within range
+        this.shootTimer++;
+        if (this.shootTimer >= this.shootCooldown) {
+            const dist = Math.abs(player.x - this.x);
+            if (dist < 160) {
+                this.shootTimer = 0;
+                // Face player
+                this.direction = player.x > this.x ? 1 : -1;
+            }
+        }
+        
+        // Check collision with player
+        if (this.checkCollision(player)) {
+            const isAttacking = player.rolling || player.jumping || player.spindashing;
+            if (isAttacking || player.instaShieldActive || player.invincible) {
+                this.destroy(player);
+                if (player.ySpeed > 0 && player.y < this.y) {
+                    player.rebound(this.y);
+                }
+            } else {
+                player.getHit(this.x);
+            }
+        }
+    }
+    
+    destroy(player) {
+        this.destroyed = true;
+        this.explosionTimer = 0;
+        if (player) player.score += 100;
+        AudioManager.play('explosion');
+    }
+    
+    draw(ctx, camera, showHitboxes) {
+        const screenX = Math.floor(this.x - camera.x);
+        const screenY = Math.floor(this.y - camera.y);
+        
+        if (this.destroyed) {
+            ctx.fillStyle = '#ff8000';
+            const size = Math.floor(8 + this.explosionTimer / 2);
+            ctx.fillRect(screenX - size, screenY - size, size * 2, size * 2);
+            ctx.fillStyle = '#ffff00';
+            ctx.fillRect(screenX - size / 2, screenY - size / 2, size, size);
+            return;
+        }
+        
+        // Draw Spiny using sprite sheet or fallback
+        const flip = this.direction > 0;
+        if (CPZEnemySprites.loaded && CPZEnemySprites.sheets['cpz_objects']) {
+            // Spiny sprites are in cpz_Objects.png
+            // Approximate region - 24x24 frames
+            const frameX = this.animFrame * 24;
+            const frameY = 0; // Top of sheet
+            CPZEnemySprites.drawRegion(ctx, 'cpz_objects', frameX, frameY, 24, 24,
+                screenX - 12, screenY - 14, flip);
+        } else {
+            // Fallback rectangle rendering
+            ctx.fillStyle = '#C04040';
+            ctx.fillRect(screenX - 12, screenY - 14, 24, 28);
+            // Spikes
+            ctx.fillStyle = '#E0E0E0';
+            for (let i = -8; i <= 8; i += 8) {
+                ctx.fillRect(screenX + i - 2, screenY - 18, 4, 4);
+            }
+            // Eye
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(screenX + this.direction * 4 - 2, screenY - 8, 5, 5);
+            ctx.fillStyle = '#000';
+            ctx.fillRect(screenX + this.direction * 5 - 1, screenY - 7, 3, 3);
+        }
+        
+        if (showHitboxes) {
+            this.drawHitbox(ctx, camera, '#ff4444');
+            this.drawLabel(ctx, camera, 'SPINY');
+        }
+    }
+}
+
+// ============================================================
+// Spiny Wall - Climbs up/down walls, shoots when player nearby
+// RSDK type 57
+// ============================================================
+class SpinyWall extends GameObject {
+    constructor(x, y, subtype) {
+        super(x, y, OBJECT_TYPES.SPINY_WALL);
+        this.isEnemy = true;
+        this.widthRadius = 14;
+        this.heightRadius = 12;
+        this.direction = -1; // -1 = up, 1 = down
+        this.speed = 0.5;
+        this.wallSide = subtype || 0; // 0=right wall, 1=left wall
+        this.startY = y;
+        this.range = 64;
+        this.animFrame = 0;
+        this.animTimer = 0;
+    }
+    
+    update(player) {
+        if (this.destroyed) {
+            this.explosionTimer++;
+            if (this.explosionTimer > 30) this.active = false;
+            return;
+        }
+        
+        // Move up/down on wall
+        this.y += this.direction * this.speed;
+        
+        // Reverse at range limits
+        if (Math.abs(this.y - this.startY) > this.range) {
+            this.direction *= -1;
+        }
+        
+        // Animation
+        this.animTimer++;
+        if (this.animTimer >= 8) {
+            this.animTimer = 0;
+            this.animFrame = (this.animFrame + 1) % 4;
+        }
+        
+        // Check collision
+        if (this.checkCollision(player)) {
+            const isAttacking = player.rolling || player.jumping || player.spindashing;
+            if (isAttacking || player.instaShieldActive || player.invincible) {
+                this.destroy(player);
+                if (player.ySpeed > 0 && player.y < this.y) {
+                    player.rebound(this.y);
+                }
+            } else {
+                player.getHit(this.x);
+            }
+        }
+    }
+    
+    destroy(player) {
+        this.destroyed = true;
+        this.explosionTimer = 0;
+        if (player) player.score += 100;
+        AudioManager.play('explosion');
+    }
+    
+    draw(ctx, camera, showHitboxes) {
+        const screenX = Math.floor(this.x - camera.x);
+        const screenY = Math.floor(this.y - camera.y);
+        
+        if (this.destroyed) {
+            ctx.fillStyle = '#ff8000';
+            const size = Math.floor(8 + this.explosionTimer / 2);
+            ctx.fillRect(screenX - size, screenY - size, size * 2, size * 2);
+            ctx.fillStyle = '#ffff00';
+            ctx.fillRect(screenX - size / 2, screenY - size / 2, size, size);
+            return;
+        }
+        
+        // Fallback rendering
+        ctx.fillStyle = '#C04040';
+        ctx.fillRect(screenX - 14, screenY - 12, 28, 24);
+        ctx.fillStyle = '#E0E0E0';
+        const side = this.wallSide === 0 ? 1 : -1;
+        for (let i = -8; i <= 8; i += 8) {
+            ctx.fillRect(screenX + side * 12, screenY + i - 2, 4, 4);
+        }
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(screenX - side * 4 - 2, screenY - 4, 5, 5);
+        
+        if (showHitboxes) {
+            this.drawHitbox(ctx, camera, '#ff4444');
+            this.drawLabel(ctx, camera, 'SPINY_W');
+        }
+    }
+}
+
+// ============================================================
+// Grabber - Hangs from ceiling, descends to grab player
+// RSDK type 59 (object list index 24 = global 35 + stage 24)
+// ============================================================
+class Grabber extends GameObject {
+    constructor(x, y) {
+        super(x, y, OBJECT_TYPES.GRABBER);
+        this.isEnemy = true;
+        this.widthRadius = 12;
+        this.heightRadius = 12;
+        this.state = 'idle'; // idle, descending, grabbing, ascending
+        this.startY = y;
+        this.descendSpeed = 2;
+        this.descendTarget = y + 96;
+        this.grabTimer = 0;
+        this.chainLength = 0;
+        this.animFrame = 0;
+        this.animTimer = 0;
+    }
+    
+    update(player) {
+        if (this.destroyed) {
+            this.explosionTimer++;
+            if (this.explosionTimer > 30) this.active = false;
+            return;
+        }
+        
+        this.animTimer++;
+        if (this.animTimer >= 6) {
+            this.animTimer = 0;
+            this.animFrame = (this.animFrame + 1) % 4;
+        }
+        
+        switch (this.state) {
+            case 'idle':
+                // Wait for player to be underneath
+                if (Math.abs(player.x - this.x) < 32 && player.y > this.y) {
+                    this.state = 'descending';
+                    this.descendTarget = player.y - 16;
+                }
+                break;
+                
+            case 'descending':
+                this.y += this.descendSpeed;
+                this.chainLength = this.y - this.startY;
+                if (this.y >= this.descendTarget || this.y - this.startY > 128) {
+                    this.state = 'grabbing';
+                    this.grabTimer = 60;
+                }
+                break;
+                
+            case 'grabbing':
+                this.grabTimer--;
+                if (this.grabTimer <= 0) {
+                    this.state = 'ascending';
+                }
+                break;
+                
+            case 'ascending':
+                this.y -= this.descendSpeed;
+                this.chainLength = this.y - this.startY;
+                if (this.y <= this.startY) {
+                    this.y = this.startY;
+                    this.state = 'idle';
+                    this.chainLength = 0;
+                }
+                break;
+        }
+        
+        // Check collision
+        if (this.checkCollision(player)) {
+            const isAttacking = player.rolling || player.jumping || player.spindashing;
+            if (isAttacking || player.instaShieldActive || player.invincible) {
+                this.destroy(player);
+                if (player.ySpeed > 0 && player.y < this.y) {
+                    player.rebound(this.y);
+                }
+            } else {
+                player.getHit(this.x);
+            }
+        }
+    }
+    
+    destroy(player) {
+        this.destroyed = true;
+        this.explosionTimer = 0;
+        if (player) player.score += 100;
+        AudioManager.play('explosion');
+    }
+    
+    draw(ctx, camera, showHitboxes) {
+        const screenX = Math.floor(this.x - camera.x);
+        const screenY = Math.floor(this.y - camera.y);
+        const startScreenY = Math.floor(this.startY - camera.y);
+        
+        if (this.destroyed) {
+            ctx.fillStyle = '#ff8000';
+            const size = Math.floor(8 + this.explosionTimer / 2);
+            ctx.fillRect(screenX - size, screenY - size, size * 2, size * 2);
+            ctx.fillStyle = '#ffff00';
+            ctx.fillRect(screenX - size / 2, screenY - size / 2, size, size);
+            return;
+        }
+        
+        // Draw chain
+        if (this.chainLength > 0) {
+            ctx.strokeStyle = '#808080';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(screenX, startScreenY);
+            ctx.lineTo(screenX, screenY - 12);
+            ctx.stroke();
+        }
+        
+        // Draw Grabber body
+        ctx.fillStyle = '#606060';
+        ctx.fillRect(screenX - 12, screenY - 12, 24, 24);
+        // Claws
+        ctx.fillStyle = '#808080';
+        const clawOpen = this.state === 'grabbing' ? 4 : 8;
+        ctx.fillRect(screenX - 16, screenY + 4, 8, clawOpen);
+        ctx.fillRect(screenX + 8, screenY + 4, 8, clawOpen);
+        // Eyes
+        ctx.fillStyle = '#ff0000';
+        ctx.fillRect(screenX - 6, screenY - 8, 4, 4);
+        ctx.fillRect(screenX + 2, screenY - 8, 4, 4);
+        
+        if (showHitboxes) {
+            this.drawHitbox(ctx, camera, '#ff4444');
+            this.drawLabel(ctx, camera, 'GRABBER');
+        }
+    }
+}
+
+// ============================================================
+// Bubbler - Floats around in water/chemical areas, spawns bubbles
+// RSDK type 61 (Bubblers Mother) + type 62 (Bubbler child)
+// ============================================================
+class Bubbler extends GameObject {
+    constructor(x, y) {
+        super(x, y, OBJECT_TYPES.BUBBLER);
+        this.isEnemy = true;
+        this.widthRadius = 10;
+        this.heightRadius = 10;
+        this.startX = x;
+        this.startY = y;
+        this.moveTimer = 0;
+        this.moveRange = 48;
+        this.animFrame = 0;
+        this.animTimer = 0;
+    }
+    
+    update(player) {
+        if (this.destroyed) {
+            this.explosionTimer++;
+            if (this.explosionTimer > 30) this.active = false;
+            return;
+        }
+        
+        // Float in a figure-8 pattern
+        this.moveTimer++;
+        this.x = this.startX + Math.sin(this.moveTimer * 0.02) * this.moveRange;
+        this.y = this.startY + Math.sin(this.moveTimer * 0.03) * (this.moveRange / 2);
+        
+        // Animation
+        this.animTimer++;
+        if (this.animTimer >= 6) {
+            this.animTimer = 0;
+            this.animFrame = (this.animFrame + 1) % 4;
+        }
+        
+        // Check collision
+        if (this.checkCollision(player)) {
+            const isAttacking = player.rolling || player.jumping || player.spindashing;
+            if (isAttacking || player.instaShieldActive || player.invincible) {
+                this.destroy(player);
+                if (player.ySpeed > 0 && player.y < this.y) {
+                    player.rebound(this.y);
+                }
+            } else {
+                player.getHit(this.x);
+            }
+        }
+    }
+    
+    destroy(player) {
+        this.destroyed = true;
+        this.explosionTimer = 0;
+        if (player) player.score += 100;
+        AudioManager.play('explosion');
+    }
+    
+    draw(ctx, camera, showHitboxes) {
+        const screenX = Math.floor(this.x - camera.x);
+        const screenY = Math.floor(this.y - camera.y);
+        
+        if (this.destroyed) {
+            ctx.fillStyle = '#ff8000';
+            const size = Math.floor(8 + this.explosionTimer / 2);
+            ctx.fillRect(screenX - size, screenY - size, size * 2, size * 2);
+            ctx.fillStyle = '#ffff00';
+            ctx.fillRect(screenX - size / 2, screenY - size / 2, size, size);
+            return;
+        }
+        
+        // Draw Bubbler body
+        ctx.fillStyle = '#4080C0';
+        ctx.beginPath();
+        ctx.arc(screenX, screenY, 10, 0, Math.PI * 2);
+        ctx.fill();
+        // Inner pattern
+        ctx.fillStyle = '#60A0E0';
+        ctx.beginPath();
+        ctx.arc(screenX, screenY, 6, 0, Math.PI * 2);
+        ctx.fill();
+        // Eyes
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(screenX - 5, screenY - 4, 4, 4);
+        ctx.fillRect(screenX + 1, screenY - 4, 4, 4);
+        ctx.fillStyle = '#000';
+        ctx.fillRect(screenX - 4, screenY - 3, 2, 2);
+        ctx.fillRect(screenX + 2, screenY - 3, 2, 2);
+        
+        if (showHitboxes) {
+            this.drawHitbox(ctx, camera, '#ff4444');
+            this.drawLabel(ctx, camera, 'BUBBLER');
+        }
+    }
+}
+
+// ============================================================
+// RSDK Object Spawner - Creates engine objects from RSDK object data
+// ============================================================
+const RSDKObjectSpawner = {
+    // RSDK object type → engine object type mapping
+    // Global objects (0-34)
+    GLOBAL_TYPES: {
+        1: 'PLAYER',
+        10: 'RING',
+        13: 'MONITOR',
+        15: 'SPRING',
+        16: 'SPIKE',
+        18: 'CHECKPOINT',
+        21: 'GOAL'
+    },
+    
+    // Stage-specific objects (type = global_count + stage_index)
+    // Global count for Sonic 2 RSDK = 35
+    GLOBAL_COUNT: 35,
+    STAGE_TYPES: {
+        21: 'SPINY',       // stage index 21 = type 56
+        22: 'SPINY_WALL',  // stage index 22 = type 57
+        24: 'GRABBER',     // stage index 24 = type 59
+        26: 'BUBBLER_MOM', // stage index 26 = type 61
+        27: 'BUBBLER'      // stage index 27 = type 62
+    },
+    
+    spawnObjects: function(rsdkObjects) {
+        if (!rsdkObjects || rsdkObjects.length === 0) return;
+        
+        let spawned = 0;
+        let skipped = 0;
+        
+        for (const obj of rsdkObjects) {
+            const rsdkType = obj.type;
+            const x = obj.x;
+            const y = obj.y;
+            const sub = obj.subtype;
+            
+            let created = null;
+            
+            // Check global types
+            if (this.GLOBAL_TYPES[rsdkType]) {
+                switch (this.GLOBAL_TYPES[rsdkType]) {
+                    case 'RING':
+                        created = new Ring(x, y);
+                        break;
+                    case 'MONITOR':
+                        created = this.createMonitor(x, y, sub);
+                        break;
+                    case 'SPRING':
+                        created = this.createSpring(x, y, sub);
+                        break;
+                    case 'SPIKE':
+                        created = new Spike(x, y, sub === 0 ? 'up' : 'right');
+                        break;
+                    case 'CHECKPOINT':
+                        created = new Checkpoint(x, y);
+                        break;
+                    case 'GOAL':
+                        created = new GoalSign(x, y);
+                        break;
+                }
+            }
+            // Check stage-specific types
+            else if (rsdkType >= this.GLOBAL_COUNT) {
+                const stageIdx = rsdkType - this.GLOBAL_COUNT;
+                const stageType = this.STAGE_TYPES[stageIdx];
+                
+                if (stageType) {
+                    switch (stageType) {
+                        case 'SPINY':
+                            created = new Spiny(x, y, sub);
+                            break;
+                        case 'SPINY_WALL':
+                            created = new SpinyWall(x, y, sub);
+                            break;
+                        case 'GRABBER':
+                            created = new Grabber(x, y);
+                            break;
+                        case 'BUBBLER_MOM':
+                        case 'BUBBLER':
+                            created = new Bubbler(x, y);
+                            break;
+                    }
+                }
+            }
+            
+            if (created) {
+                ObjectManager.add(created);
+                spawned++;
+            } else {
+                skipped++;
+            }
+        }
+        
+        console.log(`[RSDK] Spawned ${spawned} objects, skipped ${skipped} (unknown types)`);
+    },
+    
+    createMonitor: function(x, y, subtype) {
+        // RSDK monitor subtypes: 0=random, 1=ring, 2=speed, 3=bubble, 4=flame, 5=lightning, 6=invincibility, 7=extra life
+        const monitorMap = {
+            0: OBJECT_TYPES.MONITOR_RING,
+            1: OBJECT_TYPES.MONITOR_RING,
+            2: OBJECT_TYPES.MONITOR_SPEED,
+            3: OBJECT_TYPES.MONITOR_BUBBLE,
+            4: OBJECT_TYPES.MONITOR_FLAME,
+            5: OBJECT_TYPES.MONITOR_LIGHTNING,
+            6: OBJECT_TYPES.MONITOR_INVINCIBILITY,
+            7: OBJECT_TYPES.MONITOR_SONIC_LIFE,
+            42: OBJECT_TYPES.MONITOR_RING // Common subtype
+        };
+        const type = monitorMap[subtype] || OBJECT_TYPES.MONITOR_RING;
+        return new Monitor(x, y, type);
+    },
+    
+    createSpring: function(x, y, subtype) {
+        // RSDK spring subtypes: 0=yellow up, 1=yellow right, 2=yellow left, 3=yellow down
+        // 16=red up, 17=red right, 18=red left, 19=red down
+        const isRed = subtype >= 16;
+        const dir = subtype % 16;
+        
+        let springType, springDir;
+        if (isRed) {
+            switch (dir) {
+                case 0: springType = OBJECT_TYPES.SPRING_RED; springDir = 'up'; break;
+                case 1: springType = OBJECT_TYPES.SPRING_RED_H; springDir = 'right'; break;
+                case 2: springType = OBJECT_TYPES.SPRING_RED_H_LEFT; springDir = 'left'; break;
+                default: springType = OBJECT_TYPES.SPRING_RED; springDir = 'up'; break;
+            }
+        } else {
+            switch (dir) {
+                case 0: springType = OBJECT_TYPES.SPRING_YELLOW; springDir = 'up'; break;
+                case 1: springType = OBJECT_TYPES.SPRING_YELLOW_H; springDir = 'right'; break;
+                case 2: springType = OBJECT_TYPES.SPRING_YELLOW_H_LEFT; springDir = 'left'; break;
+                default: springType = OBJECT_TYPES.SPRING_YELLOW; springDir = 'up'; break;
+            }
+        }
+        return new Spring(x, y, springType, springDir);
+    }
+};
